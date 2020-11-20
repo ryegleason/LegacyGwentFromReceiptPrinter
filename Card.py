@@ -1,6 +1,7 @@
 from escpos.printer import Usb
 from escpos.printer import Dummy
 
+
 class Card:
 
     def __init__(self, name, top_right, image, typeline, body, bottom_left, bottom_right):
