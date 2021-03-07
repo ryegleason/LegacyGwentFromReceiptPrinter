@@ -12,6 +12,9 @@ class Card:
         self.body = body
         self.botttom_left = bottom_left
         self.bottom_right = bottom_right
+        printer = Dummy()
+        self.print_self(printer)
+        self.raw_print = printer.output
 
     def print_self(self, printer):
         printer.set(align="left")
@@ -34,5 +37,4 @@ if __name__ == "__main__":
     p = Usb(0x0416, 0x5011, in_ep=0x81, out_ep=0x3)
     hewwo = Card("Dimun Light Longship", "7", "dimun.jpg", "Machine, Dimun", "On each turn end, deal 1 damage to the unit to"
                                                                       " the right, then boost self by 2.", "Skellige", "Bronze")
-    hewwo.print_self(d)
-    p._raw(d.output)
+    p._raw(hewwo.raw_print)
