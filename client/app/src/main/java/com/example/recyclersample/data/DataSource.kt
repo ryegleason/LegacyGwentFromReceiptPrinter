@@ -16,46 +16,45 @@
 
 package com.example.recyclersample.data
 
-import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 /* Handles operations on flowersLiveData and holds details about it. */
-class DataSource(resources: Resources) {
-    private val initialFlowerList = flowerList(resources)
+class DataSource {
+    private val initialFlowerList = flowerList()
     private val flowersLiveData = MutableLiveData(initialFlowerList)
 
     /* Adds flower to liveData and posts value. */
-    fun addFlower(flower: Flower) {
+    fun addFlower(card: Card) {
         val currentList = flowersLiveData.value
         if (currentList == null) {
-            flowersLiveData.postValue(listOf(flower))
+            flowersLiveData.postValue(listOf(card))
         } else {
             val updatedList = currentList.toMutableList()
-            updatedList.add(0, flower)
+            updatedList.add(0, card)
             flowersLiveData.postValue(updatedList)
         }
     }
 
     /* Removes flower from liveData and posts value. */
-    fun removeFlower(flower: Flower) {
+    fun removeFlower(card: Card) {
         val currentList = flowersLiveData.value
         if (currentList != null) {
             val updatedList = currentList.toMutableList()
-            updatedList.remove(flower)
+            updatedList.remove(card)
             flowersLiveData.postValue(updatedList)
         }
     }
 
     /* Returns flower given an ID. */
-    fun getFlowerForId(id: Long): Flower? {
+    fun getFlowerForId(id: Long): Card? {
         flowersLiveData.value?.let { flowers ->
             return flowers.firstOrNull{ it.id == id}
         }
         return null
     }
 
-    fun getFlowerList(): LiveData<List<Flower>> {
+    fun getFlowerList(): LiveData<List<Card>> {
         return flowersLiveData
     }
 
@@ -68,9 +67,9 @@ class DataSource(resources: Resources) {
     companion object {
         private var INSTANCE: DataSource? = null
 
-        fun getDataSource(resources: Resources): DataSource {
+        fun getDataSource(): DataSource {
             return synchronized(DataSource::class) {
-                val newInstance = INSTANCE ?: DataSource(resources)
+                val newInstance = INSTANCE ?: DataSource()
                 INSTANCE = newInstance
                 newInstance
             }

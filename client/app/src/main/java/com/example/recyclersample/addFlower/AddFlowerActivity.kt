@@ -24,12 +24,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.recyclersample.R
 import com.google.android.material.textfield.TextInputEditText
 
-const val FLOWER_NAME = "name"
-const val FLOWER_DESCRIPTION = "description"
+const val CARD_NAME = "name"
 
 class AddFlowerActivity : AppCompatActivity() {
     private lateinit var addFlowerName: TextInputEditText
-    private lateinit var addFlowerDescription: TextInputEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +37,6 @@ class AddFlowerActivity : AppCompatActivity() {
             addFlower()
         }
         addFlowerName = findViewById(R.id.add_flower_name)
-        addFlowerDescription = findViewById(R.id.add_flower_description)
     }
 
     /* The onClick action for the done button. Closes the activity and returns the new flower name
@@ -49,13 +46,11 @@ class AddFlowerActivity : AppCompatActivity() {
     private fun addFlower() {
         val resultIntent = Intent()
 
-        if (addFlowerName.text.isNullOrEmpty() || addFlowerDescription.text.isNullOrEmpty()) {
+        if (addFlowerName.text.isNullOrEmpty()) {
             setResult(Activity.RESULT_CANCELED, resultIntent)
         } else {
             val name = addFlowerName.text.toString()
-            val description = addFlowerDescription.text.toString()
-            resultIntent.putExtra(FLOWER_NAME, name)
-            resultIntent.putExtra(FLOWER_DESCRIPTION, description)
+            resultIntent.putExtra(CARD_NAME, name)
             setResult(Activity.RESULT_OK, resultIntent)
         }
         finish()

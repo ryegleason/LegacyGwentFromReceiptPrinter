@@ -15,7 +15,7 @@
 -->
 
 <resources>
-    <string name="app_name">RecyclerView Sample</string>
+    <string name="app_name">Legacy Gwent From Receipt Printer</string>
     <string name="add_flower">Add Flower</string>
 
     <string name="flower1_name">Rose</string>
@@ -54,7 +54,8 @@
     <string name="flower_description_edit_text">Flower Description</string>
     <string name="flower_name_edit_text">Flower Name</string>
     <string name="done_button_text">Done</string>
-    <string name="fab_content_description">fab</string>
+    <string name="draw_content_description">draw card</string>
+    <string name="shuffle_content_description">shuffle deck</string>
     <string name="flower_image_content_description">Image of flower</string>
     <string name="play_card">Play</string>
     <string name="cards_in">Cards in from the top/bottom:</string>

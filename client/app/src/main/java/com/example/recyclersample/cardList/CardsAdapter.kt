@@ -14,41 +14,40 @@
  * limitations under the License.
  */
 
-package com.example.recyclersample.flowerList
+package com.example.recyclersample.cardList
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recyclersample.R
-import com.example.recyclersample.data.Flower
+import com.example.recyclersample.data.Card
 
-class FlowersAdapter(private val onClick: (Flower) -> Unit) :
-    ListAdapter<Flower, FlowersAdapter.FlowerViewHolder>(FlowerDiffCallback) {
+class CardsAdapter(private val onClick: (Card) -> Unit) :
+    ListAdapter<Card, CardsAdapter.FlowerViewHolder>(CardDiffCallback) {
 
     /* ViewHolder for Flower, takes in the inflated view and the onClick behavior. */
-    class FlowerViewHolder(itemView: View, val onClick: (Flower) -> Unit) :
+    class FlowerViewHolder(itemView: View, val onClick: (Card) -> Unit) :
         RecyclerView.ViewHolder(itemView) {
         private val flowerImageView: ImageView = itemView.findViewById(R.id.flower_image)
-        private var currentFlower: Flower? = null
+        private var currentCard: Card? = null
 
         init {
             itemView.setOnClickListener {
-                currentFlower?.let {
+                currentCard?.let {
                     onClick(it)
                 }
             }
         }
 
         /* Bind flower name and image. */
-        fun bind(flower: Flower) {
-            currentFlower = flower
-            if (flower.image != null) {
-                flowerImageView.setImageResource(flower.image)
+        fun bind(card: Card) {
+            currentCard = card
+            if (card.image != null) {
+                flowerImageView.setImageResource(card.image)
             } else {
                 flowerImageView.setImageResource(R.drawable.rose)
             }
@@ -70,12 +69,12 @@ class FlowersAdapter(private val onClick: (Flower) -> Unit) :
     }
 }
 
-object FlowerDiffCallback : DiffUtil.ItemCallback<Flower>() {
-    override fun areItemsTheSame(oldItem: Flower, newItem: Flower): Boolean {
+object CardDiffCallback : DiffUtil.ItemCallback<Card>() {
+    override fun areItemsTheSame(oldItem: Card, newItem: Card): Boolean {
         return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: Flower, newItem: Flower): Boolean {
+    override fun areContentsTheSame(oldItem: Card, newItem: Card): Boolean {
         return oldItem.id == newItem.id
     }
 }

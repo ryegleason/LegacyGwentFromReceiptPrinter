@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_hand">
+
+    <fragment
+        android:id="@+id/navigation_deck"
+        android:name="com.example.recyclersample.cardList.DeckFragment"
+        android:label="@string/title_left"
+        tools:layout="@layout/fragment_deck" />
+
+    <fragment
+        android:id="@+id/navigation_hand"
+        android:name="com.example.recyclersample.cardList.HandFragment"
+        android:label="@string/title_center"
+        tools:layout="@layout/fragment_hand" />
+
+    <fragment
+        android:id="@+id/navigation_played"
+        android:name="com.example.recyclersample.cardList.PlayedFragment"
+        android:label="@string/title_right"
+        tools:layout="@layout/fragment_played" />
+</navigation>

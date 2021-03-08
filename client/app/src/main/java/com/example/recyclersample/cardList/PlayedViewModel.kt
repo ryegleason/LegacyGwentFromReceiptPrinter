@@ -14,44 +14,42 @@
  * limitations under the License.
  */
 
-package com.example.recyclersample.flowerList
+package com.example.recyclersample.cardList
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.recyclersample.data.DataSource
-import com.example.recyclersample.data.Flower
+import com.example.recyclersample.data.Card
 import kotlin.random.Random
 
-class FlowersListViewModel(val dataSource: DataSource) : ViewModel() {
+class PlayedViewModel(val dataSource: DataSource) : ViewModel() {
 
     val flowersLiveData = dataSource.getFlowerList()
 
     /* If the name and description are present, create new Flower and add it to the datasource */
-    fun insertFlower(flowerName: String?, flowerDescription: String?) {
-        if (flowerName == null || flowerDescription == null) {
+    fun insertFlower(flowerName: String?) {
+        if (flowerName == null) {
             return
         }
 
         val image = dataSource.getRandomFlowerImageAsset()
-        val newFlower = Flower(
+        val newFlower = Card(
             Random.nextLong(),
             flowerName,
-            image,
-            flowerDescription
+            image
         )
 
         dataSource.addFlower(newFlower)
     }
 }
 
-class FlowersListViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
+class PlayedViewModelFactory : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(FlowersListViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(PlayedViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return FlowersListViewModel(
-                dataSource = DataSource.getDataSource(context.resources)
+            return PlayedViewModel(
+                dataSource = DataSource.getDataSource()
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

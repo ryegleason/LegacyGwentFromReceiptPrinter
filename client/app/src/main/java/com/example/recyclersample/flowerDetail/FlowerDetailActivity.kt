@@ -23,8 +23,7 @@ import android.widget.NumberPicker
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.recyclersample.R
-import com.example.recyclersample.flowerList.FLOWER_ID
-import kotlinx.android.synthetic.main.flower_detail_activity.*
+import com.example.recyclersample.cardList.CARD_ID
 
 class FlowerDetailActivity : AppCompatActivity() {
 
@@ -34,7 +33,7 @@ class FlowerDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.flower_detail_activity)
+        setContentView(R.layout.hand_detail_activity)
 
         var currentFlowerId: Long? = null
 
@@ -51,7 +50,7 @@ class FlowerDetailActivity : AppCompatActivity() {
 
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
-            currentFlowerId = bundle.getLong(FLOWER_ID)
+            currentFlowerId = bundle.getLong(CARD_ID)
         }
 
         /* If currentFlowerId is not null, get corresponding flower and set name, image and
