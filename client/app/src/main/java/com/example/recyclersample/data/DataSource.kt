@@ -19,49 +19,97 @@ package com.example.recyclersample.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
-/* Handles operations on flowersLiveData and holds details about it. */
-class DataSource {
-    private val initialFlowerList = flowerList()
-    private val flowersLiveData = MutableLiveData(initialFlowerList)
+enum class Zone {
+    DECK,HAND,PLAYED
+}
 
-    /* Adds flower to liveData and posts value. */
-    fun addFlower(card: Card) {
-        val currentList = flowersLiveData.value
+/* Handles operations on cardLiveData and holds details about it. */
+class DataSource {
+    private val initialCardList = flowerList()
+    private val deckCards = MutableLiveData(initialCardList)
+    private val handCards = MutableLiveData<List<Card>>()
+    private val playedCards = MutableLiveData<List<Card>>()
+
+    fun drawCard() {
+        val currentList = deckCards.value
+        if (currentList != null && currentList.isNotEmpty()) {
+            moveCard(currentList[0], Zone.DECK, Zone.HAND)
+        }
+    }
+
+    fun moveCard(card: Card, source: Zone, destination: Zone) : Boolean {
+        if (source == destination) {
+            return true
+        }
+
+        return if (removeCard(card, zoneToList(source))) {
+            addCard(card, zoneToList(destination))
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun zoneToList(zone: Zone) : MutableLiveData<List<Card>> {
+        return when (zone) {
+            Zone.DECK -> {
+                deckCards;
+            }
+            Zone.HAND -> {
+                handCards;
+            }
+            Zone.PLAYED -> {
+                playedCards;
+            }
+        }
+    }
+
+    private fun addCard(card: Card, cardList: MutableLiveData<List<Card>>) {
+        val currentList = cardList.value
         if (currentList == null) {
-            flowersLiveData.postValue(listOf(card))
+            cardList.postValue(listOf(card))
         } else {
             val updatedList = currentList.toMutableList()
             updatedList.add(0, card)
-            flowersLiveData.postValue(updatedList)
+            cardList.postValue(updatedList)
         }
     }
 
-    /* Removes flower from liveData and posts value. */
-    fun removeFlower(card: Card) {
-        val currentList = flowersLiveData.value
+    private fun removeCard(card: Card, cardList: MutableLiveData<List<Card>>): Boolean {
+        val currentList = cardList.value
         if (currentList != null) {
             val updatedList = currentList.toMutableList()
-            updatedList.remove(card)
-            flowersLiveData.postValue(updatedList)
+            if (updatedList.remove(card)) {
+                cardList.postValue(updatedList)
+                return true
+            }
         }
+        return false
     }
 
-    /* Returns flower given an ID. */
-    fun getFlowerForId(id: Long): Card? {
-        flowersLiveData.value?.let { flowers ->
+    /* Returns card given an ID. */
+    fun getCardForId(id: Long): Card? {
+        initialCardList.let { flowers ->
             return flowers.firstOrNull{ it.id == id}
         }
-        return null
     }
 
-    fun getFlowerList(): LiveData<List<Card>> {
-        return flowersLiveData
+    fun getDeck(): LiveData<List<Card>> {
+        return deckCards
+    }
+
+    fun getHand(): LiveData<List<Card>> {
+        return handCards
+    }
+
+    fun getPlayed(): LiveData<List<Card>> {
+        return playedCards
     }
 
     /* Returns a random flower asset for flowers that are added. */
     fun getRandomFlowerImageAsset(): Int? {
-        val randomNumber = (initialFlowerList.indices).random()
-        return initialFlowerList[randomNumber].image
+        val randomNumber = (initialCardList.indices).random()
+        return initialCardList[randomNumber].image
     }
 
     companion object {

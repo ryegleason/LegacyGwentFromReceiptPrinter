@@ -49,7 +49,7 @@ class CardsAdapter(private val onClick: (Card) -> Unit) :
             if (card.image != null) {
                 flowerImageView.setImageResource(card.image)
             } else {
-                flowerImageView.setImageResource(R.drawable.rose)
+                flowerImageView.setImageResource(R.drawable.ire)
             }
         }
     }

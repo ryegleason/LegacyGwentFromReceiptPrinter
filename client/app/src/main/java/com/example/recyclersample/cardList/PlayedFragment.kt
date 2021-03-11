@@ -24,7 +24,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recyclersample.flowerDetail.FlowerDetailActivity
+import com.example.recyclersample.handDetail.HandDetailActivity
 import com.example.recyclersample.R
 import com.example.recyclersample.data.Card
 
@@ -48,7 +48,7 @@ class PlayedFragment : Fragment() {
         val recyclerView: RecyclerView = root.findViewById(R.id.recycler_view)
         recyclerView.adapter = flowersAdapter
 
-        playedViewModel.flowersLiveData.observe(viewLifecycleOwner, {
+        playedViewModel.played.observe(viewLifecycleOwner, {
             it?.let {
                 flowersAdapter.submitList(it as MutableList<Card>)
             }
@@ -59,7 +59,7 @@ class PlayedFragment : Fragment() {
 
     /* Opens FlowerDetailActivity when RecyclerView item is clicked. */
     private fun adapterOnClick(card: Card) {
-        val intent = Intent(context, FlowerDetailActivity()::class.java)
+        val intent = Intent(context, HandDetailActivity()::class.java)
         intent.putExtra(CARD_ID, card.id)
         startActivity(intent)
     }

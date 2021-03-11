@@ -16,7 +16,6 @@
 
 package com.example.recyclersample.cardList
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,10 +24,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recyclersample.addFlower.AddFlowerActivity
-import com.example.recyclersample.flowerDetail.FlowerDetailActivity
+import com.example.recyclersample.handDetail.HandDetailActivity
 import com.example.recyclersample.R
-import com.example.recyclersample.addFlower.CARD_NAME
 import com.example.recyclersample.data.Card
 
 const val CARD_ID = "card id"
@@ -55,7 +52,7 @@ class HandFragment : Fragment() {
         val recyclerView: RecyclerView = root.findViewById(R.id.recycler_view)
         recyclerView.adapter = flowersAdapter
 
-        handViewModel.flowersLiveData.observe(viewLifecycleOwner, {
+        handViewModel.hand.observe(viewLifecycleOwner, {
             it?.let {
                 flowersAdapter.submitList(it as MutableList<Card>)
             }
@@ -71,27 +68,13 @@ class HandFragment : Fragment() {
 
     /* Opens FlowerDetailActivity when RecyclerView item is clicked. */
     private fun adapterOnClick(card: Card) {
-        val intent = Intent(context, FlowerDetailActivity()::class.java)
+        val intent = Intent(context, HandDetailActivity()::class.java)
         intent.putExtra(CARD_ID, card.id)
         startActivity(intent)
     }
 
     /* Adds flower to flowerList when FAB is clicked. */
     private fun drawOnClick() {
-        val intent = Intent(context, AddFlowerActivity::class.java)
-        startActivityForResult(intent, newFlowerActivityRequestCode)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
-        super.onActivityResult(requestCode, resultCode, intentData)
-
-        /* Inserts flower into viewModel. */
-        if (requestCode == newFlowerActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            intentData?.let { data ->
-                val flowerName = data.getStringExtra(CARD_NAME)
-
-                handViewModel.insertFlower(flowerName)
-            }
-        }
+        handViewModel.drawCard()
     }
 }

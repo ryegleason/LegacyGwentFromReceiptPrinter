@@ -24,7 +24,7 @@
         android:layout_height="350dp"
         android:layout_gravity="center"
         android:contentDescription="@string/flower_image_content_description"
-        app:srcCompat="@drawable/rose" />
+        app:srcCompat="@drawable/ire" />
 
     <Button
         android:id="@+id/play_button"

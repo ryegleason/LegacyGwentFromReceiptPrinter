@@ -14,33 +14,37 @@
  * limitations under the License.
  */
 
-package com.example.recyclersample.flowerDetail
+package com.example.recyclersample.handDetail
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.recyclersample.data.DataSource
 import com.example.recyclersample.data.Card
+import com.example.recyclersample.data.Zone
 
-class FlowerDetailViewModel(private val datasource: DataSource) : ViewModel() {
+class HandDetailViewModel(private val datasource: DataSource) : ViewModel() {
 
     /* Queries datasource to returns a flower that corresponds to an id. */
     fun getFlowerForId(id: Long) : Card? {
-        return datasource.getFlowerForId(id)
+        return datasource.getCardForId(id)
     }
 
-    /* Queries datasource to remove a flower. */
-    fun removeFlower(card: Card) {
-        datasource.removeFlower(card)
+    fun playCard(card: Card) {
+        datasource.moveCard(card, Zone.HAND, Zone.PLAYED)
     }
+
+    fun putInDeck(card: Card) {
+        datasource.moveCard(card, Zone.HAND, Zone.DECK)
+    }
+
 }
 
-class FlowerDetailViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
+class HandDetailViewModelFactory : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(FlowerDetailViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(HandDetailViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return FlowerDetailViewModel(
+            return HandDetailViewModel(
                 datasource = DataSource.getDataSource()
             ) as T
         }

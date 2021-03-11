@@ -24,23 +24,8 @@ import kotlin.random.Random
 
 class DeckViewModel(val dataSource: DataSource) : ViewModel() {
 
-    val flowersLiveData = dataSource.getFlowerList()
+    val deck = dataSource.getDeck()
 
-    /* If the name and description are present, create new Flower and add it to the datasource */
-    fun insertFlower(flowerName: String?) {
-        if (flowerName == null) {
-            return
-        }
-
-        val image = dataSource.getRandomFlowerImageAsset()
-        val newFlower = Card(
-            Random.nextLong(),
-            flowerName,
-            image
-        )
-
-        dataSource.addFlower(newFlower)
-    }
 }
 
 class DeckViewModelFactory : ViewModelProvider.Factory {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.recyclersample.flowerDetail
+package com.example.recyclersample.handDetail
 
 import android.os.Bundle
 import android.widget.Button
@@ -25,10 +25,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.recyclersample.R
 import com.example.recyclersample.cardList.CARD_ID
 
-class FlowerDetailActivity : AppCompatActivity() {
+class HandDetailActivity : AppCompatActivity() {
 
-    private val flowerDetailViewModel by viewModels<FlowerDetailViewModel> {
-        FlowerDetailViewModelFactory(this)
+    private val flowerDetailViewModel by viewModels<HandDetailViewModel> {
+        HandDetailViewModelFactory()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,28 +58,28 @@ class FlowerDetailActivity : AppCompatActivity() {
         currentFlowerId?.let {
             val currentFlower = flowerDetailViewModel.getFlowerForId(it)
             if (currentFlower?.image == null) {
-                flowerImage.setImageResource(R.drawable.rose)
+                flowerImage.setImageResource(R.drawable.ire)
             } else {
                 flowerImage.setImageResource(currentFlower.image)
             }
 
             playButton.setOnClickListener {
                 if (currentFlower != null) {
-                    flowerDetailViewModel.removeFlower(currentFlower)
+                    flowerDetailViewModel.playCard(currentFlower)
                 }
                 finish()
             }
 
             topButton.setOnClickListener {
                 if (currentFlower != null) {
-                    flowerDetailViewModel.removeFlower(currentFlower)
+                    flowerDetailViewModel.putInDeck(currentFlower)
                 }
                 finish()
             }
 
             bottomButton.setOnClickListener {
                 if (currentFlower != null) {
-                    flowerDetailViewModel.removeFlower(currentFlower)
+                    flowerDetailViewModel.putInDeck(currentFlower)
                 }
                 finish()
             }

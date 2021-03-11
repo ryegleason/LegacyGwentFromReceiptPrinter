@@ -56,7 +56,7 @@
     <string name="done_button_text">Done</string>
     <string name="draw_content_description">draw card</string>
     <string name="shuffle_content_description">shuffle deck</string>
-    <string name="flower_image_content_description">Image of flower</string>
+    <string name="flower_image_content_description">Image of card</string>
     <string name="play_card">Play</string>
     <string name="cards_in">Cards in from the top/bottom:</string>
     <string name="put_on_top">Put on top</string>
@@ -65,4 +65,18 @@
     <string name="title_left">Deck</string>
     <string name="title_center">Hand</string>
     <string name="title_right">Played</string>
+
+    <string name="connection_info">Connection Information</string>
+    <string name="ip_text">IP Address</string>
+    <string name="port_text">Port (Default 27068):</string>
+    <string name="submit_connection">Connect</string>
+    <string name="title_activity_connection">ConnectionActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
 </resources>

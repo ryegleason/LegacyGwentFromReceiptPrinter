@@ -24,22 +24,10 @@ import kotlin.random.Random
 
 class HandViewModel(val dataSource: DataSource) : ViewModel() {
 
-    val flowersLiveData = dataSource.getFlowerList()
+    val hand = dataSource.getHand()
 
-    /* If the name and description are present, create new Flower and add it to the datasource */
-    fun insertFlower(flowerName: String?) {
-        if (flowerName == null) {
-            return
-        }
-
-        val image = dataSource.getRandomFlowerImageAsset()
-        val newFlower = Card(
-            Random.nextLong(),
-            flowerName,
-            image
-        )
-
-        dataSource.addFlower(newFlower)
+    fun drawCard() {
+        dataSource.drawCard()
     }
 }
 
