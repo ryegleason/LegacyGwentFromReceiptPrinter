@@ -1,6 +1,6 @@
 package com.example.recyclersample.data
 
-import com.example.recyclersample.data.model.LoggedInUser
+import com.example.recyclersample.data.model.ConnectionInfo
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -10,7 +10,7 @@ import com.example.recyclersample.data.model.LoggedInUser
 class LoginRepository(val dataSource: LoginDataSource) {
 
     // in-memory cache of the loggedInUser object
-    var user: LoggedInUser? = null
+    var user: ConnectionInfo? = null
         private set
 
     val isLoggedIn: Boolean
@@ -22,14 +22,14 @@ class LoginRepository(val dataSource: LoginDataSource) {
         user = null
     }
 
-    fun logout() {
+    fun logout(connectionInfo: ConnectionInfo) {
         user = null
-        dataSource.logout()
+        dataSource.logout(connectionInfo)
     }
 
-    fun login(username: String, password: String): Result<LoggedInUser> {
+    fun login(ip: String, port: String): Result<ConnectionInfo> {
         // handle login
-        val result = dataSource.login(username, password)
+        val result = dataSource.login(ip, port)
 
         if (result is Result.Success) {
             setLoggedInUser(result.data)
@@ -38,8 +38,8 @@ class LoginRepository(val dataSource: LoginDataSource) {
         return result
     }
 
-    private fun setLoggedInUser(loggedInUser: LoggedInUser) {
-        this.user = loggedInUser
+    private fun setLoggedInUser(connectionInfo: ConnectionInfo) {
+        this.user = connectionInfo
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
     }

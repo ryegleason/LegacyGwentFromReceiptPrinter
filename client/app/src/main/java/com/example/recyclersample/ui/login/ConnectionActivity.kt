@@ -24,58 +24,57 @@ class ConnectionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_connection)
 
-        val username = findViewById<EditText>(R.id.username)
-        val password = findViewById<EditText>(R.id.password)
+        val ip = findViewById<EditText>(R.id.ip)
+        val port = findViewById<EditText>(R.id.port)
         val login = findViewById<Button>(R.id.login)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
 
-        loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
+        loginViewModel.loginFormState.observe(this@ConnectionActivity, Observer {
             val loginState = it ?: return@Observer
 
             // disable login button unless both username / password is valid
             login.isEnabled = loginState.isDataValid
 
-            if (loginState.usernameError != null) {
-                username.error = getString(loginState.usernameError)
+            if (loginState.ipError != null) {
+                ip.error = getString(loginState.ipError)
             }
-            if (loginState.passwordError != null) {
-                password.error = getString(loginState.passwordError)
+            if (loginState.portError != null) {
+                port.error = getString(loginState.portError)
             }
         })
 
-        loginViewModel.loginResult.observe(this@LoginActivity, Observer {
+        loginViewModel.loginResult.observe(this@ConnectionActivity, Observer {
             val loginResult = it ?: return@Observer
 
             loading.visibility = View.GONE
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
             }
-            if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
+            if (loginResult.success == true) {
+                //Complete and destroy login activity once successful
+                finish()
+                updateUiWithSuccess()
+                setResult(Activity.RESULT_OK)
             }
-            setResult(Activity.RESULT_OK)
-
-            //Complete and destroy login activity once successful
-            finish()
         })
 
-        username.afterTextChanged {
+        ip.afterTextChanged {
             loginViewModel.loginDataChanged(
-                username.text.toString(),
-                password.text.toString()
+                ip.text.toString(),
+                port.text.toString()
             )
         }
 
-        password.apply {
+        port.apply {
             afterTextChanged {
                 loginViewModel.loginDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
+                    ip.text.toString(),
+                    port.text.toString()
                 )
             }
 
@@ -83,8 +82,8 @@ class ConnectionActivity : AppCompatActivity() {
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
                         loginViewModel.login(
-                            username.text.toString(),
-                            password.text.toString()
+                            ip.text.toString(),
+                            port.text.toString()
                         )
                 }
                 false
@@ -92,18 +91,16 @@ class ConnectionActivity : AppCompatActivity() {
 
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+                loginViewModel.login(ip.text.toString(), port.text.toString())
             }
         }
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome)
-        val displayName = model.displayName
+    private fun updateUiWithSuccess() {
         // TODO : initiate successful logged in experience
         Toast.makeText(
             applicationContext,
-            "$welcome $displayName",
+            getString(R.string.welcome),
             Toast.LENGTH_LONG
         ).show()
     }
