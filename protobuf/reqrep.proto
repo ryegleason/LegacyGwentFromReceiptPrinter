@@ -15,6 +15,8 @@ message Move {
   UUID card_uuid = 1;
   Zone source_zone = 2;
   Zone target_zone = 3;
+  uint32 num_down = 4;
+  bool from_top = 5;
 }
 
 message Req {
@@ -27,9 +29,9 @@ message Req {
     SELECT_DECK = 4;
   }
   ReqType req_type = 2;
-  Move move = 3;
-  uint32 num_down = 4;
-  bool from_top = 5;
+  Zone draw_from = 3;
+  Move move = 4;
+  uint32 deck_index = 5;
 }
 
 message Rep {
@@ -41,9 +43,8 @@ message Rep {
 
 message DecksInfo {
   message DeckInfo {
-    UUID uuid = 1;
-    string name = 2;
-    string game = 3;
+    string name = 1;
+    string game = 2;
   }
   repeated DeckInfo decks = 1;
 }
@@ -51,5 +52,5 @@ message DecksInfo {
 message Cards {
   repeated UUID card_uuids = 1;
   repeated bytes images = 2;
-  repeated uint32 imageIndices = 3;
+  repeated uint32 image_indices = 3;
 }

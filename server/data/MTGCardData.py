@@ -35,7 +35,7 @@ class MTGCardData(CardData):
 
     def get_artwork(self) -> Image:
         if self.artwork is None:
-            art_path = os.path.join(self.art_folder, self.name + ".png")
+            art_path = os.path.join(self.art_folder, self.name.replace("//", "&&") + ".png")
             if os.path.isfile(art_path):
                 self.artwork = Image.open(art_path)
             else:
@@ -54,7 +54,7 @@ class MTGCardData(CardData):
 
     def get_card_image(self) -> Image:
         if self.card_image is None:
-            image_path = os.path.join(self.image_folder, self.name + ".png")
+            image_path = os.path.join(self.image_folder, self.name.replace("//", "&&") + ".png")
             if os.path.isfile(image_path):
                 self.card_image = Image.open(image_path)
             else:
