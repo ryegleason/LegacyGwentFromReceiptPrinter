@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Downloaded images
+download/
+
+# Generated protobufs
+proto/

@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+enum Zone {
+  DECK = 0;
+  HAND = 1;
+  PLAYED = 2;
+}
+
+message UUID {
+  fixed64 first64 = 1;
+  fixed64 second64 = 2;
+}
+
+message Move {
+  UUID card_uuid = 1;
+  Zone source_zone = 2;
+  Zone target_zone = 3;
+}
+
+message Req {
+  UUID user_uuid = 1;
+  enum ReqType {
+    SHUFFLE = 0;
+    MOVE = 1;
+    DRAW = 2;
+    DECKS_LIST = 3;
+    SELECT_DECK = 4;
+  }
+  ReqType req_type = 2;
+  Move move = 3;
+  uint32 num_down = 4;
+  bool from_top = 5;
+}
+
+message Rep {
+  bool success = 1;
+  DecksInfo decks_info = 2;
+  Cards new_cards = 3;
+  repeated Move moves = 4;
+}
+
+message DecksInfo {
+  message DeckInfo {
+    UUID uuid = 1;
+    string name = 2;
+    string game = 3;
+  }
+  repeated DeckInfo decks = 1;
+}
+
+message Cards {
+  repeated UUID card_uuids = 1;
+  repeated bytes images = 2;
+  repeated uint32 imageIndices = 3;
+}
