@@ -45,7 +45,7 @@ while True:
     elif proto_request.req_type == reqrep_pb2.Req.ReqType.SHUFFLE:
         proto_response = user_deck_managers[user_uuid].shuffle()
     elif proto_request.req_type == reqrep_pb2.Req.ReqType.DRAW:
-        proto_response = user_deck_managers[user_uuid].draw(proto_request.draw_from)
+        proto_response = user_deck_managers[user_uuid].draw(proto_request.draw_to)
     elif proto_request.req_type == reqrep_pb2.Req.ReqType.MOVE:
         proto_response = user_deck_managers[user_uuid].move(proto_request.move)
     else:

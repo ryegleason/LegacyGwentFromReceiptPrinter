@@ -1,9 +1,10 @@
 syntax = "proto3";
 
 enum Zone {
-  DECK = 0;
+  NONE = 0;
   HAND = 1;
   PLAYED = 2;
+  DECK = 3;
 }
 
 message UUID {
@@ -29,7 +30,7 @@ message Req {
     SELECT_DECK = 4;
   }
   ReqType req_type = 2;
-  Zone draw_from = 3;
+  Zone draw_to = 3;
   Move move = 4;
   uint32 deck_index = 5;
 }

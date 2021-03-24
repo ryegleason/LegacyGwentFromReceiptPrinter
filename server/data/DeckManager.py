@@ -13,7 +13,7 @@ class DeckManager:
     def shuffle(self) -> Rep:
         pass
 
-    def draw(self, draw_from: Zone) -> Rep:
+    def draw(self, draw_to: Zone) -> Rep:
         pass
 
     def move(self, move: Move) -> Rep:
