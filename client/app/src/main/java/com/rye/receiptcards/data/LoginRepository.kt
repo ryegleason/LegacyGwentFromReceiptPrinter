@@ -1,13 +1,14 @@
 package com.rye.receiptcards.data
 
 import com.rye.receiptcards.data.model.ConnectionInfo
+import java.io.IOException
 
 /**
  * Class that requests authentication and user information from the remote data source and
  * maintains an in-memory cache of login status and user credentials information.
  */
 
-class LoginRepository(val dataSource: LoginDataSource) {
+class LoginRepository {
 
     // in-memory cache of the loggedInUser object
     var user: ConnectionInfo? = null
@@ -22,15 +23,23 @@ class LoginRepository(val dataSource: LoginDataSource) {
         user = null
     }
 
-    fun login(ip: String, port: String): Result<ConnectionInfo> {
+    suspend fun login(ip: String, port: String): Result<ConnectionInfo> {
         // handle login
-        val result = dataSource.login(ip, port)
-
-        if (result is Result.Success) {
-            setLoggedInUser(result.data)
+        val serverPort = if (port.isBlank()) {
+            27068
+        } else {
+            port.toInt()
         }
 
-        return result
+        return try {
+            val connectionInfo = ConnectionInfo("$ip:$serverPort")
+            connectionInfo.connect()
+            setLoggedInUser(connectionInfo)
+            Result.Success(connectionInfo)
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Result.Error(IOException("Error logging in", e))
+        }
     }
 
     private fun setLoggedInUser(connectionInfo: ConnectionInfo) {

@@ -5,10 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import android.util.Patterns
 import androidx.core.text.isDigitsOnly
+import androidx.lifecycle.viewModelScope
 import com.rye.receiptcards.data.LoginRepository
 import com.rye.receiptcards.data.Result
 
 import com.rye.receiptcards.R
+import kotlinx.coroutines.launch
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
@@ -20,12 +22,15 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
     fun login(ip: String, port: String) {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(ip, port)
+        viewModelScope.launch {
+            val result = loginRepository.login(ip, port)
 
-        if (result is Result.Success) {
-            _loginResult.value = LoginResult(success = true)
-        } else {
-            _loginResult.value = LoginResult(error = R.string.login_failed)
+            if (result is Result.Success) {
+                _loginResult.value = LoginResult(success = true)
+            } else {
+                _loginResult.value = LoginResult(error = R.string.login_failed)
+                println(result)
+            }
         }
     }
 
@@ -40,7 +45,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     }
 
     private fun isIPValid(ip: String): Boolean {
-        return Patterns.IP_ADDRESS.matcher(ip).matches() || Patterns.WEB_URL.matcher(ip).matches()
+        return Patterns.IP_ADDRESS.matcher(ip).matches() || Patterns.WEB_URL.matcher(ip).matches() || ip == "localhost"
     }
 
     private fun isPortValid(port: String): Boolean {
