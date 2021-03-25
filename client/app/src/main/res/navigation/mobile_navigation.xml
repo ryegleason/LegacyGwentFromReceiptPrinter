@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_deck"
-        android:name="com.example.recyclersample.cardList.DeckFragment"
+        android:name="com.rye.receiptcards.cardList.DeckFragment"
         android:label="@string/title_left"
         tools:layout="@layout/fragment_deck" />
 
     <fragment
         android:id="@+id/navigation_hand"
-        android:name="com.example.recyclersample.cardList.HandFragment"
+        android:name="com.rye.receiptcards.cardList.HandFragment"
         android:label="@string/title_center"
         tools:layout="@layout/fragment_hand" />
 
     <fragment
         android:id="@+id/navigation_played"
-        android:name="com.example.recyclersample.cardList.PlayedFragment"
+        android:name="com.rye.receiptcards.cardList.PlayedFragment"
         android:label="@string/title_right"
         tools:layout="@layout/fragment_played" />
 </navigation>
