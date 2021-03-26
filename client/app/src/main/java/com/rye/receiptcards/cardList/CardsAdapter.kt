@@ -32,7 +32,7 @@ class CardsAdapter(private val onClick: (Card) -> Unit) :
     /* ViewHolder for Flower, takes in the inflated view and the onClick behavior. */
     class FlowerViewHolder(itemView: View, val onClick: (Card) -> Unit) :
         RecyclerView.ViewHolder(itemView) {
-        private val flowerImageView: ImageView = itemView.findViewById(R.id.flower_image)
+        private val cardImageView: ImageView = itemView.findViewById(R.id.card_image)
         private var currentCard: Card? = null
 
         init {
@@ -43,13 +43,13 @@ class CardsAdapter(private val onClick: (Card) -> Unit) :
             }
         }
 
-        /* Bind flower name and image. */
+        /* Bind card name and image. */
         fun bind(card: Card) {
             currentCard = card
             if (card.image != null) {
-                flowerImageView.setImageResource(card.image)
+                cardImageView.setImageResource(card.image)
             } else {
-                flowerImageView.setImageResource(R.drawable.ire)
+                cardImageView.setImageResource(R.drawable.ire)
             }
         }
     }
@@ -57,7 +57,7 @@ class CardsAdapter(private val onClick: (Card) -> Unit) :
     /* Creates and inflates view and return FlowerViewHolder. */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlowerViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.flower_item, parent, false)
+            .inflate(R.layout.card_item, parent, false)
         return FlowerViewHolder(view, onClick)
     }
 

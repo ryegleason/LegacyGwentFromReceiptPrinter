@@ -18,11 +18,15 @@ package com.rye.receiptcards.cardList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.rye.receiptcards.data.DataSource
+import com.rye.receiptcards.data.CardManager
 
-class DeckViewModel(val dataSource: DataSource) : ViewModel() {
+class DeckViewModel(val cardManager: CardManager) : ViewModel() {
 
-    val deck = dataSource.getDeck()
+    val deck = cardManager.deckCards
+
+    fun shuffle() {
+        cardManager.shuffle()
+    }
 
 }
 
@@ -32,7 +36,7 @@ class DeckViewModelFactory : ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(DeckViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return DeckViewModel(
-                dataSource = DataSource.getDataSource()
+                cardManager = CardManager.getDataSource()
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

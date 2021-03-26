@@ -24,9 +24,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
-import com.rye.receiptcards.handDetail.HandDetailActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.rye.receiptcards.cardDetail.CardDetailActivity
 import com.rye.receiptcards.R
+import com.rye.receiptcards.cardDetail.CARD_ID
+import com.rye.receiptcards.cardDetail.FROM_ZONE
 import com.rye.receiptcards.data.Card
+import com.rye.receiptcards.proto.Reqrep
 
 class DeckFragment : Fragment() {
     private val deckViewModel by viewModels<DeckViewModel> {
@@ -41,20 +45,19 @@ class DeckFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val root = inflater.inflate(R.layout.fragment_deck, container, false)
 
-        /* Instantiates headerAdapter and flowersAdapter. Both adapters are added to concatAdapter.
-        which displays the contents sequentially */
-        val flowersAdapter = CardsAdapter { flower -> adapterOnClick(flower) }
+        val cardsAdapter = CardsAdapter { card -> adapterOnClick(card) }
 
         val recyclerView: RecyclerView = root.findViewById(R.id.recycler_view)
-        recyclerView.adapter = flowersAdapter
+        val shuffle: FloatingActionButton = root.findViewById(R.id.shuffle)
+
+        recyclerView.adapter = cardsAdapter
 
         deckViewModel.deck.observe(viewLifecycleOwner, {
             it?.let {
-                flowersAdapter.submitList(it as MutableList<Card>)
+                cardsAdapter.submitList(it as MutableList<Card>)
             }
         })
 
-        val shuffle: View = root.findViewById(R.id.shuffle)
         shuffle.setOnClickListener {
             shuffleOnClick()
         }
@@ -64,13 +67,14 @@ class DeckFragment : Fragment() {
 
     /* Opens FlowerDetailActivity when RecyclerView item is clicked. */
     private fun adapterOnClick(card: Card) {
-        val intent = Intent(context, HandDetailActivity()::class.java)
+        val intent = Intent(context, CardDetailActivity()::class.java)
         intent.putExtra(CARD_ID, card.id)
+        intent.putExtra(FROM_ZONE, Reqrep.Zone.DECK)
         startActivity(intent)
     }
 
     /* Adds flower to flowerList when FAB is clicked. */
     private fun shuffleOnClick() {
-        // TODO implement
+        deckViewModel.shuffle()
     }
 }

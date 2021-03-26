@@ -23,7 +23,7 @@
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".addFlower.AddFlowerActivity" />
-        <activity android:name=".handDetail.HandDetailActivity" />
+        <activity android:name=".cardDetail.CardDetailActivity" />
     </application>
 
 </manifest>

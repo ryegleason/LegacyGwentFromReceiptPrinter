@@ -18,27 +18,31 @@ package com.rye.receiptcards.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.rye.receiptcards.proto.Reqrep
 import java.util.*
 
-enum class Zone {
-    DECK,HAND,PLAYED
-}
 
 /* Handles operations on cardLiveData and holds details about it. */
-class DataSource {
-    private val initialCardList = flowerList()
-    private val deckCards = MutableLiveData(initialCardList)
-    private val handCards = MutableLiveData<List<Card>>()
-    private val playedCards = MutableLiveData<List<Card>>()
+class CardManager {
 
-    fun drawCard() {
-        val currentList = deckCards.value
+    private val _cardForID = MutableLiveData<Map<UUID, Card>>()
+    private val _deckCards = MutableLiveData<List<Card>>()
+    private val _handCards = MutableLiveData<List<Card>>()
+    private val _playedCards = MutableLiveData<List<Card>>()
+
+    val cardForID: LiveData<Map<UUID, Card>> = _cardForID
+    val deckCards: LiveData<List<Card>> = _deckCards
+    val handCards: LiveData<List<Card>> = _deckCards
+    val playedCards: LiveData<List<Card>> = _deckCards
+
+    fun draw(target: Reqrep.Zone) {
+        val currentList = _deckCards.value
         if (currentList != null && currentList.isNotEmpty()) {
-            moveCard(currentList[0], Zone.DECK, Zone.HAND)
+            moveCard(currentList[0], Reqrep.Zone.DECK, Reqrep.Zone.HAND)
         }
     }
 
-    fun moveCard(card: Card, source: Zone, destination: Zone) : Boolean {
+    fun moveCard(card: Card, source: Reqrep.Zone, destination: Reqrep.Zone, fromTop: Boolean = true, cardsDown: Int = 0) : Boolean {
         if (source == destination) {
             return true
         }
@@ -51,17 +55,22 @@ class DataSource {
         }
     }
 
-    private fun zoneToList(zone: Zone) : MutableLiveData<List<Card>> {
+    fun shuffle() {
+        TODO("Implement")
+    }
+
+    private fun zoneToList(zone: Reqrep.Zone) : MutableLiveData<List<Card>> {
         return when (zone) {
-            Zone.DECK -> {
-                deckCards;
+            Reqrep.Zone.DECK -> {
+                _deckCards
             }
-            Zone.HAND -> {
-                handCards;
+            Reqrep.Zone.HAND -> {
+                _handCards
             }
-            Zone.PLAYED -> {
-                playedCards;
+            Reqrep.Zone.PLAYED -> {
+                _playedCards
             }
+            else -> MutableLiveData<List<Card>>()
         }
     }
 
@@ -90,35 +99,16 @@ class DataSource {
 
     /* Returns card given an ID. */
     fun getCardForId(id: UUID): Card? {
-        initialCardList.let { flowers ->
-            return flowers.firstOrNull{ it.id == id}
-        }
+        return _cardForID.value?.get(id)
     }
 
-    fun getDeck(): LiveData<List<Card>> {
-        return deckCards
-    }
-
-    fun getHand(): LiveData<List<Card>> {
-        return handCards
-    }
-
-    fun getPlayed(): LiveData<List<Card>> {
-        return playedCards
-    }
-
-    /* Returns a random flower asset for flowers that are added. */
-    fun getRandomFlowerImageAsset(): Int? {
-        val randomNumber = (initialCardList.indices).random()
-        return initialCardList[randomNumber].image
-    }
 
     companion object {
-        private var INSTANCE: DataSource? = null
+        private var INSTANCE: CardManager? = null
 
-        fun getDataSource(): DataSource {
-            return synchronized(DataSource::class) {
-                val newInstance = INSTANCE ?: DataSource()
+        fun getDataSource(): CardManager {
+            return synchronized(CardManager::class) {
+                val newInstance = INSTANCE ?: CardManager()
                 INSTANCE = newInstance
                 newInstance
             }

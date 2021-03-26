@@ -18,11 +18,16 @@ package com.rye.receiptcards.cardList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.rye.receiptcards.data.DataSource
+import com.rye.receiptcards.data.CardManager
+import com.rye.receiptcards.proto.Reqrep
 
-class PlayedViewModel(val dataSource: DataSource) : ViewModel() {
+class PlayedViewModel(val cardManager: CardManager) : ViewModel() {
 
-    val played = dataSource.getPlayed()
+    val played = cardManager.playedCards
+
+    fun drawToPlay(){
+        cardManager.draw(Reqrep.Zone.PLAYED)
+    }
 
 }
 
@@ -32,7 +37,7 @@ class PlayedViewModelFactory : ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(PlayedViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return PlayedViewModel(
-                dataSource = DataSource.getDataSource()
+                cardManager = CardManager.getDataSource()
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

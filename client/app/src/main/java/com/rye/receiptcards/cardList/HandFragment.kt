@@ -21,17 +21,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
-import com.rye.receiptcards.handDetail.HandDetailActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.rye.receiptcards.cardDetail.CardDetailActivity
 import com.rye.receiptcards.R
+import com.rye.receiptcards.cardDetail.CARD_ID
+import com.rye.receiptcards.cardDetail.FROM_ZONE
 import com.rye.receiptcards.data.Card
-
-const val CARD_ID = "card id"
+import com.rye.receiptcards.proto.Reqrep
 
 class HandFragment : Fragment() {
-    private val newFlowerActivityRequestCode = 1
+
     private val handViewModel by viewModels<HandViewModel> {
         HandViewModelFactory()
     }
@@ -42,23 +45,21 @@ class HandFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.fragment_hand)
         val root = inflater.inflate(R.layout.fragment_hand, container, false)
 
-        /* Instantiates headerAdapter and flowersAdapter. Both adapters are added to concatAdapter.
-        which displays the contents sequentially */
-        val flowersAdapter = CardsAdapter { flower -> adapterOnClick(flower) }
+        val cardsAdapter = CardsAdapter { card -> adapterOnClick(card) }
 
         val recyclerView: RecyclerView = root.findViewById(R.id.recycler_view)
-        recyclerView.adapter = flowersAdapter
+        val draw: FloatingActionButton = root.findViewById(R.id.draw)
+
+        recyclerView.adapter = cardsAdapter
 
         handViewModel.hand.observe(viewLifecycleOwner, {
             it?.let {
-                flowersAdapter.submitList(it as MutableList<Card>)
+                cardsAdapter.submitList(it as MutableList<Card>)
             }
         })
 
-        val draw: View = root.findViewById(R.id.draw)
         draw.setOnClickListener {
             drawOnClick()
         }
@@ -68,8 +69,9 @@ class HandFragment : Fragment() {
 
     /* Opens FlowerDetailActivity when RecyclerView item is clicked. */
     private fun adapterOnClick(card: Card) {
-        val intent = Intent(context, HandDetailActivity()::class.java)
+        val intent = Intent(context, CardDetailActivity()::class.java)
         intent.putExtra(CARD_ID, card.id)
+        intent.putExtra(FROM_ZONE, Reqrep.Zone.HAND)
         startActivity(intent)
     }
 

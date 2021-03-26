@@ -19,11 +19,11 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/flower_image"
+        android:id="@+id/card_image"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:contentDescription="@string/flower_image_content_description"
+        android:contentDescription="@string/card_image_content_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

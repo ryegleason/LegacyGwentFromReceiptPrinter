@@ -1,5 +1,6 @@
 package com.rye.receiptcards.deckselect
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -7,11 +8,14 @@ import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.rye.receiptcards.MainActivity
 import com.rye.receiptcards.R
 import com.rye.receiptcards.proto.Reqrep
 import com.rye.receiptcards.ui.login.EXTRA_DECKS_INFO
 
-class DeckSelectActivity() : AppCompatActivity() {
+const val EXTRA_DECK_RESPONSE = "com.rye.receiptcards.DECK_RESPONSE"
+
+class DeckSelectActivity : AppCompatActivity() {
 
     private lateinit var deckSelectViewModel: DeckSelectViewModel
 
@@ -95,6 +99,13 @@ class DeckSelectActivity() : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Deck get!", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun onDeckGet(deckRep: Reqrep.Rep) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra(EXTRA_DECK_RESPONSE, deckRep.toByteArray())
+        }
+        startActivity(intent)
     }
 
     private fun showFetchFailed(){

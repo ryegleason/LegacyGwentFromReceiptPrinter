@@ -14,39 +14,38 @@
  * limitations under the License.
  */
 
-package com.rye.receiptcards.handDetail
+package com.rye.receiptcards.cardDetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.rye.receiptcards.data.DataSource
+import com.rye.receiptcards.data.CardManager
 import com.rye.receiptcards.data.Card
-import com.rye.receiptcards.data.Zone
+import com.rye.receiptcards.proto.Reqrep
 import java.util.*
 
-class HandDetailViewModel(private val datasource: DataSource) : ViewModel() {
+class CardDetailViewModel(private val cardManager: CardManager) : ViewModel() {
+
+    fun getDeckSize() : Int {
+        return cardManager.deckCards.value?.size ?: 0
+    }
 
     /* Queries datasource to returns a flower that corresponds to an id. */
     fun getCardForId(id: UUID) : Card? {
-        return datasource.getCardForId(id)
+        return cardManager.getCardForId(id)
     }
 
-    fun playCard(card: Card) {
-        datasource.moveCard(card, Zone.HAND, Zone.PLAYED)
+    fun moveCard(card: Card, sourceZone: Reqrep.Zone, targetZone: Reqrep.Zone, fromTop: Boolean = true, cardsDown: Int = 0) {
+        cardManager.moveCard(card, sourceZone, targetZone, fromTop, cardsDown)
     }
-
-    fun putInDeck(card: Card) {
-        datasource.moveCard(card, Zone.HAND, Zone.DECK)
-    }
-
 }
 
-class HandDetailViewModelFactory : ViewModelProvider.Factory {
+class CardDetailViewModelFactory : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HandDetailViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(CardDetailViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return HandDetailViewModel(
-                datasource = DataSource.getDataSource()
+            return CardDetailViewModel(
+                cardManager = CardManager.getDataSource()
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
