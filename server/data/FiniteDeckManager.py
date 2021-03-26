@@ -10,13 +10,12 @@ from data.DeckManager import DeckManager
 from proto.protobuf import reqrep_pb2
 
 
-class MTGDeckManager(DeckManager):
+class FiniteDeckManager(DeckManager):
 
-    STARTING_HAND_SIZE = 7
-
-    def __init__(self, decklist):
+    def __init__(self, decklist, starting_hand_size=7):
         super().__init__()
         self.decklist = decklist
+        self.starting_hand_size = starting_hand_size
         self.decklist.sort()
         self.printer = None
         self.deck: List[Card] = []
@@ -30,7 +29,7 @@ class MTGDeckManager(DeckManager):
 
         response = reqrep_pb2.Rep()
         response.success = True
-        for i in range(self.STARTING_HAND_SIZE):
+        for i in range(self.starting_hand_size):
             response.success = response.success and self.draw(reqrep_pb2.Zone.HAND).success
 
         # Sort alphabetically, for convenience and to avoid exposing deck order

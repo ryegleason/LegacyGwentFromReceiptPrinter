@@ -5,6 +5,7 @@ import time
 
 import requests
 from PIL import Image, ImageOps, ImageEnhance
+from escpos.printer import Usb
 
 from data.CardData import CardData
 from data.SimpleCardData import SimpleCardData
@@ -22,6 +23,7 @@ def request_from_scryfall(req) -> requests.Response:
 
 
 class MTGCardData(CardData):
+    IMAGE_WIDTH = 300
 
     json_folder = os.path.join("download", "mtg", "json")
     art_folder = os.path.join("download", "mtg", "art")
@@ -45,7 +47,6 @@ class MTGCardData(CardData):
         self.artworks = {}
 
         self.name = self.response_json["name"]
-        print(name)
         self.card_image = None
 
         try:
@@ -88,22 +89,25 @@ class MTGCardData(CardData):
 
     def get_artwork(self, name, image_uri) -> Image:
         if name not in self.artworks or self.artworks[name] is None:
-            art_path = self.to_filename(self.art_folder, "png")
+            art_path = self.to_filename(self.art_folder, "png", name=name)
             if os.path.isfile(art_path):
                 self.artworks[name] = Image.open(art_path)
             else:
                 img_data = requests.get(image_uri).content
-                self.artworks[name] = Image.open(io.BytesIO(img_data))
-                new_height = int(self.IMAGE_WIDTH / self.artworks[name].width * self.artworks[name].height)
-                self.artworks[name] = self.artworks[name].resize((self.IMAGE_WIDTH, new_height))
-                self.artworks[name] = ImageOps.grayscale(self.artworks[name])
-                enhancer = ImageEnhance.Brightness(self.artworks[name])
-                self.artworks[name] = enhancer.enhance(2)
-                              
+                art = Image.open(io.BytesIO(img_data))
+                new_height = int(self.IMAGE_WIDTH / art.width * art.height)
+
+                enhancer = ImageEnhance.Contrast(art)
+                art = enhancer.enhance(2)
+
+                art = art.resize((self.IMAGE_WIDTH, new_height))
+                art = ImageOps.grayscale(art)
+                art = art.point(lambda x: 255 - (255 - x)/2)
+
                 if not os.path.isdir(self.art_folder):
                     os.makedirs(self.art_folder)
-                self.artworks[name].save(art_path)
-                time.sleep(0.1)
+                art.save(art_path)
+                self.artworks[name] = art
 
         return self.artworks[name]
 
@@ -114,8 +118,10 @@ class MTGCardData(CardData):
             uri = self.response_json["card_faces"][0]["image_uris"]["png"]
         return uri
 
-    def to_filename(self, folder, extension):
-        return os.path.join(folder, self.name.replace("//", "&&") + "." + extension)
+    def to_filename(self, folder, extension, name=None):
+        if name is None:
+            name = self.name
+        return os.path.join(folder, name.replace("//", "&&") + "." + extension)
 
     def print_self(self, printer, postfix="\n\n\n"):
         # Double-sided and split card printing
@@ -124,3 +130,9 @@ class MTGCardData(CardData):
             printer.set(align="center")
             printer.text("-" * 20 + "\n")
         self.card_data_components[-1].print_self(printer, postfix=postfix)
+
+
+if __name__ == "__main__":
+    p = Usb(0x0416, 0x5011, in_ep=0x81, out_ep=0x3)
+    hewwo = MTGCardData("Lone Rider")
+    p._raw(hewwo.raw_print)

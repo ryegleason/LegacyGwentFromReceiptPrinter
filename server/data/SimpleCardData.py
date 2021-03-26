@@ -27,9 +27,9 @@ class SimpleCardData(CardData):
         printer.text(self.name + "\n")
         printer.set(align="right")
         printer.text(self.top_right + "\n")
-        #if self.artwork is not None:
-        #    printer.set(align="center")
-        #    printer.image(img_source=self.artwork, impl="bitImageRaster")
+        if self.artwork is not None:
+            printer.set(align="center")
+            printer.image(img_source=self.artwork, impl="bitImageColumn")
         printer.text("\n")
         printer.set(align="left")
         printer.text("\n")

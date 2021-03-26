@@ -8,7 +8,7 @@ from data.Card import Card
 from data.DeckLoader import DeckLoader
 from data.DeckManager import DeckManager
 from data.MTGCardData import MTGCardData
-from data.MTGDeckManager import MTGDeckManager
+from data.FiniteDeckManager import FiniteDeckManager
 from proto.protobuf import reqrep_pb2
 
 
@@ -53,7 +53,7 @@ class MTGDeckLoader(DeckLoader):
 
                 image_index += 1
 
-        manager = MTGDeckManager(cards)
+        manager = FiniteDeckManager(cards)
         response = manager.setup()
         response.new_cards.card_uuids.extend(uuids)
         response.new_cards.image_uris.extend(image_uris)
