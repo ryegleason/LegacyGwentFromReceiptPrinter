@@ -133,3 +133,6 @@ download/
 
 # Generated protobufs
 proto/
+
+# Decklists
+decks/

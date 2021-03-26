@@ -1,6 +1,7 @@
 package com.rye.receiptcards.ui.login
 
 import android.app.Activity
+import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -16,6 +17,10 @@ import android.widget.ProgressBar
 import android.widget.Toast
 
 import com.rye.receiptcards.R
+import com.rye.receiptcards.deckselect.DeckSelectActivity
+
+const val EXTRA_DECKS_INFO = "com.rye.receiptcards.DECKS_INFO"
+
 
 class ConnectionActivity : AppCompatActivity() {
 
@@ -58,7 +63,7 @@ class ConnectionActivity : AppCompatActivity() {
             if (loginResult.success == true) {
                 //Complete and destroy login activity once successful
                 finish()
-                updateUiWithSuccess()
+                updateUiWithSuccess(loginResult)
                 setResult(Activity.RESULT_OK)
             }
         })
@@ -96,13 +101,11 @@ class ConnectionActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateUiWithSuccess() {
-        // TODO : initiate successful logged in experience
-        Toast.makeText(
-            applicationContext,
-            getString(R.string.welcome),
-            Toast.LENGTH_LONG
-        ).show()
+    private fun updateUiWithSuccess(loginResult: LoginResult) {
+        val intent = Intent(this, DeckSelectActivity::class.java).apply {
+            putExtra(EXTRA_DECKS_INFO, loginResult.decksInfo!!.toByteArray())
+        }
+        startActivity(intent)
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {

@@ -78,4 +78,10 @@
     <string name="invalid_ip">Invalid IP</string>
     <string name="invalid_port">Port must be between 0 and 65535</string>
     <string name="login_failed">"Connection failed"</string>
+
+    <string name="deck_selection">Select Deck</string>
+    <string name="game_chooser">Game type:</string>
+    <string name="deck_chooser">Deck:</string>
+    <string name="all_games">Any</string>
+    <string name="begin">Play</string>
 </resources>

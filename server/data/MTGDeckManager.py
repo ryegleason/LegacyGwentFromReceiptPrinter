@@ -13,7 +13,7 @@ class MTGDeckManager(DeckManager):
 
     STARTING_HAND_SIZE = 7
 
-    def __init__(self, decklist: List[Card]):
+    def __init__(self, decklist):
         super().__init__()
         self.decklist = decklist
         self.decklist.sort()
@@ -28,20 +28,23 @@ class MTGDeckManager(DeckManager):
         self.played = []
 
         response = reqrep_pb2.Rep()
+        response.success = True
         for i in range(self.STARTING_HAND_SIZE):
-            response.success = response.success and self.draw(reqrep_pb2.Zone.HAND)
+            response.success = response.success and self.draw(reqrep_pb2.Zone.HAND).success
 
         # Sort alphabetically, for convenience and to avoid exposing deck order
         for card in sorted(self.deck, key=lambda c: c.card_data.name):
             move = response.moves.add()
-            move.card_uuid = util.UUID_to_proto_UUID(card.uuid)
+            util.UUID_to_proto_UUID(card.uuid, move.card_uuid)
             move.source_zone = reqrep_pb2.Zone.NONE
             move.target_zone = reqrep_pb2.Zone.DECK
         for card in self.hand:
             move = response.moves.add()
-            move.card_uuid = util.UUID_to_proto_UUID(card.uuid)
+            util.UUID_to_proto_UUID(card.uuid, move.card_uuid)
             move.source_zone = reqrep_pb2.Zone.NONE
             move.target_zone = reqrep_pb2.Zone.HAND
+
+        return response
 
     def shuffle(self) -> reqrep_pb2.Rep:
         random.shuffle(self.deck)
@@ -66,9 +69,11 @@ class MTGDeckManager(DeckManager):
             return response
 
         move = response.moves.add()
-        move.card_uuid = util.UUID_to_proto_UUID(to_draw.uuid)
+        util.UUID_to_proto_UUID(to_draw.uuid, move.card_uuid)
         move.source_zone = reqrep_pb2.Zone.DECK
         move.target_zone = draw_to
+        response.success = True
+        return response
 
     def move(self, move: reqrep_pb2.Move) -> reqrep_pb2.Rep:
         response = reqrep_pb2.Rep()

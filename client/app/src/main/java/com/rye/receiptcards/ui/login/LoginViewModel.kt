@@ -10,6 +10,8 @@ import com.rye.receiptcards.data.LoginRepository
 import com.rye.receiptcards.data.Result
 
 import com.rye.receiptcards.R
+import com.rye.receiptcards.data.model.request
+import com.rye.receiptcards.proto.Reqrep
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
@@ -26,7 +28,13 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
             val result = loginRepository.login(ip, port)
 
             if (result is Result.Success) {
-                _loginResult.value = LoginResult(success = true)
+                val response = request(Reqrep.Req.newBuilder().setReqType(Reqrep.Req.ReqType.DECKS_LIST))
+                if (response is Result.Success && response.data.success) {
+                    _loginResult.value = LoginResult(success = true, decksInfo = response.data.decksInfo)
+                } else {
+                    _loginResult.value = LoginResult(error = R.string.login_failed,)
+                    println(response)
+                }
             } else {
                 _loginResult.value = LoginResult(error = R.string.login_failed)
                 println(result)

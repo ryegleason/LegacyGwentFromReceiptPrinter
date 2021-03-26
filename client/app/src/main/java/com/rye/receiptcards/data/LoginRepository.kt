@@ -1,6 +1,6 @@
 package com.rye.receiptcards.data
 
-import com.rye.receiptcards.data.model.ConnectionInfo
+import com.rye.receiptcards.data.model.connect
 import java.io.IOException
 
 /**
@@ -10,20 +10,10 @@ import java.io.IOException
 
 class LoginRepository {
 
-    // in-memory cache of the loggedInUser object
-    var user: ConnectionInfo? = null
-        private set
+    var isLoggedIn = false
 
-    val isLoggedIn: Boolean
-        get() = user != null
 
-    init {
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
-        user = null
-    }
-
-    suspend fun login(ip: String, port: String): Result<ConnectionInfo> {
+    suspend fun login(ip: String, port: String): Result<Boolean> {
         // handle login
         val serverPort = if (port.isBlank()) {
             27068
@@ -32,19 +22,12 @@ class LoginRepository {
         }
 
         return try {
-            val connectionInfo = ConnectionInfo("$ip:$serverPort")
-            connectionInfo.connect()
-            setLoggedInUser(connectionInfo)
-            Result.Success(connectionInfo)
+            connect("$ip:$serverPort")
+            isLoggedIn = true
+            Result.Success(isLoggedIn)
         } catch (e: Throwable) {
             e.printStackTrace()
             Result.Error(IOException("Error logging in", e))
         }
-    }
-
-    private fun setLoggedInUser(connectionInfo: ConnectionInfo) {
-        this.user = connectionInfo
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
     }
 }

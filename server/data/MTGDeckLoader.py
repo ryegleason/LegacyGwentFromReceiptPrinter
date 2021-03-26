@@ -26,7 +26,9 @@ class MTGDeckLoader(DeckLoader):
 
     def load_deck(self, name: str) -> (DeckManager, reqrep_pb2.Rep):
         cards = []
-        proto_cards = reqrep_pb2.Cards()
+        uuids = []
+        images = []
+        image_indices = []
         image_index = 0
 
         with open(os.path.join(self.deck_dir, name + ".txt"), "r") as f:
@@ -35,25 +37,35 @@ class MTGDeckLoader(DeckLoader):
                     break
                 copies = int(line.split(" ")[0])
                 # Split and double sided card handling
-                name = line[line.index(" "):].replace("/", " // ")
+                name = line[line.index(" "):].replace("/", " // ").strip()
 
                 card_data = MTGCardData(name)
 
                 # Convert image to bytes
                 img_byte_arr = io.BytesIO()
                 card_data.get_card_image().save(img_byte_arr, format='PNG')
-                proto_cards.images.append(img_byte_arr.getvalue())
+                images.append(img_byte_arr.getvalue())
 
                 for i in range(copies):
                     new_card = Card(card_data)
                     cards.append(new_card)
-                    proto_cards.card_uuids.append(util.UUID_to_proto_UUID(new_card.uuid))
-                    proto_cards.image_indices.append(image_index)
+                    new_uuid = reqrep_pb2.UUID()
+                    util.UUID_to_proto_UUID(new_card.uuid, new_uuid)
+                    uuids.append(new_uuid)
+
+                    image_indices.append(image_index)
 
                 image_index += 1
 
         manager = MTGDeckManager(cards)
         response = manager.setup()
-        response.new_cards = proto_cards
+        response.new_cards.card_uuids.extend(uuids)
+        response.new_cards.images.extend(images)
+        response.new_cards.image_indices.extend(image_indices)
         return manager, response
 
+
+if __name__ == "__main__":
+    loader = MTGDeckLoader(r"G:\Documents\MixedProjects\LegacyGwentFromReceiptPrinter\server\decks\mtg")
+    print(loader.get_deck_names())
+    loader.load_deck(loader.get_deck_names()[0])
