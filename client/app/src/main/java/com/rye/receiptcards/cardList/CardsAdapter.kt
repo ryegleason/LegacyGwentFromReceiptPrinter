@@ -46,11 +46,7 @@ class CardsAdapter(private val onClick: (Card) -> Unit) :
         /* Bind card name and image. */
         fun bind(card: Card) {
             currentCard = card
-            if (card.image != null) {
-                cardImageView.setImageResource(card.image)
-            } else {
-                cardImageView.setImageResource(R.drawable.ire)
-            }
+            cardImageView.setImageBitmap(card.image)
         }
     }
 

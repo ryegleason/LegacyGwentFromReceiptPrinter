@@ -18,14 +18,18 @@ package com.rye.receiptcards.cardList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.rye.receiptcards.data.CardManager
+import kotlinx.coroutines.launch
 
 class DeckViewModel(val cardManager: CardManager) : ViewModel() {
 
     val deck = cardManager.deckCards
 
     fun shuffle() {
-        cardManager.shuffle()
+        viewModelScope.launch {
+            cardManager.shuffle()
+        }
     }
 
 }

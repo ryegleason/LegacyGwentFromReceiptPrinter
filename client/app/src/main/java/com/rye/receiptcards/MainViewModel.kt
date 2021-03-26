@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.rye.receiptcards.cardList
+package com.rye.receiptcards
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -23,23 +23,22 @@ import com.rye.receiptcards.data.CardManager
 import com.rye.receiptcards.proto.Reqrep
 import kotlinx.coroutines.launch
 
-class HandViewModel(val cardManager: CardManager) : ViewModel() {
+class MainViewModel(val cardManager: CardManager) : ViewModel() {
 
-    val hand = cardManager.handCards
-
-    fun drawCard() {
+    fun processResponse(response: Reqrep.Rep) {
         viewModelScope.launch {
-            cardManager.draw(Reqrep.Zone.HAND)
+            cardManager.processResponse(response)
         }
     }
+
 }
 
-class HandViewModelFactory : ViewModelProvider.Factory {
+class MainViewModelFactory : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HandViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return HandViewModel(
+            return MainViewModel(
                 cardManager = CardManager.getDataSource()
             ) as T
         }

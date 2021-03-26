@@ -23,7 +23,6 @@ import android.widget.ImageView
 import android.widget.NumberPicker
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModel
 import com.rye.receiptcards.R
 import com.rye.receiptcards.proto.Reqrep
 import java.util.*
@@ -80,14 +79,14 @@ class CardDetailActivity : AppCompatActivity() {
             }
         }
 
-        /* If currentCardId is not null, get corresponding flower and set name, image and
+        /* If currentCardId is not null, get corresponding card and set name, image and
         description */
         currentCardId?.let {
             val currentCard = cardDetailViewModel.getCardForId(it)
             if (currentCard?.image == null) {
                 cardImage.setImageResource(R.drawable.ire)
             } else {
-                cardImage.setImageResource(currentCard.image)
+                cardImage.setImageBitmap(currentCard.image)
             }
 
             playButton.setOnClickListener {

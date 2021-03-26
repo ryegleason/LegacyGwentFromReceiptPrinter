@@ -21,14 +21,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.rye.receiptcards.cardDetail.CardDetailActivity
 import com.rye.receiptcards.R
 import com.rye.receiptcards.cardDetail.CARD_ID
+import com.rye.receiptcards.cardDetail.CardDetailActivity
 import com.rye.receiptcards.cardDetail.FROM_ZONE
 import com.rye.receiptcards.data.Card
 import com.rye.receiptcards.proto.Reqrep

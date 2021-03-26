@@ -16,9 +16,14 @@
 
 package com.rye.receiptcards.data
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.rye.receiptcards.data.model.request
 import com.rye.receiptcards.proto.Reqrep
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -30,36 +35,93 @@ class CardManager {
     private val _handCards = MutableLiveData<List<Card>>()
     private val _playedCards = MutableLiveData<List<Card>>()
 
-    val cardForID: LiveData<Map<UUID, Card>> = _cardForID
     val deckCards: LiveData<List<Card>> = _deckCards
     val handCards: LiveData<List<Card>> = _deckCards
     val playedCards: LiveData<List<Card>> = _deckCards
 
-    fun draw(target: Reqrep.Zone) {
-        val currentList = _deckCards.value
-        if (currentList != null && currentList.isNotEmpty()) {
-            moveCard(currentList[0], Reqrep.Zone.DECK, Reqrep.Zone.HAND)
+    suspend fun draw(target: Reqrep.Zone) {
+        val response = request(Reqrep.Req.newBuilder().setReqType(Reqrep.Req.ReqType.DRAW).setDrawTo(target))
+        if (response is Result.Success) {
+            processResponse(response.data)
         }
     }
 
-    fun moveCard(card: Card, source: Reqrep.Zone, destination: Reqrep.Zone, fromTop: Boolean = true, cardsDown: Int = 0) : Boolean {
-        if (source == destination) {
-            return true
-        }
-
-        return if (removeCard(card, zoneToList(source))) {
-            addCard(card, zoneToList(destination))
-            true
-        } else {
-            false
+    suspend fun moveCard(card: Card, source: Reqrep.Zone, destination: Reqrep.Zone, fromTop: Boolean = true, cardsDown: Int = 0) {
+        val requestBuilder = Reqrep.Req.newBuilder()
+        requestBuilder.reqType = Reqrep.Req.ReqType.MOVE
+        requestBuilder.moveBuilder.cardUuid = UUIDToProtoUUID(card.id)
+        requestBuilder.moveBuilder.sourceZone = source
+        requestBuilder.moveBuilder.targetZone = destination
+        requestBuilder.moveBuilder.fromTop = fromTop
+        requestBuilder.moveBuilder.numDown = cardsDown
+        val response = request(requestBuilder)
+        if (response is Result.Success) {
+            processResponse(response.data)
         }
     }
 
-    fun shuffle() {
-        TODO("Implement")
+    suspend fun shuffle() {
+        val response = request(Reqrep.Req.newBuilder().setReqType(Reqrep.Req.ReqType.SHUFFLE))
+        if (response is Result.Success) {
+            processResponse(response.data)
+        }
     }
 
-    private fun zoneToList(zone: Reqrep.Zone) : MutableLiveData<List<Card>> {
+    suspend fun processResponse(response: Reqrep.Rep) {
+        if (response.success) {
+            // Add new cards
+            if (response.newCards.imagesCount > 0) {
+
+                // Load images (may be slow)
+                val images = withContext(Dispatchers.Default) {
+                    Array<Bitmap>(response.newCards.imagesCount) { index ->
+                        return@Array response.newCards.getImages(index).let {
+                            BitmapFactory.decodeByteArray(it.toByteArray(), 0, it.size())
+                        }
+                    }
+                }
+
+                val updatedMap = _cardForID.value?.toMutableMap() ?: mutableMapOf()
+
+                for (index in 1..response.newCards.cardUuidsCount) {
+                    val uuid = protoUUIDToUUID(response.newCards.getCardUuids(index))
+                    val newCard = Card(uuid, images[response.newCards.getImageIndices(index)])
+                    updatedMap[uuid] = newCard
+                }
+
+                _cardForID.postValue(updatedMap)
+            }
+
+            val updatedMap = _cardForID.value?.toMutableMap() ?: mutableMapOf()
+            var updateMapFlag = false
+
+            for (move in response.movesList) {
+                val targetCard = getCardForId(protoUUIDToUUID(move.cardUuid))
+                targetCard?.let {
+                    val sourceList = zoneToList(move.sourceZone)
+                    if (sourceList != null) {
+                        removeCardFromAll(it, sourceList)
+                    }
+
+                    if (move.targetZone == Reqrep.Zone.NONE) {
+                        updatedMap.remove(targetCard.id)
+                        updateMapFlag = true
+                    } else {
+                        val targetList = zoneToList(move.targetZone)
+                        if (targetList != null) {
+                            addCard(targetCard, targetList)
+                        }
+                    }
+                }
+            }
+
+            if (updateMapFlag) {
+                _cardForID.postValue(updatedMap)
+            }
+        }
+    }
+
+    private fun zoneToList(zone: Reqrep.Zone) : MutableLiveData<List<Card>>? {
         return when (zone) {
             Reqrep.Zone.DECK -> {
                 _deckCards
@@ -70,7 +132,7 @@ class CardManager {
             Reqrep.Zone.PLAYED -> {
                 _playedCards
             }
-            else -> MutableLiveData<List<Card>>()
+            else -> null
         }
     }
 
@@ -83,6 +145,26 @@ class CardManager {
             updatedList.add(0, card)
             cardList.postValue(updatedList)
         }
+    }
+
+    private fun removeCardFromAll(card: Card, firstList: MutableLiveData<List<Card>>): Boolean {
+        if (!removeCard(card, firstList)) {
+            return when (firstList) {
+                _deckCards -> {
+                    removeCard(card, _handCards) || removeCard(card, _playedCards)
+                }
+                _handCards -> {
+                    removeCard(card, _deckCards) || removeCard(card, _playedCards)
+                }
+                _playedCards -> {
+                    removeCard(card, _handCards) || removeCard(card, _deckCards)
+                }
+                else -> {
+                    removeCard(card, _handCards) || removeCard(card, _deckCards) || removeCard(card, _playedCards)
+                }
+            }
+        }
+        return true
     }
 
     private fun removeCard(card: Card, cardList: MutableLiveData<List<Card>>): Boolean {

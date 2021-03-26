@@ -16,11 +16,11 @@
 
 package com.rye.receiptcards.data
 
+import android.graphics.Bitmap
 import androidx.annotation.DrawableRes
 import java.util.*
 
 data class Card(
     val id: UUID,
-    @DrawableRes
-    val image: Int?
+    val image: Bitmap
 )

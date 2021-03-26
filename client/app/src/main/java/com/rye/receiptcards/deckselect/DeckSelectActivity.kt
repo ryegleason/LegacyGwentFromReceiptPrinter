@@ -95,8 +95,7 @@ class DeckSelectActivity : AppCompatActivity() {
             if (!loginResult.success) {
                 showFetchFailed()
             } else {
-                // TODO put something here
-                Toast.makeText(applicationContext, "Deck get!", Toast.LENGTH_SHORT).show()
+                onDeckGet(loginResult)
             }
         })
     }

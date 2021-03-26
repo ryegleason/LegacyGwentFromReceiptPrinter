@@ -18,15 +18,19 @@ package com.rye.receiptcards.cardList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.rye.receiptcards.data.CardManager
 import com.rye.receiptcards.proto.Reqrep
+import kotlinx.coroutines.launch
 
 class PlayedViewModel(val cardManager: CardManager) : ViewModel() {
 
     val played = cardManager.playedCards
 
     fun drawToPlay(){
-        cardManager.draw(Reqrep.Zone.PLAYED)
+        viewModelScope.launch {
+            cardManager.draw(Reqrep.Zone.PLAYED)
+        }
     }
 
 }

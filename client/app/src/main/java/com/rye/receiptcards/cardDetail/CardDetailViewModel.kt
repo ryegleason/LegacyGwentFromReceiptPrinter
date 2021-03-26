@@ -21,6 +21,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.rye.receiptcards.data.CardManager
 import com.rye.receiptcards.data.Card
 import com.rye.receiptcards.proto.Reqrep
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class CardDetailViewModel(private val cardManager: CardManager) : ViewModel() {
@@ -35,7 +37,9 @@ class CardDetailViewModel(private val cardManager: CardManager) : ViewModel() {
     }
 
     fun moveCard(card: Card, sourceZone: Reqrep.Zone, targetZone: Reqrep.Zone, fromTop: Boolean = true, cardsDown: Int = 0) {
-        cardManager.moveCard(card, sourceZone, targetZone, fromTop, cardsDown)
+        GlobalScope.launch {
+            cardManager.moveCard(card, sourceZone, targetZone, fromTop, cardsDown)
+        }
     }
 }
 
