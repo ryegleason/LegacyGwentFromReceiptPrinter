@@ -5,7 +5,7 @@ from escpos.printer import Dummy
 
 class CardData:
 
-    IMAGE_WIDTH = 100
+    IMAGE_WIDTH = 50
 
     def __init__(self):
         printer = Dummy()
@@ -15,7 +15,7 @@ class CardData:
     def get_card_image_uri(self) -> str:
         pass
 
-    def print_self(self, printer, postfix="\n\n\n\n"):
+    def print_self(self, printer, postfix="\n\n\n"):
         pass
 
 

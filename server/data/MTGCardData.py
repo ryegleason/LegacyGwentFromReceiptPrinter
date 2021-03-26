@@ -4,7 +4,7 @@ import os
 import time
 
 import requests
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageEnhance
 
 from data.CardData import CardData
 from data.SimpleCardData import SimpleCardData
@@ -53,7 +53,7 @@ class MTGCardData(CardData):
 
             try:
                 art = self.get_artwork(self.name, self.response_json["image_uris"]["art_crop"])
-            except KeyError:
+            except KeyError as e:
                 # Different art for each face
                 art = None
 
@@ -81,23 +81,25 @@ class MTGCardData(CardData):
         if image is None:
             try:
                 image = self.get_artwork(face_json["name"], face_json["image_uris"]["art_crop"])
-            except KeyError:
+            except KeyError as e:
                 pass
 
-        return SimpleCardData(face_json["name"], top_right, face_json["type_line"], face_json["oracle_text"], "", bottom_right, image)
+        return SimpleCardData(face_json["name"], top_right, face_json["type_line"].replace("—", "-"), face_json["oracle_text"], "", bottom_right, image)
 
     def get_artwork(self, name, image_uri) -> Image:
-        if self.artworks[name] is None:
+        if name not in self.artworks or self.artworks[name] is None:
             art_path = self.to_filename(self.art_folder, "png")
             if os.path.isfile(art_path):
                 self.artworks[name] = Image.open(art_path)
             else:
                 img_data = requests.get(image_uri).content
                 self.artworks[name] = Image.open(io.BytesIO(img_data))
-                self.artworks[name] = ImageOps.grayscale(self.artworks[name])
                 new_height = int(self.IMAGE_WIDTH / self.artworks[name].width * self.artworks[name].height)
                 self.artworks[name] = self.artworks[name].resize((self.IMAGE_WIDTH, new_height))
-
+                self.artworks[name] = ImageOps.grayscale(self.artworks[name])
+                enhancer = ImageEnhance.Brightness(self.artworks[name])
+                self.artworks[name] = enhancer.enhance(2)
+                              
                 if not os.path.isdir(self.art_folder):
                     os.makedirs(self.art_folder)
                 self.artworks[name].save(art_path)
@@ -115,7 +117,7 @@ class MTGCardData(CardData):
     def to_filename(self, folder, extension):
         return os.path.join(folder, self.name.replace("//", "&&") + "." + extension)
 
-    def print_self(self, printer, postfix="\n\n\n\n"):
+    def print_self(self, printer, postfix="\n\n\n"):
         # Double-sided and split card printing
         for card_data in self.card_data_components[:-1]:
             card_data.print_self(printer, postfix="\n")

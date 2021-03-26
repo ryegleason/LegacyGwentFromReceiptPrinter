@@ -1,17 +1,20 @@
 import zmq
-from escpos.printer import Dummy
+from escpos.printer import Dummy, Usb
 
 import util
 from data.MTGDeckLoader import MTGDeckLoader
 from proto.protobuf import reqrep_pb2
+import os.path
 
-printer = Dummy()
+#printer = Dummy()
+printer = Usb(0x0416, 0x5011, 4, 0x81, 0x03)
+printer.set(density=2)
 
 context = zmq.Context()
 server = context.socket(zmq.REP)
 server.bind("tcp://*:27068")
 
-deck_manager_loaders = {"mtg": MTGDeckLoader("decks/mtg")}
+deck_manager_loaders = {"mtg": MTGDeckLoader(os.path.abspath(os.path.join("decks", "mtg")))}
 user_deck_managers = {}
 
 decks_info_list = []
@@ -49,7 +52,7 @@ while True:
     else:
         proto_response.success = False
 
-    print("Response sent: \n" + str(proto_response))
+    # print("Response sent: \n" + str(proto_response))
 
-    print("Response success: " + str(proto_response.success))
+    # print("Response success: " + str(proto_response.success))
     server.send(proto_response.SerializeToString())

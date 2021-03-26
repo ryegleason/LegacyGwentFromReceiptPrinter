@@ -22,14 +22,15 @@ class SimpleCardData(CardData):
     def get_card_image_uri(self) -> str:
         pass
 
-    def print_self(self, printer, postfix="\n\n\n\n"):
+    def print_self(self, printer, postfix="\n\n\n"):
         printer.set(align="left")
         printer.text(self.name + "\n")
         printer.set(align="right")
         printer.text(self.top_right + "\n")
-        if self.artwork is not None:
-            printer.set(align="center")
-            printer.image(img_source=self.artwork, impl="bitImageRaster")
+        #if self.artwork is not None:
+        #    printer.set(align="center")
+        #    printer.image(img_source=self.artwork, impl="bitImageRaster")
+        printer.text("\n")
         printer.set(align="left")
         printer.text("\n")
         printer.text(self.typeline + "\n\n")
