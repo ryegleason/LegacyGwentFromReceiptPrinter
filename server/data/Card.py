@@ -12,3 +12,9 @@ class Card:
 
     def __lt__(self, other):
         return self.uuid < other.uuid
+
+
+class DummyCard(Card):
+
+    def __init__(self, set_uuid):
+        self.uuid = set_uuid

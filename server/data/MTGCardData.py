@@ -25,7 +25,6 @@ class MTGCardData(CardData):
 
     json_folder = os.path.join("download", "mtg", "json")
     art_folder = os.path.join("download", "mtg", "art")
-    image_folder = os.path.join("download", "mtg", "card")
 
     def __init__(self, name):
         # Get saved json, or get new json from scryfall
@@ -106,27 +105,12 @@ class MTGCardData(CardData):
 
         return self.artworks[name]
 
-    def get_card_image(self) -> Image:
-        if self.card_image is None:
-            image_path = self.to_filename(self.image_folder, "png")
-            if os.path.isfile(image_path):
-                self.card_image = Image.open(image_path)
-            else:
-                try:
-                    uri = self.response_json["image_uris"]["png"]
-                except KeyError:
-                    uri = self.response_json["card_faces"][0]["image_uris"]["png"]
-
-                img_data = requests.get(uri).content
-                self.card_image = Image.open(io.BytesIO(img_data))
-
-                if not os.path.isdir(self.image_folder):
-                    os.makedirs(self.image_folder)
-                self.card_image.save(image_path)
-                time.sleep(0.1)
-
-        return self.card_image
-
+    def get_card_image_uri(self) -> str:
+        try:
+            uri = self.response_json["image_uris"]["png"]
+        except KeyError:
+            uri = self.response_json["card_faces"][0]["image_uris"]["png"]
+        return uri
 
     def to_filename(self, folder, extension):
         return os.path.join(folder, self.name.replace("//", "&&") + "." + extension)
@@ -138,10 +122,3 @@ class MTGCardData(CardData):
             printer.set(align="center")
             printer.text("-" * 20 + "\n")
         self.card_data_components[-1].print_self(printer, postfix=postfix)
-
-
-
-if __name__ == "__main__":
-    ire_shaman = MTGCardData("Ire shaman")
-    ire_shaman.get_artwork().show()
-    ire_shaman.get_card_image().show()

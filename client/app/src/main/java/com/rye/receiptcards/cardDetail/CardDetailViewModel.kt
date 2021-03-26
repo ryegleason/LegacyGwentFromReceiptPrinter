@@ -31,7 +31,7 @@ class CardDetailViewModel(private val cardManager: CardManager) : ViewModel() {
         return cardManager.deckCards.value?.size ?: 0
     }
 
-    /* Queries datasource to returns a flower that corresponds to an id. */
+    /* Queries datasource to returns a card that corresponds to an id. */
     fun getCardForId(id: UUID) : Card? {
         return cardManager.getCardForId(id)
     }

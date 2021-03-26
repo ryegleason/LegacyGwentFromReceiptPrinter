@@ -21,8 +21,10 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.NumberPicker
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.rye.receiptcards.R
 import com.rye.receiptcards.proto.Reqrep
 import java.util.*
@@ -47,6 +49,7 @@ class CardDetailActivity : AppCompatActivity() {
         val cardImage: ImageView = findViewById(R.id.card_detail_image)
         val playButton: Button = findViewById(R.id.play_button)
         val handButton: Button = findViewById(R.id.hand_button)
+        val cardsInLabel: TextView = findViewById(R.id.cards_in_text)
         val topButton: Button = findViewById(R.id.top_button)
         val bottomButton: Button = findViewById(R.id.bottom_button)
         val numberPicker: NumberPicker = findViewById(R.id.cards_in_picker);
@@ -76,6 +79,7 @@ class CardDetailActivity : AppCompatActivity() {
                 topButton.visibility = View.GONE
                 bottomButton.visibility = View.GONE
                 numberPicker.visibility = View.GONE
+                cardsInLabel.visibility = View.GONE
             }
         }
 
@@ -83,10 +87,10 @@ class CardDetailActivity : AppCompatActivity() {
         description */
         currentCardId?.let {
             val currentCard = cardDetailViewModel.getCardForId(it)
-            if (currentCard?.image == null) {
-                cardImage.setImageResource(R.drawable.ire)
+            if (currentCard?.imageURI == null) {
+                cardImage.setImageResource(R.drawable.placeholder)
             } else {
-                cardImage.setImageBitmap(currentCard.image)
+                Glide.with(this).load(currentCard.imageURI).into(cardImage)
             }
 
             playButton.setOnClickListener {

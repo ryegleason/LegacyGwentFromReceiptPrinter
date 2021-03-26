@@ -23,16 +23,19 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.rye.receiptcards.R
 import com.rye.receiptcards.data.Card
 
 class CardsAdapter(private val onClick: (Card) -> Unit) :
-    ListAdapter<Card, CardsAdapter.FlowerViewHolder>(CardDiffCallback) {
+    ListAdapter<Card, CardsAdapter.CardViewHolder>(CardDiffCallback) {
 
-    /* ViewHolder for Flower, takes in the inflated view and the onClick behavior. */
-    class FlowerViewHolder(itemView: View, val onClick: (Card) -> Unit) :
+    private lateinit var parent: ViewGroup
+
+    /* ViewHolder for Card, takes in the inflated view and the onClick behavior. */
+    class CardViewHolder(itemView: View, val onClick: (Card) -> Unit) :
         RecyclerView.ViewHolder(itemView) {
-        private val cardImageView: ImageView = itemView.findViewById(R.id.card_image)
+        val cardImageView: ImageView = itemView.findViewById(R.id.card_image)
         private var currentCard: Card? = null
 
         init {
@@ -46,22 +49,22 @@ class CardsAdapter(private val onClick: (Card) -> Unit) :
         /* Bind card name and image. */
         fun bind(card: Card) {
             currentCard = card
-            cardImageView.setImageBitmap(card.image)
         }
     }
 
-    /* Creates and inflates view and return FlowerViewHolder. */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlowerViewHolder {
+    /* Creates and inflates view and return CardViewHolder. */
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
+        this.parent = parent
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.card_item, parent, false)
-        return FlowerViewHolder(view, onClick)
+        return CardViewHolder(view, onClick)
     }
 
     /* Gets current flower and uses it to bind view. */
-    override fun onBindViewHolder(holder: FlowerViewHolder, position: Int) {
-        val flower = getItem(position)
-        holder.bind(flower)
-
+    override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
+        val card = getItem(position)
+        holder.bind(card)
+        Glide.with(parent.rootView).load(card.imageURI).placeholder(R.drawable.placeholder).into(holder.cardImageView)
     }
 }
 

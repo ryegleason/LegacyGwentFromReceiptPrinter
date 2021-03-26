@@ -16,7 +16,7 @@ import java.io.Closeable
 import java.util.*
 
 const val REQUEST_RETRIES = 3
-const val REQUEST_TIMEOUT: Long = 20000
+const val REQUEST_TIMEOUT: Long = 5000
 
 /**
  * Maintains connection to server

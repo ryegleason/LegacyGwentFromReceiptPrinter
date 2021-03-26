@@ -50,6 +50,7 @@ class DeckFragment : Fragment() {
         val recyclerView: RecyclerView = root.findViewById(R.id.recycler_view)
         val shuffle: FloatingActionButton = root.findViewById(R.id.shuffle)
 
+        recyclerView.removeAllViews()
         recyclerView.adapter = cardsAdapter
 
         deckViewModel.deck.observe(viewLifecycleOwner, {

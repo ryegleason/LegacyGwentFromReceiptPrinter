@@ -19,7 +19,7 @@ class SimpleCardData(CardData):
         self.artwork = artwork
         super().__init__()
 
-    def get_card_image(self) -> Image:
+    def get_card_image_uri(self) -> str:
         pass
 
     def print_self(self, printer, postfix="\n\n\n\n"):

@@ -10,10 +10,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.rye.receiptcards.MainActivity
 import com.rye.receiptcards.R
+import com.rye.receiptcards.data.CardManager
 import com.rye.receiptcards.proto.Reqrep
 import com.rye.receiptcards.ui.login.EXTRA_DECKS_INFO
-
-const val EXTRA_DECK_RESPONSE = "com.rye.receiptcards.DECK_RESPONSE"
 
 class DeckSelectActivity : AppCompatActivity() {
 
@@ -101,9 +100,10 @@ class DeckSelectActivity : AppCompatActivity() {
     }
 
     private fun onDeckGet(deckRep: Reqrep.Rep) {
-        val intent = Intent(this, MainActivity::class.java).apply {
-            putExtra(EXTRA_DECK_RESPONSE, deckRep.toByteArray())
-        }
+        val cardManager = CardManager.getDataSource()
+        cardManager.reset()
+        cardManager.processResponse(deckRep)
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
 

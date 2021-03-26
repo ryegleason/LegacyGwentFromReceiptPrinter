@@ -27,7 +27,7 @@ class MTGDeckLoader(DeckLoader):
     def load_deck(self, name: str) -> (DeckManager, reqrep_pb2.Rep):
         cards = []
         uuids = []
-        images = []
+        image_uris = []
         image_indices = []
         image_index = 0
 
@@ -40,11 +40,7 @@ class MTGDeckLoader(DeckLoader):
                 name = line[line.index(" "):].replace("/", " // ").strip()
 
                 card_data = MTGCardData(name)
-
-                # Convert image to bytes
-                img_byte_arr = io.BytesIO()
-                card_data.get_card_image().save(img_byte_arr, format='PNG')
-                images.append(img_byte_arr.getvalue())
+                image_uris.append(card_data.get_card_image_uri())
 
                 for i in range(copies):
                     new_card = Card(card_data)
@@ -60,7 +56,7 @@ class MTGDeckLoader(DeckLoader):
         manager = MTGDeckManager(cards)
         response = manager.setup()
         response.new_cards.card_uuids.extend(uuids)
-        response.new_cards.images.extend(images)
+        response.new_cards.image_uris.extend(image_uris)
         response.new_cards.image_indices.extend(image_indices)
         return manager, response
 

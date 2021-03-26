@@ -5,6 +5,7 @@ from uuid import UUID
 
 import util
 from data import Card
+from data.Card import DummyCard
 from data.DeckManager import DeckManager
 from proto.protobuf import reqrep_pb2
 
@@ -111,12 +112,12 @@ class MTGDeckManager(DeckManager):
         else:
             insert_index = -n_cards_down if from_top else n_cards_down
             # Bound properly
-            insert_index = max(0, insert_index)
+            insert_index = max(-len(self.deck), insert_index)
             insert_index = min(insert_index, len(self.deck))
             self.deck.insert(insert_index, card)
 
     def card_for_uuid(self, uuid: UUID) -> Card:
-        i = bisect_left(self.decklist, uuid)
+        i = bisect_left(self.decklist, DummyCard(uuid))
         if i != len(self.decklist) and self.decklist[i].uuid == uuid:
             return self.decklist[i]
         raise ValueError

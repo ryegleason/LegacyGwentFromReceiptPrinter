@@ -16,14 +16,10 @@
 
 package com.rye.receiptcards.data
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.rye.receiptcards.data.model.request
 import com.rye.receiptcards.proto.Reqrep
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -36,8 +32,8 @@ class CardManager {
     private val _playedCards = MutableLiveData<List<Card>>()
 
     val deckCards: LiveData<List<Card>> = _deckCards
-    val handCards: LiveData<List<Card>> = _deckCards
-    val playedCards: LiveData<List<Card>> = _deckCards
+    val handCards: LiveData<List<Card>> = _handCards
+    val playedCards: LiveData<List<Card>> = _playedCards
 
     suspend fun draw(target: Reqrep.Zone) {
         val response = request(Reqrep.Req.newBuilder().setReqType(Reqrep.Req.ReqType.DRAW).setDrawTo(target))
@@ -67,121 +63,70 @@ class CardManager {
         }
     }
 
-    suspend fun processResponse(response: Reqrep.Rep) {
+    fun processResponse(response: Reqrep.Rep) {
         if (response.success) {
             // Add new cards
-            if (response.newCards.imagesCount > 0) {
+            val updatedMap = _cardForID.value?.toMutableMap() ?: mutableMapOf()
+            val updatedDeck = _deckCards.value?.toMutableList() ?: mutableListOf()
+            val updatedHand = _handCards.value?.toMutableList() ?: mutableListOf()
+            val updatedPlayed = _playedCards.value?.toMutableList() ?: mutableListOf()
 
-                // Load images (may be slow)
-                val images = withContext(Dispatchers.Default) {
-                    Array<Bitmap>(response.newCards.imagesCount) { index ->
-                        return@Array response.newCards.getImages(index).let {
-                            BitmapFactory.decodeByteArray(it.toByteArray(), 0, it.size())
-                        }
-                    }
-                }
+            if (response.newCards.imageUrisCount > 0) {
 
-                val updatedMap = _cardForID.value?.toMutableMap() ?: mutableMapOf()
-
-                for (index in 1..response.newCards.cardUuidsCount) {
+                for (index in 1 until response.newCards.cardUuidsCount) {
                     val uuid = protoUUIDToUUID(response.newCards.getCardUuids(index))
-                    val newCard = Card(uuid, images[response.newCards.getImageIndices(index)])
+                    val newCard = Card(uuid, response.newCards.getImageUris(response.newCards.getImageIndices(index)))
                     updatedMap[uuid] = newCard
                 }
-
-                _cardForID.postValue(updatedMap)
             }
 
-            val updatedMap = _cardForID.value?.toMutableMap() ?: mutableMapOf()
-            var updateMapFlag = false
-
             for (move in response.movesList) {
-                val targetCard = getCardForId(protoUUIDToUUID(move.cardUuid))
+                val targetCard = updatedMap[protoUUIDToUUID(move.cardUuid)]
                 targetCard?.let {
-                    val sourceList = zoneToList(move.sourceZone)
-                    if (sourceList != null) {
-                        removeCardFromAll(it, sourceList)
+                    if (move.sourceZone != Reqrep.Zone.NONE) {
+                        updatedDeck.remove(targetCard)
+                        updatedHand.remove(targetCard)
+                        updatedPlayed.remove(targetCard)
                     }
 
-                    if (move.targetZone == Reqrep.Zone.NONE) {
-                        updatedMap.remove(targetCard.id)
-                        updateMapFlag = true
-                    } else {
-                        val targetList = zoneToList(move.targetZone)
-                        if (targetList != null) {
-                            addCard(targetCard, targetList)
+                    when (move.targetZone!!) {
+                        Reqrep.Zone.NONE -> {
+                            updatedMap.remove(targetCard.id)
+                        }
+                        Reqrep.Zone.DECK -> {
+                            updatedDeck.add(targetCard)
+                        }
+                        Reqrep.Zone.HAND -> {
+                            updatedHand.add(targetCard)
+                        }
+                        Reqrep.Zone.PLAYED -> {
+                            updatedPlayed.add(targetCard)
+                        }
+                        Reqrep.Zone.UNRECOGNIZED -> {
+                            // Do nothing
                         }
                     }
                 }
             }
 
-            if (updateMapFlag) {
-                _cardForID.postValue(updatedMap)
-            }
+            _cardForID.postValue(updatedMap)
+            _deckCards.postValue(updatedDeck)
+            _handCards.postValue(updatedHand)
+            _playedCards.postValue(updatedPlayed)
         }
-    }
-
-    private fun zoneToList(zone: Reqrep.Zone) : MutableLiveData<List<Card>>? {
-        return when (zone) {
-            Reqrep.Zone.DECK -> {
-                _deckCards
-            }
-            Reqrep.Zone.HAND -> {
-                _handCards
-            }
-            Reqrep.Zone.PLAYED -> {
-                _playedCards
-            }
-            else -> null
-        }
-    }
-
-    private fun addCard(card: Card, cardList: MutableLiveData<List<Card>>) {
-        val currentList = cardList.value
-        if (currentList == null) {
-            cardList.postValue(listOf(card))
-        } else {
-            val updatedList = currentList.toMutableList()
-            updatedList.add(0, card)
-            cardList.postValue(updatedList)
-        }
-    }
-
-    private fun removeCardFromAll(card: Card, firstList: MutableLiveData<List<Card>>): Boolean {
-        if (!removeCard(card, firstList)) {
-            return when (firstList) {
-                _deckCards -> {
-                    removeCard(card, _handCards) || removeCard(card, _playedCards)
-                }
-                _handCards -> {
-                    removeCard(card, _deckCards) || removeCard(card, _playedCards)
-                }
-                _playedCards -> {
-                    removeCard(card, _handCards) || removeCard(card, _deckCards)
-                }
-                else -> {
-                    removeCard(card, _handCards) || removeCard(card, _deckCards) || removeCard(card, _playedCards)
-                }
-            }
-        }
-        return true
-    }
-
-    private fun removeCard(card: Card, cardList: MutableLiveData<List<Card>>): Boolean {
-        val currentList = cardList.value
-        if (currentList != null) {
-            val updatedList = currentList.toMutableList()
-            if (updatedList.remove(card)) {
-                cardList.postValue(updatedList)
-                return true
-            }
-        }
-        return false
     }
 
     /* Returns card given an ID. */
     fun getCardForId(id: UUID): Card? {
         return _cardForID.value?.get(id)
+    }
+
+    fun reset() {
+        println("Reset called")
+        _cardForID.value = mapOf()
+        _deckCards.value = listOf()
+        _handCards.value = listOf()
+        _playedCards.value = listOf()
     }
 
 
