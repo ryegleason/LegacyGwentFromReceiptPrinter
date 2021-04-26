@@ -30,6 +30,7 @@
     <string name="title_left">Deck</string>
     <string name="title_center">Hand</string>
     <string name="title_right">Played</string>
+    <string name="title_special">Special</string>
 
     <string name="connection_info">Connection Information</string>
     <string name="ip_text">IP Address</string>

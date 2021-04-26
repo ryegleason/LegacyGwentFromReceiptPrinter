@@ -22,4 +22,10 @@
         android:name="com.rye.receiptcards.cardList.PlayedFragment"
         android:label="@string/title_right"
         tools:layout="@layout/fragment_played" />
+
+    <fragment
+        android:id="@+id/navigation_special"
+        android:name="com.rye.receiptcards.cardList.SpecialFragment"
+        android:label="@string/title_special"
+        tools:layout="@layout/fragment_special" />
 </navigation>

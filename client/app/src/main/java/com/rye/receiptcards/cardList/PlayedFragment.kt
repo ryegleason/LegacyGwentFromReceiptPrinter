@@ -65,7 +65,7 @@ class PlayedFragment : Fragment() {
         return root
     }
 
-    /* Opens FlowerDetailActivity when RecyclerView item is clicked. */
+    /* Opens CardDetailActivity when RecyclerView item is clicked. */
     private fun adapterOnClick(card: Card) {
         val intent = Intent(context, CardDetailActivity()::class.java)
         intent.putExtra(CARD_ID, card.id)

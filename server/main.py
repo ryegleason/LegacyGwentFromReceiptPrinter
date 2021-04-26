@@ -1,7 +1,11 @@
+from typing import Dict
+from uuid import UUID
+
 import zmq
 from escpos.printer import Dummy, Usb
 
 import util
+from data import DeckManager
 from data.MTGDeckLoader import MTGDeckLoader
 from proto.protobuf import reqrep_pb2
 import os.path
@@ -15,7 +19,7 @@ server = context.socket(zmq.REP)
 server.bind("tcp://*:27068")
 
 deck_manager_loaders = {"mtg": MTGDeckLoader(os.path.abspath(os.path.join("decks", "mtg")))}
-user_deck_managers = {}
+user_deck_managers: Dict[UUID, DeckManager] = {}
 
 decks_info_list = []
 
@@ -49,6 +53,8 @@ while True:
         proto_response = user_deck_managers[user_uuid].draw(proto_request.draw_to)
     elif proto_request.req_type == reqrep_pb2.Req.ReqType.MOVE:
         proto_response = user_deck_managers[user_uuid].move(proto_request.move)
+    elif proto_request.req_type == reqrep_pb2.Req.ReqType.SPECIAL:
+        proto_response = user_deck_managers[user_uuid].special(proto_request.special)
     else:
         proto_response.success = False
 

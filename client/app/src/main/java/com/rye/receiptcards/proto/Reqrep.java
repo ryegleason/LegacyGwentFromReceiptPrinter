@@ -35,6 +35,10 @@ public final class Reqrep {
      * <code>DECK = 3;</code>
      */
     DECK(3),
+    /**
+     * <code>SPECIAL = 4;</code>
+     */
+    SPECIAL(4),
     UNRECOGNIZED(-1),
     ;
 
@@ -54,6 +58,10 @@ public final class Reqrep {
      * <code>DECK = 3;</code>
      */
     public static final int DECK_VALUE = 3;
+    /**
+     * <code>SPECIAL = 4;</code>
+     */
+    public static final int SPECIAL_VALUE = 4;
 
 
     public final int getNumber() {
@@ -84,6 +92,7 @@ public final class Reqrep {
         case 1: return HAND;
         case 2: return PLAYED;
         case 3: return DECK;
+        case 4: return SPECIAL;
         default: return null;
       }
     }
@@ -138,6 +147,168 @@ public final class Reqrep {
     }
 
     // @@protoc_insertion_point(enum_scope:Zone)
+  }
+
+  /**
+   * Protobuf enum {@code SpecialAction}
+   */
+  public enum SpecialAction
+      implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <code>SIDEBOARD = 0;</code>
+     */
+    SIDEBOARD(0),
+    /**
+     * <code>CREEP = 1;</code>
+     */
+    CREEP(1),
+    /**
+     * <code>RAND_ARROW = 2;</code>
+     */
+    RAND_ARROW(2),
+    /**
+     * <code>LEFT_ARROW = 3;</code>
+     */
+    LEFT_ARROW(3),
+    /**
+     * <code>FORWARD_ARROW = 4;</code>
+     */
+    FORWARD_ARROW(4),
+    /**
+     * <code>RIGHT_ARROW = 5;</code>
+     */
+    RIGHT_ARROW(5),
+    /**
+     * <code>SHOP_NO_HOLD = 6;</code>
+     */
+    SHOP_NO_HOLD(6),
+    /**
+     * <code>SHOP_HOLD = 7;</code>
+     */
+    SHOP_HOLD(7),
+    UNRECOGNIZED(-1),
+    ;
+
+    /**
+     * <code>SIDEBOARD = 0;</code>
+     */
+    public static final int SIDEBOARD_VALUE = 0;
+    /**
+     * <code>CREEP = 1;</code>
+     */
+    public static final int CREEP_VALUE = 1;
+    /**
+     * <code>RAND_ARROW = 2;</code>
+     */
+    public static final int RAND_ARROW_VALUE = 2;
+    /**
+     * <code>LEFT_ARROW = 3;</code>
+     */
+    public static final int LEFT_ARROW_VALUE = 3;
+    /**
+     * <code>FORWARD_ARROW = 4;</code>
+     */
+    public static final int FORWARD_ARROW_VALUE = 4;
+    /**
+     * <code>RIGHT_ARROW = 5;</code>
+     */
+    public static final int RIGHT_ARROW_VALUE = 5;
+    /**
+     * <code>SHOP_NO_HOLD = 6;</code>
+     */
+    public static final int SHOP_NO_HOLD_VALUE = 6;
+    /**
+     * <code>SHOP_HOLD = 7;</code>
+     */
+    public static final int SHOP_HOLD_VALUE = 7;
+
+
+    public final int getNumber() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalArgumentException(
+            "Can't get the number of an unknown enum value.");
+      }
+      return value;
+    }
+
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static SpecialAction valueOf(int value) {
+      return forNumber(value);
+    }
+
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     */
+    public static SpecialAction forNumber(int value) {
+      switch (value) {
+        case 0: return SIDEBOARD;
+        case 1: return CREEP;
+        case 2: return RAND_ARROW;
+        case 3: return LEFT_ARROW;
+        case 4: return FORWARD_ARROW;
+        case 5: return RIGHT_ARROW;
+        case 6: return SHOP_NO_HOLD;
+        case 7: return SHOP_HOLD;
+        default: return null;
+      }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<SpecialAction>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static final com.google.protobuf.Internal.EnumLiteMap<
+        SpecialAction> internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<SpecialAction>() {
+            public SpecialAction findValueByNumber(int number) {
+              return SpecialAction.forNumber(number);
+            }
+          };
+
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalStateException(
+            "Can't get the descriptor of an unrecognized enum value.");
+      }
+      return getDescriptor().getValues().get(ordinal());
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return com.rye.receiptcards.proto.Reqrep.getDescriptor().getEnumTypes().get(1);
+    }
+
+    private static final SpecialAction[] VALUES = values();
+
+    public static SpecialAction valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      if (desc.getIndex() == -1) {
+        return UNRECOGNIZED;
+      }
+      return VALUES[desc.getIndex()];
+    }
+
+    private final int value;
+
+    private SpecialAction(int value) {
+      this.value = value;
+    }
+
+    // @@protoc_insertion_point(enum_scope:SpecialAction)
   }
 
   public interface UUIDOrBuilder extends
@@ -1737,6 +1908,17 @@ public final class Reqrep {
      * @return The deckIndex.
      */
     int getDeckIndex();
+
+    /**
+     * <code>.SpecialAction special = 6;</code>
+     * @return The enum numeric value on the wire for special.
+     */
+    int getSpecialValue();
+    /**
+     * <code>.SpecialAction special = 6;</code>
+     * @return The special.
+     */
+    com.rye.receiptcards.proto.Reqrep.SpecialAction getSpecial();
   }
   /**
    * Protobuf type {@code Req}
@@ -1753,6 +1935,7 @@ public final class Reqrep {
     private Req() {
       reqType_ = 0;
       drawTo_ = 0;
+      special_ = 0;
     }
 
     @java.lang.Override
@@ -1828,6 +2011,12 @@ public final class Reqrep {
               deckIndex_ = input.readUInt32();
               break;
             }
+            case 48: {
+              int rawValue = input.readEnum();
+
+              special_ = rawValue;
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -1885,6 +2074,10 @@ public final class Reqrep {
        * <code>SELECT_DECK = 4;</code>
        */
       SELECT_DECK(4),
+      /**
+       * <code>SPECIAL = 5;</code>
+       */
+      SPECIAL(5),
       UNRECOGNIZED(-1),
       ;
 
@@ -1908,6 +2101,10 @@ public final class Reqrep {
        * <code>SELECT_DECK = 4;</code>
        */
       public static final int SELECT_DECK_VALUE = 4;
+      /**
+       * <code>SPECIAL = 5;</code>
+       */
+      public static final int SPECIAL_VALUE = 5;
 
 
       public final int getNumber() {
@@ -1939,6 +2136,7 @@ public final class Reqrep {
           case 2: return DRAW;
           case 3: return DECKS_LIST;
           case 4: return SELECT_DECK;
+          case 5: return SPECIAL;
           default: return null;
         }
       }
@@ -2096,6 +2294,25 @@ public final class Reqrep {
       return deckIndex_;
     }
 
+    public static final int SPECIAL_FIELD_NUMBER = 6;
+    private int special_;
+    /**
+     * <code>.SpecialAction special = 6;</code>
+     * @return The enum numeric value on the wire for special.
+     */
+    @java.lang.Override public int getSpecialValue() {
+      return special_;
+    }
+    /**
+     * <code>.SpecialAction special = 6;</code>
+     * @return The special.
+     */
+    @java.lang.Override public com.rye.receiptcards.proto.Reqrep.SpecialAction getSpecial() {
+      @SuppressWarnings("deprecation")
+      com.rye.receiptcards.proto.Reqrep.SpecialAction result = com.rye.receiptcards.proto.Reqrep.SpecialAction.valueOf(special_);
+      return result == null ? com.rye.receiptcards.proto.Reqrep.SpecialAction.UNRECOGNIZED : result;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -2124,6 +2341,9 @@ public final class Reqrep {
       }
       if (deckIndex_ != 0) {
         output.writeUInt32(5, deckIndex_);
+      }
+      if (special_ != com.rye.receiptcards.proto.Reqrep.SpecialAction.SIDEBOARD.getNumber()) {
+        output.writeEnum(6, special_);
       }
       unknownFields.writeTo(output);
     }
@@ -2154,6 +2374,10 @@ public final class Reqrep {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(5, deckIndex_);
       }
+      if (special_ != com.rye.receiptcards.proto.Reqrep.SpecialAction.SIDEBOARD.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(6, special_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -2183,6 +2407,7 @@ public final class Reqrep {
       }
       if (getDeckIndex()
           != other.getDeckIndex()) return false;
+      if (special_ != other.special_) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -2208,6 +2433,8 @@ public final class Reqrep {
       }
       hash = (37 * hash) + DECK_INDEX_FIELD_NUMBER;
       hash = (53 * hash) + getDeckIndex();
+      hash = (37 * hash) + SPECIAL_FIELD_NUMBER;
+      hash = (53 * hash) + special_;
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -2359,6 +2586,8 @@ public final class Reqrep {
         }
         deckIndex_ = 0;
 
+        special_ = 0;
+
         return this;
       }
 
@@ -2398,6 +2627,7 @@ public final class Reqrep {
           result.move_ = moveBuilder_.build();
         }
         result.deckIndex_ = deckIndex_;
+        result.special_ = special_;
         onBuilt();
         return result;
       }
@@ -2460,6 +2690,9 @@ public final class Reqrep {
         }
         if (other.getDeckIndex() != 0) {
           setDeckIndex(other.getDeckIndex());
+        }
+        if (other.special_ != 0) {
+          setSpecialValue(other.getSpecialValue());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2866,6 +3099,60 @@ public final class Reqrep {
         onChanged();
         return this;
       }
+
+      private int special_ = 0;
+      /**
+       * <code>.SpecialAction special = 6;</code>
+       * @return The enum numeric value on the wire for special.
+       */
+      @java.lang.Override public int getSpecialValue() {
+        return special_;
+      }
+      /**
+       * <code>.SpecialAction special = 6;</code>
+       * @param value The enum numeric value on the wire for special to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSpecialValue(int value) {
+        
+        special_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.SpecialAction special = 6;</code>
+       * @return The special.
+       */
+      @java.lang.Override
+      public com.rye.receiptcards.proto.Reqrep.SpecialAction getSpecial() {
+        @SuppressWarnings("deprecation")
+        com.rye.receiptcards.proto.Reqrep.SpecialAction result = com.rye.receiptcards.proto.Reqrep.SpecialAction.valueOf(special_);
+        return result == null ? com.rye.receiptcards.proto.Reqrep.SpecialAction.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.SpecialAction special = 6;</code>
+       * @param value The special to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSpecial(com.rye.receiptcards.proto.Reqrep.SpecialAction value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        special_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.SpecialAction special = 6;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSpecial() {
+        
+        special_ = 0;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -2982,6 +3269,35 @@ public final class Reqrep {
      */
     com.rye.receiptcards.proto.Reqrep.MoveOrBuilder getMovesOrBuilder(
         int index);
+
+    /**
+     * <code>repeated .SpecialAction special_actions = 5;</code>
+     * @return A list containing the specialActions.
+     */
+    java.util.List<com.rye.receiptcards.proto.Reqrep.SpecialAction> getSpecialActionsList();
+    /**
+     * <code>repeated .SpecialAction special_actions = 5;</code>
+     * @return The count of specialActions.
+     */
+    int getSpecialActionsCount();
+    /**
+     * <code>repeated .SpecialAction special_actions = 5;</code>
+     * @param index The index of the element to return.
+     * @return The specialActions at the given index.
+     */
+    com.rye.receiptcards.proto.Reqrep.SpecialAction getSpecialActions(int index);
+    /**
+     * <code>repeated .SpecialAction special_actions = 5;</code>
+     * @return A list containing the enum numeric values on the wire for specialActions.
+     */
+    java.util.List<java.lang.Integer>
+    getSpecialActionsValueList();
+    /**
+     * <code>repeated .SpecialAction special_actions = 5;</code>
+     * @param index The index of the value to return.
+     * @return The enum numeric value on the wire of specialActions at the given index.
+     */
+    int getSpecialActionsValue(int index);
   }
   /**
    * Protobuf type {@code Rep}
@@ -2997,6 +3313,7 @@ public final class Reqrep {
     }
     private Rep() {
       moves_ = java.util.Collections.emptyList();
+      specialActions_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -3070,6 +3387,29 @@ public final class Reqrep {
                   input.readMessage(com.rye.receiptcards.proto.Reqrep.Move.parser(), extensionRegistry));
               break;
             }
+            case 40: {
+              int rawValue = input.readEnum();
+              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                specialActions_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              specialActions_.add(rawValue);
+              break;
+            }
+            case 42: {
+              int length = input.readRawVarint32();
+              int oldLimit = input.pushLimit(length);
+              while(input.getBytesUntilLimit() > 0) {
+                int rawValue = input.readEnum();
+                if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                  specialActions_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000002;
+                }
+                specialActions_.add(rawValue);
+              }
+              input.popLimit(oldLimit);
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -3087,6 +3427,9 @@ public final class Reqrep {
       } finally {
         if (((mutable_bitField0_ & 0x00000001) != 0)) {
           moves_ = java.util.Collections.unmodifiableList(moves_);
+        }
+        if (((mutable_bitField0_ & 0x00000002) != 0)) {
+          specialActions_ = java.util.Collections.unmodifiableList(specialActions_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -3208,6 +3551,64 @@ public final class Reqrep {
       return moves_.get(index);
     }
 
+    public static final int SPECIAL_ACTIONS_FIELD_NUMBER = 5;
+    private java.util.List<java.lang.Integer> specialActions_;
+    private static final com.google.protobuf.Internal.ListAdapter.Converter<
+        java.lang.Integer, com.rye.receiptcards.proto.Reqrep.SpecialAction> specialActions_converter_ =
+            new com.google.protobuf.Internal.ListAdapter.Converter<
+                java.lang.Integer, com.rye.receiptcards.proto.Reqrep.SpecialAction>() {
+              public com.rye.receiptcards.proto.Reqrep.SpecialAction convert(java.lang.Integer from) {
+                @SuppressWarnings("deprecation")
+                com.rye.receiptcards.proto.Reqrep.SpecialAction result = com.rye.receiptcards.proto.Reqrep.SpecialAction.valueOf(from);
+                return result == null ? com.rye.receiptcards.proto.Reqrep.SpecialAction.UNRECOGNIZED : result;
+              }
+            };
+    /**
+     * <code>repeated .SpecialAction special_actions = 5;</code>
+     * @return A list containing the specialActions.
+     */
+    @java.lang.Override
+    public java.util.List<com.rye.receiptcards.proto.Reqrep.SpecialAction> getSpecialActionsList() {
+      return new com.google.protobuf.Internal.ListAdapter<
+          java.lang.Integer, com.rye.receiptcards.proto.Reqrep.SpecialAction>(specialActions_, specialActions_converter_);
+    }
+    /**
+     * <code>repeated .SpecialAction special_actions = 5;</code>
+     * @return The count of specialActions.
+     */
+    @java.lang.Override
+    public int getSpecialActionsCount() {
+      return specialActions_.size();
+    }
+    /**
+     * <code>repeated .SpecialAction special_actions = 5;</code>
+     * @param index The index of the element to return.
+     * @return The specialActions at the given index.
+     */
+    @java.lang.Override
+    public com.rye.receiptcards.proto.Reqrep.SpecialAction getSpecialActions(int index) {
+      return specialActions_converter_.convert(specialActions_.get(index));
+    }
+    /**
+     * <code>repeated .SpecialAction special_actions = 5;</code>
+     * @return A list containing the enum numeric values on the wire for specialActions.
+     */
+    @java.lang.Override
+    public java.util.List<java.lang.Integer>
+    getSpecialActionsValueList() {
+      return specialActions_;
+    }
+    /**
+     * <code>repeated .SpecialAction special_actions = 5;</code>
+     * @param index The index of the value to return.
+     * @return The enum numeric value on the wire of specialActions at the given index.
+     */
+    @java.lang.Override
+    public int getSpecialActionsValue(int index) {
+      return specialActions_.get(index);
+    }
+    private int specialActionsMemoizedSerializedSize;
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -3222,6 +3623,7 @@ public final class Reqrep {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
+      getSerializedSize();
       if (success_ != false) {
         output.writeBool(1, success_);
       }
@@ -3233,6 +3635,13 @@ public final class Reqrep {
       }
       for (int i = 0; i < moves_.size(); i++) {
         output.writeMessage(4, moves_.get(i));
+      }
+      if (getSpecialActionsList().size() > 0) {
+        output.writeUInt32NoTag(42);
+        output.writeUInt32NoTag(specialActionsMemoizedSerializedSize);
+      }
+      for (int i = 0; i < specialActions_.size(); i++) {
+        output.writeEnumNoTag(specialActions_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -3258,6 +3667,18 @@ public final class Reqrep {
       for (int i = 0; i < moves_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, moves_.get(i));
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < specialActions_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeEnumSizeNoTag(specialActions_.get(i));
+        }
+        size += dataSize;
+        if (!getSpecialActionsList().isEmpty()) {  size += 1;
+          size += com.google.protobuf.CodedOutputStream
+            .computeUInt32SizeNoTag(dataSize);
+        }specialActionsMemoizedSerializedSize = dataSize;
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3288,6 +3709,7 @@ public final class Reqrep {
       }
       if (!getMovesList()
           .equals(other.getMovesList())) return false;
+      if (!specialActions_.equals(other.specialActions_)) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -3313,6 +3735,10 @@ public final class Reqrep {
       if (getMovesCount() > 0) {
         hash = (37 * hash) + MOVES_FIELD_NUMBER;
         hash = (53 * hash) + getMovesList().hashCode();
+      }
+      if (getSpecialActionsCount() > 0) {
+        hash = (37 * hash) + SPECIAL_ACTIONS_FIELD_NUMBER;
+        hash = (53 * hash) + specialActions_.hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -3468,6 +3894,8 @@ public final class Reqrep {
         } else {
           movesBuilder_.clear();
         }
+        specialActions_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -3515,6 +3943,11 @@ public final class Reqrep {
         } else {
           result.moves_ = movesBuilder_.build();
         }
+        if (((bitField0_ & 0x00000002) != 0)) {
+          specialActions_ = java.util.Collections.unmodifiableList(specialActions_);
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.specialActions_ = specialActions_;
         onBuilt();
         return result;
       }
@@ -3597,6 +4030,16 @@ public final class Reqrep {
               movesBuilder_.addAllMessages(other.moves_);
             }
           }
+        }
+        if (!other.specialActions_.isEmpty()) {
+          if (specialActions_.isEmpty()) {
+            specialActions_ = other.specialActions_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureSpecialActionsIsMutable();
+            specialActions_.addAll(other.specialActions_);
+          }
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -4135,6 +4578,146 @@ public final class Reqrep {
           moves_ = null;
         }
         return movesBuilder_;
+      }
+
+      private java.util.List<java.lang.Integer> specialActions_ =
+        java.util.Collections.emptyList();
+      private void ensureSpecialActionsIsMutable() {
+        if (!((bitField0_ & 0x00000002) != 0)) {
+          specialActions_ = new java.util.ArrayList<java.lang.Integer>(specialActions_);
+          bitField0_ |= 0x00000002;
+        }
+      }
+      /**
+       * <code>repeated .SpecialAction special_actions = 5;</code>
+       * @return A list containing the specialActions.
+       */
+      public java.util.List<com.rye.receiptcards.proto.Reqrep.SpecialAction> getSpecialActionsList() {
+        return new com.google.protobuf.Internal.ListAdapter<
+            java.lang.Integer, com.rye.receiptcards.proto.Reqrep.SpecialAction>(specialActions_, specialActions_converter_);
+      }
+      /**
+       * <code>repeated .SpecialAction special_actions = 5;</code>
+       * @return The count of specialActions.
+       */
+      public int getSpecialActionsCount() {
+        return specialActions_.size();
+      }
+      /**
+       * <code>repeated .SpecialAction special_actions = 5;</code>
+       * @param index The index of the element to return.
+       * @return The specialActions at the given index.
+       */
+      public com.rye.receiptcards.proto.Reqrep.SpecialAction getSpecialActions(int index) {
+        return specialActions_converter_.convert(specialActions_.get(index));
+      }
+      /**
+       * <code>repeated .SpecialAction special_actions = 5;</code>
+       * @param index The index to set the value at.
+       * @param value The specialActions to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSpecialActions(
+          int index, com.rye.receiptcards.proto.Reqrep.SpecialAction value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureSpecialActionsIsMutable();
+        specialActions_.set(index, value.getNumber());
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated .SpecialAction special_actions = 5;</code>
+       * @param value The specialActions to add.
+       * @return This builder for chaining.
+       */
+      public Builder addSpecialActions(com.rye.receiptcards.proto.Reqrep.SpecialAction value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureSpecialActionsIsMutable();
+        specialActions_.add(value.getNumber());
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated .SpecialAction special_actions = 5;</code>
+       * @param values The specialActions to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllSpecialActions(
+          java.lang.Iterable<? extends com.rye.receiptcards.proto.Reqrep.SpecialAction> values) {
+        ensureSpecialActionsIsMutable();
+        for (com.rye.receiptcards.proto.Reqrep.SpecialAction value : values) {
+          specialActions_.add(value.getNumber());
+        }
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated .SpecialAction special_actions = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSpecialActions() {
+        specialActions_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated .SpecialAction special_actions = 5;</code>
+       * @return A list containing the enum numeric values on the wire for specialActions.
+       */
+      public java.util.List<java.lang.Integer>
+      getSpecialActionsValueList() {
+        return java.util.Collections.unmodifiableList(specialActions_);
+      }
+      /**
+       * <code>repeated .SpecialAction special_actions = 5;</code>
+       * @param index The index of the value to return.
+       * @return The enum numeric value on the wire of specialActions at the given index.
+       */
+      public int getSpecialActionsValue(int index) {
+        return specialActions_.get(index);
+      }
+      /**
+       * <code>repeated .SpecialAction special_actions = 5;</code>
+       * @param index The index of the value to return.
+       * @return The enum numeric value on the wire of specialActions at the given index.
+       * @return This builder for chaining.
+       */
+      public Builder setSpecialActionsValue(
+          int index, int value) {
+        ensureSpecialActionsIsMutable();
+        specialActions_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated .SpecialAction special_actions = 5;</code>
+       * @param value The enum numeric value on the wire for specialActions to add.
+       * @return This builder for chaining.
+       */
+      public Builder addSpecialActionsValue(int value) {
+        ensureSpecialActionsIsMutable();
+        specialActions_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated .SpecialAction special_actions = 5;</code>
+       * @param values The enum numeric values on the wire for specialActions to add.
+       * @return This builder for chaining.
+       */
+      public Builder addAllSpecialActionsValue(
+          java.lang.Iterable<java.lang.Integer> values) {
+        ensureSpecialActionsIsMutable();
+        for (int value : values) {
+          specialActions_.add(value);
+        }
+        onChanged();
+        return this;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -6952,22 +7535,28 @@ public final class Reqrep {
       "64\030\001 \001(\006\022\020\n\010second64\030\002 \001(\006\"|\n\004Move\022\030\n\tca" +
       "rd_uuid\030\001 \001(\0132\005.UUID\022\032\n\013source_zone\030\002 \001(" +
       "\0162\005.Zone\022\032\n\013target_zone\030\003 \001(\0162\005.Zone\022\020\n\010" +
-      "num_down\030\004 \001(\r\022\020\n\010from_top\030\005 \001(\010\"\315\001\n\003Req" +
+      "num_down\030\004 \001(\r\022\020\n\010from_top\030\005 \001(\010\"\373\001\n\003Req" +
       "\022\030\n\tuser_uuid\030\001 \001(\0132\005.UUID\022\036\n\010req_type\030\002" +
       " \001(\0162\014.Req.ReqType\022\026\n\007draw_to\030\003 \001(\0162\005.Zo" +
       "ne\022\023\n\004move\030\004 \001(\0132\005.Move\022\022\n\ndeck_index\030\005 " +
-      "\001(\r\"K\n\007ReqType\022\013\n\007SHUFFLE\020\000\022\010\n\004MOVE\020\001\022\010\n" +
-      "\004DRAW\020\002\022\016\n\nDECKS_LIST\020\003\022\017\n\013SELECT_DECK\020\004" +
-      "\"g\n\003Rep\022\017\n\007success\030\001 \001(\010\022\036\n\ndecks_info\030\002" +
-      " \001(\0132\n.DecksInfo\022\031\n\tnew_cards\030\003 \001(\0132\006.Ca" +
-      "rds\022\024\n\005moves\030\004 \003(\0132\005.Move\"W\n\tDecksInfo\022\"" +
-      "\n\005decks\030\001 \003(\0132\023.DecksInfo.DeckInfo\032&\n\010De" +
-      "ckInfo\022\014\n\004name\030\001 \001(\t\022\014\n\004game\030\002 \001(\t\"M\n\005Ca" +
-      "rds\022\031\n\ncard_uuids\030\001 \003(\0132\005.UUID\022\022\n\nimage_" +
-      "uris\030\002 \003(\t\022\025\n\rimage_indices\030\003 \003(\r*0\n\004Zon" +
-      "e\022\010\n\004NONE\020\000\022\010\n\004HAND\020\001\022\n\n\006PLAYED\020\002\022\010\n\004DEC" +
-      "K\020\003B\034\n\032com.rye.receiptcards.protob\006proto" +
-      "3"
+      "\001(\r\022\037\n\007special\030\006 \001(\0162\016.SpecialAction\"X\n\007" +
+      "ReqType\022\013\n\007SHUFFLE\020\000\022\010\n\004MOVE\020\001\022\010\n\004DRAW\020\002" +
+      "\022\016\n\nDECKS_LIST\020\003\022\017\n\013SELECT_DECK\020\004\022\013\n\007SPE" +
+      "CIAL\020\005\"\220\001\n\003Rep\022\017\n\007success\030\001 \001(\010\022\036\n\ndecks" +
+      "_info\030\002 \001(\0132\n.DecksInfo\022\031\n\tnew_cards\030\003 \001" +
+      "(\0132\006.Cards\022\024\n\005moves\030\004 \003(\0132\005.Move\022\'\n\017spec" +
+      "ial_actions\030\005 \003(\0162\016.SpecialAction\"W\n\tDec" +
+      "ksInfo\022\"\n\005decks\030\001 \003(\0132\023.DecksInfo.DeckIn" +
+      "fo\032&\n\010DeckInfo\022\014\n\004name\030\001 \001(\t\022\014\n\004game\030\002 \001" +
+      "(\t\"M\n\005Cards\022\031\n\ncard_uuids\030\001 \003(\0132\005.UUID\022\022" +
+      "\n\nimage_uris\030\002 \003(\t\022\025\n\rimage_indices\030\003 \003(" +
+      "\r*=\n\004Zone\022\010\n\004NONE\020\000\022\010\n\004HAND\020\001\022\n\n\006PLAYED\020" +
+      "\002\022\010\n\004DECK\020\003\022\013\n\007SPECIAL\020\004*\216\001\n\rSpecialActi" +
+      "on\022\r\n\tSIDEBOARD\020\000\022\t\n\005CREEP\020\001\022\016\n\nRAND_ARR" +
+      "OW\020\002\022\016\n\nLEFT_ARROW\020\003\022\021\n\rFORWARD_ARROW\020\004\022" +
+      "\017\n\013RIGHT_ARROW\020\005\022\020\n\014SHOP_NO_HOLD\020\006\022\r\n\tSH" +
+      "OP_HOLD\020\007B\034\n\032com.rye.receiptcards.protob" +
+      "\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -6990,13 +7579,13 @@ public final class Reqrep {
     internal_static_Req_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Req_descriptor,
-        new java.lang.String[] { "UserUuid", "ReqType", "DrawTo", "Move", "DeckIndex", });
+        new java.lang.String[] { "UserUuid", "ReqType", "DrawTo", "Move", "DeckIndex", "Special", });
     internal_static_Rep_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_Rep_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Rep_descriptor,
-        new java.lang.String[] { "Success", "DecksInfo", "NewCards", "Moves", });
+        new java.lang.String[] { "Success", "DecksInfo", "NewCards", "Moves", "SpecialActions", });
     internal_static_DecksInfo_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_DecksInfo_fieldAccessorTable = new
