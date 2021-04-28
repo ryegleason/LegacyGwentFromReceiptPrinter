@@ -15,15 +15,19 @@ html_remover = re.compile("[<].*?[>]")
 
 LANG = "english"
 
-with open("artifact_set_0.json", "r", encoding="utf-8") as f:
+with open("data/artifact_set_0.json", "r", encoding="utf-8") as f:
     set_0 = json.load(f)["card_set"]["card_list"]
 
-with open("artifact_set_1.json", "r", encoding="utf-8") as f:
+with open("data/artifact_set_1.json", "r", encoding="utf-8") as f:
     set_1 = json.load(f)["card_set"]["card_list"]
 
 id_to_card_dict = {}
 
 for card in set_0:
+    if card["card_type"] in ["Hero", "Creep", "Improvement", "Spell", "Item"]:
+        id_to_card_dict[card["card_id"]] = card
+
+for card in set_1:
     if card["card_type"] in ["Hero", "Creep", "Improvement", "Spell", "Item"]:
         id_to_card_dict[card["card_id"]] = card
 
@@ -37,6 +41,7 @@ class ArtifactCardData(SimpleCardData):
         self.card_id = card_id
         data = id_to_card_dict[card_id]
         self.data = data
+        self.type = data["card_type"]
         self.name = data["card_name"][LANG]
         crosslane = data.get("is_crosslane", False)
         top_right = str(data.get("mana_cost", ""))
@@ -52,7 +57,7 @@ class ArtifactCardData(SimpleCardData):
         if data.get("is_black", False):
             typeline += "Black "
 
-        typeline += data.get("card_type")
+        typeline += self.type
 
         subtype = data.get("sub_type")
         if subtype is not None:
@@ -61,15 +66,21 @@ class ArtifactCardData(SimpleCardData):
         body = data.get("card_text").get(LANG, "")
         body = body.replace("<br/>", "\n")
         html_remover.sub("", body)
-        bottom_left = data.get("attack", "")
-        bottom_center = data.get("armor", "")
-        if data.get("card_type") == "Item":
+        bottom_left = str(data.get("attack", ""))
+        bottom_center = str(data.get("armor", ""))
+        if self.is_item():
             bottom_right = data.get("gold_cost", "")
         else:
             bottom_right = data.get("hit_points", "")
 
+        self.artwork = None
         self.get_artwork(data["mini_image"]["default"])
-        super().__init__(self.name, top_right, typeline, body, bottom_left, bottom_right, self.artwork,
+
+        self.includes = []
+        for ref in data.get("references", []):
+            if ref.get("ref_type") == "includes":
+                self.includes.append([ref["card_id"], ref["count"]])
+        super().__init__(self.name, top_right, typeline, body, bottom_left, str(bottom_right), self.artwork,
                          bottom_center=bottom_center)
 
     def get_artwork(self, image_uri) -> Image:
@@ -95,6 +106,9 @@ class ArtifactCardData(SimpleCardData):
 
     def get_card_image_uri(self) -> str:
         return self.data["large_image"]["default"]
+
+    def is_item(self) -> bool:
+        return self.type == "Item"
 
     def to_filename(self, folder, extension, name=None):
         if name is None:

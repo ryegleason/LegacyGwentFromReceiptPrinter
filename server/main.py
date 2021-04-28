@@ -6,20 +6,22 @@ from escpos.printer import Dummy, Usb
 
 import util
 from data import DeckManager
+from data.ArtifactDeckLoader import ArtifactDeckLoader
 from data.MTGDeckLoader import MTGDeckLoader
 from proto.protobuf import reqrep_pb2
 import os.path
 
-#printer = Dummy()
-printer = Usb(0x0416, 0x5011, 4, 0x81, 0x03)
+printer = Dummy()
+# printer = Usb(0x0416, 0x5011, 4, 0x81, 0x03)
 printer.set(density=2)
 
 context = zmq.Context()
 server = context.socket(zmq.REP)
 server.bind("tcp://*:27068")
 
-deck_manager_loaders = {"mtg": MTGDeckLoader(os.path.abspath(os.path.join("decks", "mtg")))}
-user_deck_managers: Dict[UUID, DeckManager] = {}
+deck_manager_loaders = {"mtg": MTGDeckLoader(os.path.abspath(os.path.join("decks", "mtg"))),
+                        "artifact": ArtifactDeckLoader(os.path.abspath(os.path.join("decks", "artifact_decks.txt")), printer)}
+user_deck_managers = {}
 
 decks_info_list = []
 

@@ -146,6 +146,9 @@ class ArtifactDeckManager(FiniteDeckManager):
             rep.new_cards.image_uris.extend(image_uris)
 
             rep.new_cards.image_indices.extend(list(range(len(self.shop_cards))))
+            rep.special_actions.extend([SpecialAction.CREEP, SpecialAction.RAND_ARROW, SpecialAction.LEFT_ARROW,
+                                        SpecialAction.FORWARD_ARROW, SpecialAction.RIGHT_ARROW,
+                                        SpecialAction.SHOP_NO_HOLD, SpecialAction.SHOP_HOLD])
 
             for card_uuid in card_uuids:
                 move = rep.moves.add()
