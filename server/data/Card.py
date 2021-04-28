@@ -1,9 +1,11 @@
 import uuid
 
+from data import CardData
+
 
 class Card:
 
-    def __init__(self, card_data):
+    def __init__(self, card_data: CardData):
         self.card_data = card_data
         self.uuid = uuid.uuid4()
 

@@ -90,14 +90,7 @@ class FiniteDeckManager(DeckManager):
             response.success = False
             return response
 
-        if move.target_zone == reqrep_pb2.Zone.HAND:
-            self.hand.append(card)
-        elif move.target_zone == reqrep_pb2.Zone.PLAYED:
-            self.played.append(card)
-            card.print_self(self.printer)
-        elif move.target_zone == reqrep_pb2.Zone.DECK:
-            self.put_in_deck(card, move.from_top, move.num_down)
-        else:
+        if not self.move_card(card, move):
             response.success = False
             return response
 
@@ -120,3 +113,15 @@ class FiniteDeckManager(DeckManager):
         if i != len(self.decklist) and self.decklist[i].uuid == uuid:
             return self.decklist[i]
         raise ValueError
+
+    def move_card(self, card: Card, move: reqrep_pb2.Move) -> bool:
+        if move.target_zone == reqrep_pb2.Zone.HAND:
+            self.hand.append(card)
+        elif move.target_zone == reqrep_pb2.Zone.PLAYED:
+            self.played.append(card)
+            card.print_self(self.printer)
+        elif move.target_zone == reqrep_pb2.Zone.DECK:
+            self.put_in_deck(card, move.from_top, move.num_down)
+        else:
+            return False
+        return True
