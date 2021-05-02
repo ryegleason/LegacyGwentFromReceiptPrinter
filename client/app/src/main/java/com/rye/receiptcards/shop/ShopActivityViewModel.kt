@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.rye.receiptcards.cardList
+package com.rye.receiptcards.shop
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -23,24 +23,18 @@ import com.rye.receiptcards.data.CardManager
 import com.rye.receiptcards.proto.Reqrep
 import kotlinx.coroutines.launch
 
-class SpecialViewModel(val cardManager: CardManager) : ViewModel() {
+class ShopActivityViewModel(val cardManager: CardManager) : ViewModel() {
 
-    val specialActions = cardManager.specialActions
-
-    fun doSpecialAction(action: Reqrep.SpecialAction){
-        viewModelScope.launch {
-            cardManager.doSpecialAction(action)
-        }
-    }
+    val shopCards = cardManager.shopCards
 
 }
 
-class SpecialViewModelFactory : ViewModelProvider.Factory {
+class ShopActivityViewModelFactory : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SpecialViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(ShopActivityViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return SpecialViewModel(
+            return ShopActivityViewModel(
                 cardManager = CardManager.getDataSource()
             ) as T
         }

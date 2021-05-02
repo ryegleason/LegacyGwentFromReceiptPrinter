@@ -81,6 +81,16 @@ class CardDetailActivity : AppCompatActivity() {
                 numberPicker.visibility = View.GONE
                 cardsInLabel.visibility = View.GONE
             }
+            Reqrep.Zone.SPECIAL -> {
+                topButton.isEnabled = false
+                bottomButton.isEnabled = false
+                playButton.isEnabled = false
+                topButton.visibility = View.GONE
+                bottomButton.visibility = View.GONE
+                numberPicker.visibility = View.GONE
+                cardsInLabel.visibility = View.GONE
+                playButton.visibility = View.GONE
+            }
         }
 
         /* If currentCardId is not null, get corresponding card and set name, image and

@@ -50,4 +50,17 @@
     <string name="deck_chooser">Deck:</string>
     <string name="all_games">Any</string>
     <string name="begin">Play</string>
+
+    <string name="sideboard">Sideboard</string>
+    <string name="creep">Creep</string>
+    <string name="rand_arrow">Random Arrow</string>
+    <string name="left_arrow">Left Arrow</string>
+    <string name="forward_arrow">Forward Arrow</string>
+    <string name="right_arrow">Right Arrow</string>
+    <string name="shop_no_hold">Shop (no hold)</string>
+    <string name="shop_hold">Shop (hold Secret Shop item)</string>
+
+    <string name="secret_shop">Secret Shop Item:</string>
+    <string name="item_deck">Item Deck Item:</string>
+    <string name="consumable">Consumable Item:</string>
 </resources>
