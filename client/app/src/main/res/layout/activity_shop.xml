@@ -51,7 +51,7 @@
             <ImageView
                 android:id="@+id/item_deck_image"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginStart="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/secret_shop_image"
@@ -73,7 +73,7 @@
             <ImageView
                 android:id="@+id/consumable_image"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/item_deck_image"
                 app:layout_constraintTop_toBottomOf="@+id/consumable_text"

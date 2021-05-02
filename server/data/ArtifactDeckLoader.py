@@ -58,7 +58,7 @@ class ArtifactDeckLoader(DeckLoader):
                 hero_card_data[(-4 + hero[1])] = hero_card
 
             for include in hero_card.includes:
-                item_deck_cards.append((ArtifactCardData(include[0]), include[1]))
+                main_deck_cards.append((ArtifactCardData(include[0]), include[1]))
 
         uuids = []
         deck_cards = []
@@ -85,7 +85,7 @@ class ArtifactDeckLoader(DeckLoader):
             for i in range(copies):
                 item_cards.append(Card(card_data))
 
-        manager = ArtifactDeckManager(deck_cards, hero_card_data, item_cards)
+        manager = ArtifactDeckManager(main_deck=deck_cards, heroes=hero_card_data, item_deck=item_cards)
         manager.set_printer(self.printer)
         response = manager.setup()
         response.new_cards.card_uuids.extend(uuids)

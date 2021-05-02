@@ -37,8 +37,6 @@ while True:
     proto_request = reqrep_pb2.Req()
     proto_request.ParseFromString(request)
 
-    print("Request get: \n" + str(proto_request))
-
     proto_response = reqrep_pb2.Rep()
 
     user_uuid = util.proto_UUID_to_UUID(proto_request.user_uuid)

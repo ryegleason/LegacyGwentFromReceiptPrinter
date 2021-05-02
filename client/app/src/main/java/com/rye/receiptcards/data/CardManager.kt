@@ -86,7 +86,7 @@ class CardManager {
 
             if (response.newCards.imageUrisCount > 0) {
 
-                for (index in 1 until response.newCards.cardUuidsCount) {
+                for (index in 0 until response.newCards.cardUuidsCount) {
                     val uuid = protoUUIDToUUID(response.newCards.getCardUuids(index))
                     val newCard = Card(uuid, response.newCards.getImageUris(response.newCards.getImageIndices(index)))
                     updatedMap[uuid] = newCard

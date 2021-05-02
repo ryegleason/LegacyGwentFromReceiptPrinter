@@ -1,4 +1,5 @@
 import random
+from uuid import UUID
 
 import util
 from data.ArtifactCardData import ArtifactCardData, id_to_card_dict
@@ -46,6 +47,9 @@ class ArtifactDeckManager(FiniteDeckManager):
         self.secret_shop_item = None
         # Order is always secret shop, item deck, consumable
         self.shop_cards = [None, None, None]
+        self.item_card_uuids_map = {}
+        for card in item_deck:
+            self.item_card_uuids_map[card.uuid.int] = card
 
     def setup(self) -> reqrep_pb2.Rep:
         rep = super().setup()
@@ -57,6 +61,10 @@ class ArtifactDeckManager(FiniteDeckManager):
             starting_hero.print_self(self.printer)
         for hero in self.heroes[3:]:
             hero.print_self(self.printer)
+
+        rep.special_actions.extend([SpecialAction.CREEP, SpecialAction.RAND_ARROW, SpecialAction.LEFT_ARROW,
+                                    SpecialAction.FORWARD_ARROW, SpecialAction.RIGHT_ARROW,
+                                    SpecialAction.SHOP_NO_HOLD, SpecialAction.SHOP_HOLD])
 
         return rep
 
@@ -90,7 +98,7 @@ class ArtifactDeckManager(FiniteDeckManager):
                 rep.new_cards.image_indices.append(0)
 
                 new_move = rep.moves.add()
-                new_move.card_uuid = proto_uuid
+                util.UUID_to_proto_UUID(new_card.uuid, new_move.card_uuid)
                 new_move.source_zone = Zone.NONE
                 new_move.target_zone = Zone.SPECIAL
         else:
@@ -131,6 +139,9 @@ class ArtifactDeckManager(FiniteDeckManager):
             secret_shop_card = Card(self.secret_shop_item)
             consumable_card = Card(random.choice(CONSUMABLE_SHOP_CARDS))
 
+            self.item_card_uuids_map[secret_shop_card.uuid.int] = secret_shop_card
+            self.item_card_uuids_map[consumable_card.uuid.int] = consumable_card
+
             if len(self.item_deck) > 0:
                 item_deck_card = self.item_deck[-1]
                 self.shop_cards = [secret_shop_card, item_deck_card, consumable_card]
@@ -146,18 +157,21 @@ class ArtifactDeckManager(FiniteDeckManager):
             rep.new_cards.image_uris.extend(image_uris)
 
             rep.new_cards.image_indices.extend(list(range(len(self.shop_cards))))
-            rep.special_actions.extend([SpecialAction.CREEP, SpecialAction.RAND_ARROW, SpecialAction.LEFT_ARROW,
-                                        SpecialAction.FORWARD_ARROW, SpecialAction.RIGHT_ARROW,
-                                        SpecialAction.SHOP_NO_HOLD, SpecialAction.SHOP_HOLD])
 
-            for card_uuid in card_uuids:
+            for shop_card in self.shop_cards:
                 move = rep.moves.add()
-                move.card_uuid = card_uuid
+                util.UUID_to_proto_UUID(shop_card.uuid, move.card_uuid)
                 move.source_zone = Zone.NONE
                 move.target_zone = Zone.SPECIAL
 
-            self.shop_cards.insert(1, None)
+            if len(self.shop_cards) == 2:
+                self.shop_cards.insert(1, None)
 
             return rep
 
+    def card_for_uuid(self, uuid: UUID) -> Card:
+        try:
+            return self.item_card_uuids_map[uuid.int]
+        except KeyError:
+            return super().card_for_uuid(uuid)
 

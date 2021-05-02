@@ -31,7 +31,10 @@ class ShopActivity : AppCompatActivity() {
             .get(ShopActivityViewModel::class.java)
 
         shopActivityViewModel.shopCards.observe(this@ShopActivity, Observer {
-            val shopCards = it ?: listOf<Card?>(null, null, null)
+            var shopCards = it ?: listOf<Card?>(null, null, null)
+            if (shopCards.size != 3) {
+                shopCards = listOf<Card?>(null, null, null)
+            }
 
             val secretShopCard = shopCards[0]
             val itemDeckCard = shopCards[1]
