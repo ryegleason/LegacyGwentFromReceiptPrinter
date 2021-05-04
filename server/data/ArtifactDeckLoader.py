@@ -19,10 +19,10 @@ from proto.protobuf import reqrep_pb2
 
 class ArtifactDeckLoader(DeckLoader):
 
-    def __init__(self, deck_codes_file, printer):
+    def __init__(self, print_queue, deck_codes_file):
+        super().__init__(print_queue)
         decoder = MyArtifactDeckDecoder()
         self.decks = {}
-        self.printer = printer
         if os.path.isfile(deck_codes_file):
             with open(deck_codes_file, "r") as f:
                 for line in f:
@@ -85,16 +85,10 @@ class ArtifactDeckLoader(DeckLoader):
             for i in range(copies):
                 item_cards.append(Card(card_data))
 
-        manager = ArtifactDeckManager(main_deck=deck_cards, heroes=hero_card_data, item_deck=item_cards)
-        manager.set_printer(self.printer)
+        manager = ArtifactDeckManager(self.print_queue, deck_cards, hero_card_data, item_cards)
         response = manager.setup()
         response.new_cards.card_uuids.extend(uuids)
         response.new_cards.image_uris.extend(image_uris)
         response.new_cards.image_indices.extend(image_indices)
         return manager, response
 
-
-if __name__ == "__main__":
-    loader = ArtifactDeckLoader(r"G:\Documents\MixedProjects\LegacyGwentFromReceiptPrinter\server\decks\artifact_decks.txt", Dummy())
-    print(loader.get_deck_names())
-    loader.load_deck(loader.get_deck_names()[0])

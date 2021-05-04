@@ -12,12 +12,11 @@ from proto.protobuf import reqrep_pb2
 
 class FiniteDeckManager(DeckManager):
 
-    def __init__(self, decklist, starting_hand_size=7):
-        super().__init__()
+    def __init__(self, print_queue, decklist, starting_hand_size=7):
+        super().__init__(print_queue)
         self.decklist = decklist
         self.starting_hand_size = starting_hand_size
         self.decklist.sort()
-        self.printer = None
         self.deck: List[Card] = []
         self.hand: List[Card] = []
         self.played: List[Card] = []
@@ -63,7 +62,7 @@ class FiniteDeckManager(DeckManager):
             self.hand.append(to_draw)
         elif draw_to == reqrep_pb2.Zone.PLAYED:
             self.played.append(to_draw)
-            to_draw.print_self(self.printer)
+            to_draw.queue_print(self.print_queue)
         else:
             response.success = False
             return response
@@ -119,7 +118,7 @@ class FiniteDeckManager(DeckManager):
             self.hand.append(card)
         elif move.target_zone == reqrep_pb2.Zone.PLAYED:
             self.played.append(card)
-            card.print_self(self.printer)
+            card.queue_print(self.print_queue)
         elif move.target_zone == reqrep_pb2.Zone.DECK:
             self.put_in_deck(card, move.from_top, move.num_down)
         else:

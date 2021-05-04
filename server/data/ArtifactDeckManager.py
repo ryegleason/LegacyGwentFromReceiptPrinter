@@ -1,6 +1,8 @@
 import random
 from uuid import UUID
 
+from escpos.printer import Dummy
+
 import util
 from data.ArtifactCardData import ArtifactCardData, id_to_card_dict
 from data.Card import Card
@@ -15,32 +17,32 @@ for card_id, card_data in id_to_card_dict.items():
     if card_data["card_type"] == "Item" and not (3003 <= card_id <= 3006):
         SECRET_SHOP_CARDS.append(ArtifactCardData(card_id))
 
+dummy_printer = Dummy()
+dummy_printer.set(align="center")
+dummy_printer.text("\n" * 5)
+dummy_printer.text("<-------")
+dummy_printer.text("\n" * 5)
+left_arrow_raw = dummy_printer.output
 
-def print_left_arrow(printer):
-    printer.set(align="center")
-    printer.text("\n" * 5)
-    printer.text("<-------")
-    printer.text("\n" * 5)
+dummy_printer = Dummy()
+dummy_printer.set(align="center")
+dummy_printer.text("\n" * 5)
+dummy_printer.text("------->")
+dummy_printer.text("\n" * 5)
+right_arrow_raw = dummy_printer.output
 
-
-def print_right_arrow(printer):
-    printer.set(align="center")
-    printer.text("\n" * 5)
-    printer.text("------->")
-    printer.text("\n" * 5)
-
-
-def print_forward_arrow(printer):
-    printer.set(align="center")
-    printer.text("\n" * 4)
-    printer.text("^\n|\n|")
-    printer.text("\n" * 4)
+dummy_printer = Dummy()
+dummy_printer.set(align="center")
+dummy_printer.text("\n" * 4)
+dummy_printer.text("^\n|\n|")
+dummy_printer.text("\n" * 4)
+forward_arrow_raw = dummy_printer.output
 
 
 class ArtifactDeckManager(FiniteDeckManager):
 
-    def __init__(self, main_deck, heroes, item_deck):
-        super().__init__(main_deck, starting_hand_size=5)
+    def __init__(self, print_queue, main_deck, heroes, item_deck):
+        super().__init__(print_queue, main_deck, starting_hand_size=5)
         self.heroes = heroes
         self.starting_item_deck = item_deck
         self.item_deck = []
@@ -58,9 +60,9 @@ class ArtifactDeckManager(FiniteDeckManager):
 
         # Randomize print order for first 3
         for starting_hero in random.sample(self.heroes[:3], 3):
-            starting_hero.print_self(self.printer)
+            starting_hero.queue_print(self.print_queue)
         for hero in self.heroes[3:]:
-            hero.print_self(self.printer)
+            hero.queue_print(self.print_queue)
 
         rep.special_actions.extend([SpecialAction.CREEP, SpecialAction.RAND_ARROW, SpecialAction.LEFT_ARROW,
                                     SpecialAction.FORWARD_ARROW, SpecialAction.RIGHT_ARROW,
@@ -112,25 +114,25 @@ class ArtifactDeckManager(FiniteDeckManager):
         rep = reqrep_pb2.Rep()
         rep.success = True
         if special_action == SpecialAction.CREEP:
-            CREEP_CARD.print_self(self.printer)
+            CREEP_CARD.queue_print(self.print_queue)
             return rep
         if special_action == SpecialAction.RAND_ARROW:
             arrow = random.randint(0, 3)
             if arrow == 0:
-                print_left_arrow(self.printer)
+                self.print_queue.put(left_arrow_raw)
             elif arrow == 1:
-                print_right_arrow(self.printer)
+                self.print_queue.put(right_arrow_raw)
             else:
-                print_forward_arrow(self.printer)
+                self.print_queue.put(forward_arrow_raw)
             return rep
         if special_action == SpecialAction.LEFT_ARROW:
-            print_left_arrow(self.printer)
+            self.print_queue.put(left_arrow_raw)
             return rep
         if special_action == SpecialAction.FORWARD_ARROW:
-            print_forward_arrow(self.printer)
+            self.print_queue.put(right_arrow_raw)
             return rep
         if special_action == SpecialAction.RIGHT_ARROW:
-            print_right_arrow(self.printer)
+            self.print_queue.put(forward_arrow_raw)
             return rep
         if special_action == SpecialAction.SHOP_NO_HOLD:
             self.secret_shop_item = random.choice(SECRET_SHOP_CARDS)

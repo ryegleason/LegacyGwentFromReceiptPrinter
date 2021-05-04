@@ -123,7 +123,7 @@ class MTGCardData(CardData):
             name = self.name
         return os.path.join(folder, name.replace("//", "&&") + "." + extension)
 
-    def print_self(self, printer, postfix="\n\n\n"):
+    async def print_self(self, printer, postfix="\n\n\n"):
         # Double-sided and split card printing
         for card_data in self.card_data_components[:-1]:
             card_data.print_self(printer, postfix="\n")
