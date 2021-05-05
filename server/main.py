@@ -1,17 +1,16 @@
-from typing import Dict
-from uuid import UUID
-
 import zmq
-from escpos.printer import Dummy, Usb
 
-import util
-from data import DeckManager
-from data.ArtifactDeckLoader import ArtifactDeckLoader
-from data.MTGDeckLoader import MTGDeckLoader
-from printer.PrinterDaemon import PrinterDaemon
-from proto.protobuf import reqrep_pb2
 import os.path
 
+import zmq
+
+import util
+from daemons.CLIDaemon import CLIDaemon
+from data import MTGCardData, ArtifactCardData
+from data.ArtifactDeckLoader import ArtifactDeckLoader
+from data.MTGDeckLoader import MTGDeckLoader
+from daemons.PrinterDaemon import PrinterDaemon
+from proto.protobuf import reqrep_pb2
 
 context = zmq.Context()
 server = context.socket(zmq.REP)
@@ -24,6 +23,12 @@ print_queue = printer_daemon.print_queue
 
 deck_manager_loaders = {"mtg": MTGDeckLoader(print_queue, os.path.abspath(os.path.join("decks", "mtg"))),
                         "artifact": ArtifactDeckLoader(print_queue, os.path.abspath(os.path.join("decks", "artifact_decks.txt")))}
+
+card_print_functions = {"mtg": MTGCardData.print_card_from_name, "artifact": ArtifactCardData.print_card_from_name}
+
+cli_daemon = CLIDaemon(print_queue)
+cli_daemon.start()
+
 user_deck_managers = {}
 
 decks_info_list = []
@@ -49,6 +54,7 @@ while True:
     elif proto_request.req_type == reqrep_pb2.Req.ReqType.SELECT_DECK:
         deck_info = decks_info_list[proto_request.deck_index]
         user_deck_managers[user_uuid], proto_response = deck_manager_loaders[deck_info.game].load_deck(deck_info.name)
+        cli_daemon.print_func = card_print_functions[deck_info.game]
     elif proto_request.req_type == reqrep_pb2.Req.ReqType.SHUFFLE:
         proto_response = user_deck_managers[user_uuid].shuffle()
     elif proto_request.req_type == reqrep_pb2.Req.ReqType.DRAW:

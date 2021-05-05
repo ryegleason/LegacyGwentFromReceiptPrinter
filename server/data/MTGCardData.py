@@ -22,6 +22,11 @@ def request_from_scryfall(req) -> requests.Response:
     return requests.get(req)
 
 
+def print_card_from_name(print_queue, name):
+    card = MTGCardData(name)
+    card.queue_print(print_queue)
+
+
 class MTGCardData(CardData):
     IMAGE_WIDTH = 300
 

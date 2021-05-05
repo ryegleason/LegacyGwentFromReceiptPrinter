@@ -2,13 +2,11 @@ import io
 import json
 import os
 import re
-import time
 
 import requests
 from PIL import Image, ImageOps, ImageEnhance
 from escpos.printer import Usb
 
-from data.CardData import CardData
 from data.SimpleCardData import SimpleCardData
 
 html_remover = re.compile("[<].*?[>]")
@@ -30,6 +28,13 @@ for card in set_0:
 for card in set_1:
     if card["card_type"] in ["Hero", "Creep", "Improvement", "Spell", "Item"]:
         id_to_card_dict[card["card_id"]] = card
+
+name_to_id_dict = {id_to_card_dict[card_id]["card_name"][LANG].lower() : card_id for card_id in id_to_card_dict}
+
+
+def print_card_from_name(print_queue, name):
+    card_for_name = ArtifactCardData(name_to_id_dict[name.lower()])
+    card_for_name.queue_print(print_queue)
 
 
 class ArtifactCardData(SimpleCardData):

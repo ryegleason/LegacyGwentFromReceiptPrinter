@@ -1,3 +1,4 @@
+import time
 from queue import Queue
 from threading import Thread
 
@@ -18,5 +19,4 @@ class PrinterDaemon(Thread):
         while True:
             to_print = self.print_queue.get()
             printer._raw(to_print)
-            if not self.print_queue.empty():
-                input("Press enter to print next card. ")
+            time.sleep(0.25)
