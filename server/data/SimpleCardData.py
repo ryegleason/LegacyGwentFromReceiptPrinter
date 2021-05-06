@@ -23,7 +23,7 @@ class SimpleCardData(CardData):
     def get_card_image_uri(self) -> str:
         pass
 
-    def print_self(self, printer, postfix="\n\n\n"):
+    def print_self(self, printer, postfix="\n\n\n\n"):
         printer.set(align="left")
         printer.text(self.name + "\n")
         printer.set(align="right")

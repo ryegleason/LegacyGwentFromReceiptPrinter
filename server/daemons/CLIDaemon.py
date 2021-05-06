@@ -17,5 +17,6 @@ class CLIDaemon(Thread):
                 continue
             try:
                 print_func(self.print_queue, user_in)
-            except:
+            except Exception as e:
+                print(e)
                 print("No card found for this name!")

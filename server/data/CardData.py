@@ -14,6 +14,6 @@ class CardData:
     def get_card_image_uri(self) -> str:
         pass
 
-    async def print_self(self, printer, postfix="\n\n\n"):
+    def print_self(self, printer, postfix="\n\n\n\n"):
         pass
 

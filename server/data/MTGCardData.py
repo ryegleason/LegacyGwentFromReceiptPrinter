@@ -7,6 +7,7 @@ import requests
 from PIL import Image, ImageOps, ImageEnhance
 from escpos.printer import Usb
 
+from daemons.PrinterDaemon import PrinterDaemon, printer
 from data.CardData import CardData
 from data.SimpleCardData import SimpleCardData
 
@@ -128,7 +129,7 @@ class MTGCardData(CardData):
             name = self.name
         return os.path.join(folder, name.replace("//", "&&") + "." + extension)
 
-    async def print_self(self, printer, postfix="\n\n\n"):
+    def print_self(self, printer, postfix="\n\n\n\n"):
         # Double-sided and split card printing
         for card_data in self.card_data_components[:-1]:
             card_data.print_self(printer, postfix="\n")
@@ -138,6 +139,11 @@ class MTGCardData(CardData):
 
 
 if __name__ == "__main__":
-    p = Usb(0x0416, 0x5011, in_ep=0x81, out_ep=0x3)
-    hewwo = MTGCardData("Lone Rider")
-    p._raw(hewwo.raw_print)
+    pd = PrinterDaemon()
+    # p = Usb(0x0416, 0x5011, in_ep=0x81, out_ep=0x3)
+    hewwo = MTGCardData("Fireball")
+    # print(hewwo.raw_print)
+    # printer._raw(hewwo.raw_print)
+    pd.print_queue.put(hewwo.raw_print)
+    pd.print_queue.put(MTGCardData("Goblin").raw_print)
+    pd.run()

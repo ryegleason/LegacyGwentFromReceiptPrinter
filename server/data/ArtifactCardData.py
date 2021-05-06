@@ -70,7 +70,7 @@ class ArtifactCardData(SimpleCardData):
 
         body = data.get("card_text").get(LANG, "")
         body = body.replace("<br/>", "\n")
-        html_remover.sub("", body)
+        body = html_remover.sub("", body)
         bottom_left = str(data.get("attack", ""))
         bottom_center = str(data.get("armor", ""))
         if self.is_item():
@@ -122,6 +122,7 @@ class ArtifactCardData(SimpleCardData):
 
 
 if __name__ == "__main__":
-    p = Usb(0x0416, 0x5011, in_ep=0x81, out_ep=0x3)
-    hewwo = ArtifactCardData(10148)
-    p._raw(hewwo.raw_print)
+    # p = Usb(0x0416, 0x5011, in_ep=0x81, out_ep=0x3)
+    hewwo = ArtifactCardData(10017)
+    print(hewwo.body)
+    # p._raw(hewwo.raw_print)

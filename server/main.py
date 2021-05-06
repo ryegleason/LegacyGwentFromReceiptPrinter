@@ -2,8 +2,6 @@ import zmq
 
 import os.path
 
-import zmq
-
 import util
 from daemons.CLIDaemon import CLIDaemon
 from data import MTGCardData, ArtifactCardData
@@ -28,6 +26,7 @@ card_print_functions = {"mtg": MTGCardData.print_card_from_name, "artifact": Art
 
 cli_daemon = CLIDaemon(print_queue)
 cli_daemon.start()
+cli_daemon.print_func = card_print_functions["mtg"]
 
 user_deck_managers = {}
 
