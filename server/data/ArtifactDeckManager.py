@@ -20,21 +20,21 @@ for card_id, card_data in id_to_card_dict.items():
 dummy_printer = Dummy()
 dummy_printer.set(align="center")
 dummy_printer.text("\n" * 5)
-dummy_printer.text("<-------")
-dummy_printer.text("\n" * 5)
+dummy_printer.text("<-------\nL")
+dummy_printer.text("\n" * 4)
 left_arrow_raw = dummy_printer.output
 
 dummy_printer = Dummy()
 dummy_printer.set(align="center")
 dummy_printer.text("\n" * 5)
-dummy_printer.text("------->")
-dummy_printer.text("\n" * 5)
+dummy_printer.text("------->\nR")
+dummy_printer.text("\n" * 4)
 right_arrow_raw = dummy_printer.output
 
 dummy_printer = Dummy()
 dummy_printer.set(align="center")
 dummy_printer.text("\n" * 4)
-dummy_printer.text("^\n|\n|")
+dummy_printer.text("|\n|\nV")
 dummy_printer.text("\n" * 4)
 forward_arrow_raw = dummy_printer.output
 
@@ -129,10 +129,10 @@ class ArtifactDeckManager(FiniteDeckManager):
             self.print_queue.put(left_arrow_raw)
             return rep
         if special_action == SpecialAction.FORWARD_ARROW:
-            self.print_queue.put(right_arrow_raw)
+            self.print_queue.put(forward_arrow_raw)
             return rep
         if special_action == SpecialAction.RIGHT_ARROW:
-            self.print_queue.put(forward_arrow_raw)
+            self.print_queue.put(right_arrow_raw)
             return rep
         if special_action == SpecialAction.SHOP_NO_HOLD:
             self.secret_shop_item = random.choice(SECRET_SHOP_CARDS)
