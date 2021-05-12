@@ -30,10 +30,14 @@ class CardManager {
     private val _deckCards = MutableLiveData<List<Card>>()
     private val _handCards = MutableLiveData<List<Card>>()
     private val _playedCards = MutableLiveData<List<Card>>()
+    private val _shopCards = MutableLiveData<List<Card?>>()
+    private val _specialActions = MutableLiveData<Set<Reqrep.SpecialAction>>()
 
     val deckCards: LiveData<List<Card>> = _deckCards
     val handCards: LiveData<List<Card>> = _handCards
     val playedCards: LiveData<List<Card>> = _playedCards
+    val shopCards: LiveData<List<Card?>> = _shopCards
+    val specialActions: LiveData<Set<Reqrep.SpecialAction>> = _specialActions
 
     suspend fun draw(target: Reqrep.Zone) {
         val response = request(Reqrep.Req.newBuilder().setReqType(Reqrep.Req.ReqType.DRAW).setDrawTo(target))
@@ -63,6 +67,13 @@ class CardManager {
         }
     }
 
+    suspend fun doSpecialAction(action: Reqrep.SpecialAction) {
+        val response = request(Reqrep.Req.newBuilder().setReqType(Reqrep.Req.ReqType.SPECIAL).setSpecial(action))
+        if (response is Result.Success) {
+            processResponse(response.data)
+        }
+    }
+
     fun processResponse(response: Reqrep.Rep) {
         if (response.success) {
             // Add new cards
@@ -70,15 +81,23 @@ class CardManager {
             val updatedDeck = _deckCards.value?.toMutableList() ?: mutableListOf()
             val updatedHand = _handCards.value?.toMutableList() ?: mutableListOf()
             val updatedPlayed = _playedCards.value?.toMutableList() ?: mutableListOf()
+            var updatedShop: MutableList<Card?> = _shopCards.value?.toMutableList() ?: mutableListOf(null, null, null)
+            var updatedActions = _specialActions.value?.toSet() ?: setOf()
 
             if (response.newCards.imageUrisCount > 0) {
 
-                for (index in 1 until response.newCards.cardUuidsCount) {
+                for (index in 0 until response.newCards.cardUuidsCount) {
                     val uuid = protoUUIDToUUID(response.newCards.getCardUuids(index))
                     val newCard = Card(uuid, response.newCards.getImageUris(response.newCards.getImageIndices(index)))
                     updatedMap[uuid] = newCard
                 }
             }
+
+            if (response.specialActionsCount > 0) {
+                updatedActions = response.specialActionsList.toSet()
+            }
+
+            val newSpecialCards = mutableListOf<Card>()
 
             for (move in response.movesList) {
                 val targetCard = updatedMap[protoUUIDToUUID(move.cardUuid)]
@@ -87,6 +106,9 @@ class CardManager {
                         updatedDeck.remove(targetCard)
                         updatedHand.remove(targetCard)
                         updatedPlayed.remove(targetCard)
+                        if (updatedShop.contains(targetCard)) {
+                            updatedShop[updatedShop.indexOf(targetCard)] = null
+                        }
                     }
 
                     when (move.targetZone!!) {
@@ -102,6 +124,9 @@ class CardManager {
                         Reqrep.Zone.PLAYED -> {
                             updatedPlayed.add(targetCard)
                         }
+                        Reqrep.Zone.SPECIAL -> {
+                            newSpecialCards.add(targetCard)
+                        }
                         Reqrep.Zone.UNRECOGNIZED -> {
                             // Do nothing
                         }
@@ -109,10 +134,27 @@ class CardManager {
                 }
             }
 
+            when (newSpecialCards.size) {
+                3 -> {
+                    // Full shop
+                    updatedShop = newSpecialCards.toMutableList()
+                }
+                2 -> {
+                    // Item deck is empty
+                    updatedShop = mutableListOf(newSpecialCards[0], null, newSpecialCards[1])
+                }
+                1 -> {
+                    // Replacing drawn item deck card
+                    updatedShop[1] = newSpecialCards[0]
+                }
+            }
+
             _cardForID.postValue(updatedMap)
             _deckCards.postValue(updatedDeck)
             _handCards.postValue(updatedHand)
             _playedCards.postValue(updatedPlayed)
+            _shopCards.postValue(updatedShop)
+            _specialActions.postValue(updatedActions)
         }
     }
 
@@ -127,6 +169,8 @@ class CardManager {
         _deckCards.value = listOf()
         _handCards.value = listOf()
         _playedCards.value = listOf()
+        _shopCards.value = listOf()
+        _specialActions.value = setOf()
     }
 
 

@@ -8,9 +8,12 @@ class CardData:
         self.print_self(printer)
         self.raw_print = printer.output
 
+    def queue_print(self, print_queue):
+        print_queue.put(self.raw_print)
+
     def get_card_image_uri(self) -> str:
         pass
 
-    def print_self(self, printer, postfix="\n\n\n"):
+    def print_self(self, printer, postfix="\n\n\n\n"):
         pass
 

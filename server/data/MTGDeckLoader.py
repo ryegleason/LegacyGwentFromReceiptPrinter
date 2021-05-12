@@ -14,7 +14,8 @@ from proto.protobuf import reqrep_pb2
 
 class MTGDeckLoader(DeckLoader):
 
-    def __init__(self, deck_dir):
+    def __init__(self, print_queue, deck_dir):
+        super().__init__(print_queue)
         self.deck_dir = deck_dir
         self.deck_names = []
         if os.path.isdir(deck_dir):
@@ -53,7 +54,7 @@ class MTGDeckLoader(DeckLoader):
 
                 image_index += 1
 
-        manager = FiniteDeckManager(cards)
+        manager = FiniteDeckManager(self.print_queue, cards)
         response = manager.setup()
         response.new_cards.card_uuids.extend(uuids)
         response.new_cards.image_uris.extend(image_uris)

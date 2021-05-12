@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.widget.LinearLayout
+            android:id="@+id/inner_special_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/sideboard_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sideboard"
+                tools:visibility="gone" />
+
+            <Button
+                android:id="@+id/creep_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/creep"
+                android:visibility="gone"
+                tools:visibility="gone" />
+
+            <Button
+                android:id="@+id/rand_arrow_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rand_arrow"
+                tools:visibility="gone" />
+
+            <Button
+                android:id="@+id/left_arrow_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/left_arrow"
+                tools:visibility="gone" />
+
+            <Button
+                android:id="@+id/forward_arrow_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/forward_arrow"
+                tools:visibility="gone" />
+
+            <Button
+                android:id="@+id/right_arrow_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/right_arrow"
+                tools:visibility="gone" />
+
+            <Button
+                android:id="@+id/shop_no_hold_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/shop_no_hold"
+                tools:visibility="gone" />
+
+            <Button
+                android:id="@+id/shop_hold_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/shop_hold"
+                tools:visibility="gone" />
+
+        </android.widget.LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

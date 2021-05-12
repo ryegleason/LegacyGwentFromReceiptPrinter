@@ -6,6 +6,9 @@ from proto.protobuf import reqrep_pb2
 
 class DeckLoader:
 
+    def __init__(self, print_queue):
+        self.print_queue = print_queue
+
     def get_deck_names(self) -> List[str]:
         pass
 

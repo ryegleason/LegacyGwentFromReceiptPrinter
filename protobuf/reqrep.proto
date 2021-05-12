@@ -7,6 +7,18 @@ enum Zone {
   HAND = 1;
   PLAYED = 2;
   DECK = 3;
+  SPECIAL = 4;
+}
+
+enum SpecialAction {
+  SIDEBOARD = 0;
+  CREEP = 1;
+  RAND_ARROW = 2;
+  LEFT_ARROW = 3;
+  FORWARD_ARROW = 4;
+  RIGHT_ARROW = 5;
+  SHOP_NO_HOLD = 6;
+  SHOP_HOLD = 7;
 }
 
 message UUID {
@@ -30,11 +42,13 @@ message Req {
     DRAW = 2;
     DECKS_LIST = 3;
     SELECT_DECK = 4;
+    SPECIAL = 5;
   }
   ReqType req_type = 2;
   Zone draw_to = 3;
   Move move = 4;
   uint32 deck_index = 5;
+  SpecialAction special = 6;
 }
 
 message Rep {
@@ -42,6 +56,7 @@ message Rep {
   DecksInfo decks_info = 2;
   Cards new_cards = 3;
   repeated Move moves = 4;
+  repeated SpecialAction special_actions = 5;
 }
 
 message DecksInfo {

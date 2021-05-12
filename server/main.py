@@ -1,20 +1,33 @@
 import zmq
-from escpos.printer import Dummy, Usb
 
-import util
-from data.MTGDeckLoader import MTGDeckLoader
-from proto.protobuf import reqrep_pb2
 import os.path
 
-#printer = Dummy()
-printer = Usb(0x0416, 0x5011, 4, 0x81, 0x03)
-printer.set(density=2)
+import util
+from daemons.CLIDaemon import CLIDaemon
+from data import MTGCardData, ArtifactCardData
+from data.ArtifactDeckLoader import ArtifactDeckLoader
+from data.MTGDeckLoader import MTGDeckLoader
+from daemons.PrinterDaemon import PrinterDaemon
+from proto.protobuf import reqrep_pb2
 
 context = zmq.Context()
 server = context.socket(zmq.REP)
 server.bind("tcp://*:27068")
 
-deck_manager_loaders = {"mtg": MTGDeckLoader(os.path.abspath(os.path.join("decks", "mtg")))}
+printer_daemon = PrinterDaemon()
+printer_daemon.setDaemon(True)
+printer_daemon.start()
+print_queue = printer_daemon.print_queue
+
+deck_manager_loaders = {"mtg": MTGDeckLoader(print_queue, os.path.abspath(os.path.join("decks", "mtg"))),
+                        "artifact": ArtifactDeckLoader(print_queue, os.path.abspath(os.path.join("decks", "artifact_decks.txt")))}
+
+card_print_functions = {"mtg": MTGCardData.print_card_from_name, "artifact": ArtifactCardData.print_card_from_name}
+
+cli_daemon = CLIDaemon(print_queue)
+cli_daemon.start()
+cli_daemon.print_func = card_print_functions["mtg"]
+
 user_deck_managers = {}
 
 decks_info_list = []
@@ -31,8 +44,6 @@ while True:
     proto_request = reqrep_pb2.Req()
     proto_request.ParseFromString(request)
 
-    print("Request get: \n" + str(proto_request))
-
     proto_response = reqrep_pb2.Rep()
 
     user_uuid = util.proto_UUID_to_UUID(proto_request.user_uuid)
@@ -42,13 +53,15 @@ while True:
     elif proto_request.req_type == reqrep_pb2.Req.ReqType.SELECT_DECK:
         deck_info = decks_info_list[proto_request.deck_index]
         user_deck_managers[user_uuid], proto_response = deck_manager_loaders[deck_info.game].load_deck(deck_info.name)
-        user_deck_managers[user_uuid].set_printer(printer)
+        cli_daemon.print_func = card_print_functions[deck_info.game]
     elif proto_request.req_type == reqrep_pb2.Req.ReqType.SHUFFLE:
         proto_response = user_deck_managers[user_uuid].shuffle()
     elif proto_request.req_type == reqrep_pb2.Req.ReqType.DRAW:
         proto_response = user_deck_managers[user_uuid].draw(proto_request.draw_to)
     elif proto_request.req_type == reqrep_pb2.Req.ReqType.MOVE:
         proto_response = user_deck_managers[user_uuid].move(proto_request.move)
+    elif proto_request.req_type == reqrep_pb2.Req.ReqType.SPECIAL:
+        proto_response = user_deck_managers[user_uuid].special(proto_request.special)
     else:
         proto_response.success = False
 
