@@ -62,6 +62,8 @@ while True:
         proto_response = user_deck_managers[user_uuid].move(proto_request.move)
     elif proto_request.req_type == reqrep_pb2.Req.ReqType.SPECIAL:
         proto_response = user_deck_managers[user_uuid].special(proto_request.special)
+    elif proto_request.req_type == reqrep_pb2.Req.ReqType.RESUME:
+        proto_response = user_deck_managers[user_uuid].get_full_state()
     else:
         proto_response.success = False
 

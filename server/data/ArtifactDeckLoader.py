@@ -1,19 +1,13 @@
-import io
 import os
-from pathlib import Path
 from typing import List
 
-from escpos.printer import Dummy
-
-import util
 from data.ArtifactCardData import ArtifactCardData
 from data.ArtifactDeckDecoder import MyArtifactDeckDecoder
 from data.ArtifactDeckManager import ArtifactDeckManager
 from data.Card import Card
+from data.CardData import CardData
 from data.DeckLoader import DeckLoader
 from data.DeckManager import DeckManager
-from data.MTGCardData import MTGCardData
-from data.FiniteDeckManager import FiniteDeckManager
 from proto.protobuf import reqrep_pb2
 
 
@@ -38,7 +32,7 @@ class ArtifactDeckLoader(DeckLoader):
         heroes = deck["heroes"]
         other = deck["cards"]
 
-        hero_card_data = [None] * 2
+        hero_card_data: List[CardData] = [None] * 2
         main_deck_cards = []
         item_deck_cards = []
 
@@ -60,26 +54,12 @@ class ArtifactDeckLoader(DeckLoader):
             for include in hero_card.includes:
                 main_deck_cards.append((ArtifactCardData(include[0]), include[1]))
 
-        uuids = []
         deck_cards = []
         item_cards = []
-        image_uris = []
-        image_indices = []
-        image_index = 0
 
         for (card_data, copies) in main_deck_cards:
-            image_uris.append(card_data.get_card_image_uri())
-
             for i in range(copies):
-                new_card = Card(card_data)
-                deck_cards.append(new_card)
-                new_uuid = reqrep_pb2.UUID()
-                util.UUID_to_proto_UUID(new_card.uuid, new_uuid)
-                uuids.append(new_uuid)
-
-                image_indices.append(image_index)
-
-            image_index += 1
+                deck_cards.append(Card(card_data))
 
         for (card_data, copies) in item_deck_cards:
             for i in range(copies):
@@ -87,8 +67,5 @@ class ArtifactDeckLoader(DeckLoader):
 
         manager = ArtifactDeckManager(self.print_queue, deck_cards, hero_card_data, item_cards)
         response = manager.setup()
-        response.new_cards.card_uuids.extend(uuids)
-        response.new_cards.image_uris.extend(image_uris)
-        response.new_cards.image_indices.extend(image_indices)
         return manager, response
 

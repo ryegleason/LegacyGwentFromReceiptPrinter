@@ -6,6 +6,7 @@ from escpos.printer import Dummy
 import util
 from data.ArtifactCardData import ArtifactCardData, id_to_card_dict
 from data.Card import Card
+from data.DeckManager import add_new_card_to_message
 from data.FiniteDeckManager import FiniteDeckManager
 from proto.protobuf import reqrep_pb2
 from proto.protobuf.reqrep_pb2 import SpecialAction, Zone
@@ -63,10 +64,6 @@ class ArtifactDeckManager(FiniteDeckManager):
             starting_hero.queue_print(self.print_queue)
         for hero in self.heroes[3:]:
             hero.queue_print(self.print_queue)
-
-        rep.special_actions.extend([SpecialAction.CREEP, SpecialAction.RAND_ARROW, SpecialAction.LEFT_ARROW,
-                                    SpecialAction.FORWARD_ARROW, SpecialAction.RIGHT_ARROW,
-                                    SpecialAction.SHOP_NO_HOLD, SpecialAction.SHOP_HOLD])
 
         return rep
 
@@ -150,30 +147,23 @@ class ArtifactDeckManager(FiniteDeckManager):
             else:
                 self.shop_cards = [secret_shop_card, consumable_card]
 
-            card_uuids = list(map(lambda x: reqrep_pb2.UUID(), range(len(self.shop_cards))))
-            for idx, card in enumerate(self.shop_cards):
-                util.UUID_to_proto_UUID(card.uuid, card_uuids[idx])
-            rep.new_cards.card_uuids.extend(card_uuids)
-
-            image_uris = list(map(lambda x: x.card_data.get_card_image_uri(), self.shop_cards))
-            rep.new_cards.image_uris.extend(image_uris)
-
-            rep.new_cards.image_indices.extend(list(range(len(self.shop_cards))))
-
-            for shop_card in self.shop_cards:
-                move = rep.moves.add()
-                util.UUID_to_proto_UUID(shop_card.uuid, move.card_uuid)
-                move.source_zone = Zone.NONE
-                move.target_zone = Zone.SPECIAL
+            for card in self.shop_cards:
+                add_new_card_to_message(card, Zone.SPECIAL, rep)
 
             if len(self.shop_cards) == 2:
                 self.shop_cards.insert(1, None)
 
             return rep
 
+    def get_full_state(self) -> reqrep_pb2.Rep:
+        rep = super().get_full_state()
+        rep.special_actions.extend([SpecialAction.CREEP, SpecialAction.RAND_ARROW, SpecialAction.LEFT_ARROW,
+                                    SpecialAction.FORWARD_ARROW, SpecialAction.RIGHT_ARROW,
+                                    SpecialAction.SHOP_NO_HOLD, SpecialAction.SHOP_HOLD])
+        return rep
+
     def card_for_uuid(self, uuid: UUID) -> Card:
         try:
             return self.item_card_uuids_map[uuid.int]
         except KeyError:
             return super().card_for_uuid(uuid)
-

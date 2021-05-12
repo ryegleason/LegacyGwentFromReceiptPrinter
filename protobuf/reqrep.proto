@@ -43,6 +43,7 @@ message Req {
     DECKS_LIST = 3;
     SELECT_DECK = 4;
     SPECIAL = 5;
+    RESUME = 6;
   }
   ReqType req_type = 2;
   Zone draw_to = 3;
@@ -54,7 +55,7 @@ message Req {
 message Rep {
   bool success = 1;
   DecksInfo decks_info = 2;
-  Cards new_cards = 3;
+  repeated Card new_cards = 3;
   repeated Move moves = 4;
   repeated SpecialAction special_actions = 5;
 }
@@ -67,8 +68,7 @@ message DecksInfo {
   repeated DeckInfo decks = 1;
 }
 
-message Cards {
-  repeated UUID card_uuids = 1;
-  repeated string image_uris = 2;
-  repeated uint32 image_indices = 3;
+message Card {
+  UUID card_uuid = 1;
+  string image_uri = 2;
 }

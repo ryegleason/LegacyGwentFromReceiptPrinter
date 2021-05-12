@@ -6,8 +6,9 @@ from uuid import UUID
 import util
 from data import Card
 from data.Card import DummyCard
-from data.DeckManager import DeckManager
+from data.DeckManager import DeckManager, add_new_card_to_message
 from proto.protobuf import reqrep_pb2
+from proto.protobuf.reqrep_pb2 import Rep
 
 
 class FiniteDeckManager(DeckManager):
@@ -26,22 +27,12 @@ class FiniteDeckManager(DeckManager):
         self.hand = []
         self.played = []
 
-        response = reqrep_pb2.Rep()
-        response.success = True
+        success = True
         for i in range(self.starting_hand_size):
-            response.success = response.success and self.draw(reqrep_pb2.Zone.HAND).success
+            success = success and self.draw(reqrep_pb2.Zone.HAND).success
 
-        # Sort alphabetically, for convenience and to avoid exposing deck order
-        for card in sorted(self.deck, key=lambda c: c.card_data.name):
-            move = response.moves.add()
-            util.UUID_to_proto_UUID(card.uuid, move.card_uuid)
-            move.source_zone = reqrep_pb2.Zone.NONE
-            move.target_zone = reqrep_pb2.Zone.DECK
-        for card in self.hand:
-            move = response.moves.add()
-            util.UUID_to_proto_UUID(card.uuid, move.card_uuid)
-            move.source_zone = reqrep_pb2.Zone.NONE
-            move.target_zone = reqrep_pb2.Zone.HAND
+        response = self.get_full_state()
+        response.success = response.success and success
 
         return response
 
@@ -95,6 +86,20 @@ class FiniteDeckManager(DeckManager):
 
         response.success = True
         response.moves.append(move)
+        return response
+
+    def get_full_state(self) -> Rep:
+        response = reqrep_pb2.Rep()
+
+        # Sort alphabetically, for convenience and to avoid exposing deck order
+        for card in sorted(self.deck, key=lambda c: c.card_data.name):
+            add_new_card_to_message(card, reqrep_pb2.Zone.DECK, response)
+        for card in self.hand:
+            add_new_card_to_message(card, reqrep_pb2.Zone.HAND, response)
+        for card in self.played:
+            add_new_card_to_message(card, reqrep_pb2.Zone.PLAYED, response)
+
+        response.success = True
         return response
 
     def put_in_deck(self, card: Card, from_top: bool, n_cards_down: int = 0):
