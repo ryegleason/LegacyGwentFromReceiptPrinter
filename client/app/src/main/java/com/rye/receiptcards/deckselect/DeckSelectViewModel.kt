@@ -26,6 +26,18 @@ class DeckSelectViewModel : ViewModel() {
             }
         }
     }
+
+    fun resume() {
+        viewModelScope.launch {
+            val result = request(Reqrep.Req.newBuilder().setReqType(Reqrep.Req.ReqType.RESUME))
+            if (result is Result.Success) {
+                _cardsResult.value = result.data
+            } else {
+                println(result.toString())
+                _cardsResult.value = Reqrep.Rep.newBuilder().setSuccess(false).build()
+            }
+        }
+    }
 }
 
 class DeckSelectViewModelFactory : ViewModelProvider.Factory {

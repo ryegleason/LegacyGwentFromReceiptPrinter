@@ -10,7 +10,7 @@ def add_new_card_to_message(card, zone, response):
     util.UUID_to_proto_UUID(card.uuid, proto_card.card_uuid)
     move.source_zone = reqrep_pb2.Zone.NONE
     move.target_zone = zone
-    proto_card.image_uri = card.get_card_image_uri()
+    proto_card.image_uri = card.card_data.get_card_image_uri()
 
 
 class DeckManager:

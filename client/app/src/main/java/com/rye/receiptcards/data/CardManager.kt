@@ -84,13 +84,10 @@ class CardManager {
             var updatedShop: MutableList<Card?> = _shopCards.value?.toMutableList() ?: mutableListOf(null, null, null)
             var updatedActions = _specialActions.value?.toSet() ?: setOf()
 
-            if (response.newCards.imageUrisCount > 0) {
-
-                for (index in 0 until response.newCards.cardUuidsCount) {
-                    val uuid = protoUUIDToUUID(response.newCards.getCardUuids(index))
-                    val newCard = Card(uuid, response.newCards.getImageUris(response.newCards.getImageIndices(index)))
-                    updatedMap[uuid] = newCard
-                }
+            for (protoCard in response.newCardsList) {
+                val uuid = protoUUIDToUUID(protoCard.cardUuid)
+                val newCard = Card(uuid, protoCard.imageUri)
+                updatedMap[uuid] = newCard
             }
 
             if (response.specialActionsCount > 0) {

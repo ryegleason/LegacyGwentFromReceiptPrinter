@@ -45,11 +45,13 @@
     <string name="invalid_port">Port must be between 0 and 65535</string>
     <string name="login_failed">"Connection failed"</string>
 
-    <string name="deck_selection">Select Deck</string>
+    <string name="deck_selection">New Game</string>
     <string name="game_chooser">Game type:</string>
     <string name="deck_chooser">Deck:</string>
     <string name="all_games">Any</string>
-    <string name="begin">Play</string>
+    <string name="begin">Start</string>
+    <string name="resume_title">Resume Ongoing Game</string>
+    <string name="resume">Resume</string>
 
     <string name="sideboard">Sideboard</string>
     <string name="creep">Creep</string>
