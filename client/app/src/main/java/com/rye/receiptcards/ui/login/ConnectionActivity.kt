@@ -15,9 +15,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.preference.PreferenceManager
 
 import com.rye.receiptcards.R
+import com.rye.receiptcards.data.model.setUUID
 import com.rye.receiptcards.deckselect.DeckSelectActivity
+import java.util.*
 
 const val EXTRA_DECKS_INFO = "com.rye.receiptcards.DECKS_INFO"
 
@@ -30,6 +33,18 @@ class ConnectionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_connection)
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
+        val savedUUID = sharedPreferences.getString(getString(R.string.saved_uuid_key), "")
+        if (savedUUID != "") {
+            setUUID(UUID.fromString(savedUUID))
+        } else {
+            val newUUID = UUID.randomUUID()
+            setUUID(newUUID)
+            with (sharedPreferences.edit()) {
+                putString(getString(R.string.saved_uuid_key), newUUID.toString())
+                apply()
+            }
+        }
 
         val ip = findViewById<EditText>(R.id.ip)
         val port = findViewById<EditText>(R.id.port)
@@ -61,10 +76,12 @@ class ConnectionActivity : AppCompatActivity() {
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success == true) {
-                //Complete and destroy login activity once successful
-                finish()
+                with (sharedPreferences.edit()) {
+                    putString(getString(R.string.saved_ip_key), ip.text.toString())
+                    putInt(getString(R.string.saved_port_key), port.text.toString().toInt())
+                    apply()
+                }
                 updateUiWithSuccess(loginResult)
-                setResult(Activity.RESULT_OK)
             }
         })
 
@@ -99,6 +116,9 @@ class ConnectionActivity : AppCompatActivity() {
                 loginViewModel.login(ip.text.toString(), port.text.toString())
             }
         }
+
+        ip.setText(sharedPreferences.getString(getString(R.string.saved_ip_key), ""))
+        port.setText(sharedPreferences.getInt(getString(R.string.saved_port_key), 27068).toString())
     }
 
     private fun updateUiWithSuccess(loginResult: LoginResult) {

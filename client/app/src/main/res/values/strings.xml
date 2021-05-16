@@ -65,4 +65,8 @@
     <string name="secret_shop">Secret Shop Item:</string>
     <string name="item_deck">Item Deck Item:</string>
     <string name="consumable">Consumable Item:</string>
+
+    <string name="saved_ip_key">ip</string>
+    <string name="saved_port_key">port</string>
+    <string name="saved_uuid_key">user_uuid</string>
 </resources>
