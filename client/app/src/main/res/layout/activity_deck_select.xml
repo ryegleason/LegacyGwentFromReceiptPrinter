@@ -49,6 +49,21 @@
         android:enabled="false"
         android:text="@string/begin" />
 
+    <TextView
+        android:id="@+id/resumeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/resume_title"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2" />
+
+    <Button
+        android:id="@+id/resume"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:text="@string/resume" />
+
     <ProgressBar
         android:id="@+id/loadBar"
         style="?android:attr/progressBarStyle"

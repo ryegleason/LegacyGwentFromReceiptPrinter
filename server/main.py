@@ -1,3 +1,5 @@
+import datetime
+
 import zmq
 
 import os.path
@@ -9,6 +11,10 @@ from data.ArtifactDeckLoader import ArtifactDeckLoader
 from data.MTGDeckLoader import MTGDeckLoader
 from daemons.PrinterDaemon import PrinterDaemon
 from proto.protobuf import reqrep_pb2
+
+
+LOG = True
+LOG_FILE_NAME = datetime.datetime.now().strftime("receipt_server_log_%Y_%m_%d_%H_%M_%f.txt")
 
 context = zmq.Context()
 server = context.socket(zmq.REP)
@@ -39,10 +45,17 @@ for game_name, loader in deck_manager_loaders.items():
         deck.game = game_name
         decks_info_list.append(deck)
 
+log_file = None
+if LOG:
+    log_file = open(LOG_FILE_NAME, 'w')
+
 while True:
     request = server.recv()
     proto_request = reqrep_pb2.Req()
     proto_request.ParseFromString(request)
+
+    if LOG:
+        log_file.write(str(proto_request) + "\n")
 
     proto_response = reqrep_pb2.Rep()
 
@@ -62,10 +75,13 @@ while True:
         proto_response = user_deck_managers[user_uuid].move(proto_request.move)
     elif proto_request.req_type == reqrep_pb2.Req.ReqType.SPECIAL:
         proto_response = user_deck_managers[user_uuid].special(proto_request.special)
+    elif proto_request.req_type == reqrep_pb2.Req.ReqType.RESUME:
+        proto_response = user_deck_managers[user_uuid].get_full_state()
     else:
         proto_response.success = False
 
-    # print("Response sent: \n" + str(proto_response))
+    if LOG:
+        log_file.write(str(proto_response) + "\n")
+        log_file.flush()
 
-    # print("Response success: " + str(proto_response.success))
     server.send(proto_response.SerializeToString())

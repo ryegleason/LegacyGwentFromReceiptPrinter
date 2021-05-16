@@ -26,9 +26,13 @@ const val REQUEST_TIMEOUT: Long = 5000
 private val ctx: ZContext = ZContext()
 private var socket: Socket = ctx.createSocket(SocketType.REQ)!!
 private val poller: Poller = ctx.createPoller(1)
-private val uuid = UUID.randomUUID()
+private var uuid: UUID = UUID.randomUUID()
 
 private lateinit var address: String
+
+fun setUUID(newUuid: UUID) {
+    uuid = newUuid
+}
 
 suspend fun connect(ipAddress: String) {
     ctx.destroySocket(socket)

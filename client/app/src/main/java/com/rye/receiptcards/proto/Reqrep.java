@@ -2078,6 +2078,10 @@ public final class Reqrep {
        * <code>SPECIAL = 5;</code>
        */
       SPECIAL(5),
+      /**
+       * <code>RESUME = 6;</code>
+       */
+      RESUME(6),
       UNRECOGNIZED(-1),
       ;
 
@@ -2105,6 +2109,10 @@ public final class Reqrep {
        * <code>SPECIAL = 5;</code>
        */
       public static final int SPECIAL_VALUE = 5;
+      /**
+       * <code>RESUME = 6;</code>
+       */
+      public static final int RESUME_VALUE = 6;
 
 
       public final int getNumber() {
@@ -2137,6 +2145,7 @@ public final class Reqrep {
           case 3: return DECKS_LIST;
           case 4: return SELECT_DECK;
           case 5: return SPECIAL;
+          case 6: return RESUME;
           default: return null;
         }
       }
@@ -3232,19 +3241,28 @@ public final class Reqrep {
     com.rye.receiptcards.proto.Reqrep.DecksInfoOrBuilder getDecksInfoOrBuilder();
 
     /**
-     * <code>.Cards new_cards = 3;</code>
-     * @return Whether the newCards field is set.
+     * <code>repeated .Card new_cards = 3;</code>
      */
-    boolean hasNewCards();
+    java.util.List<com.rye.receiptcards.proto.Reqrep.Card> 
+        getNewCardsList();
     /**
-     * <code>.Cards new_cards = 3;</code>
-     * @return The newCards.
+     * <code>repeated .Card new_cards = 3;</code>
      */
-    com.rye.receiptcards.proto.Reqrep.Cards getNewCards();
+    com.rye.receiptcards.proto.Reqrep.Card getNewCards(int index);
     /**
-     * <code>.Cards new_cards = 3;</code>
+     * <code>repeated .Card new_cards = 3;</code>
      */
-    com.rye.receiptcards.proto.Reqrep.CardsOrBuilder getNewCardsOrBuilder();
+    int getNewCardsCount();
+    /**
+     * <code>repeated .Card new_cards = 3;</code>
+     */
+    java.util.List<? extends com.rye.receiptcards.proto.Reqrep.CardOrBuilder> 
+        getNewCardsOrBuilderList();
+    /**
+     * <code>repeated .Card new_cards = 3;</code>
+     */
+    com.rye.receiptcards.proto.Reqrep.CardOrBuilder getNewCardsOrBuilder(
+        int index);
 
     /**
      * <code>repeated .Move moves = 4;</code>
@@ -3312,6 +3330,7 @@ public final class Reqrep {
       super(builder);
     }
     private Rep() {
+      newCards_ = java.util.Collections.emptyList();
       moves_ = java.util.Collections.emptyList();
       specialActions_ = java.util.Collections.emptyList();
     }
@@ -3366,22 +3385,18 @@ public final class Reqrep {
               break;
             }
             case 26: {
-              com.rye.receiptcards.proto.Reqrep.Cards.Builder subBuilder = null;
-              if (newCards_ != null) {
-                subBuilder = newCards_.toBuilder();
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                newCards_ = new java.util.ArrayList<com.rye.receiptcards.proto.Reqrep.Card>();
+                mutable_bitField0_ |= 0x00000001;
               }
-              newCards_ = input.readMessage(com.rye.receiptcards.proto.Reqrep.Cards.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(newCards_);
-                newCards_ = subBuilder.buildPartial();
-              }
-
+              newCards_.add(
+                  input.readMessage(com.rye.receiptcards.proto.Reqrep.Card.parser(), extensionRegistry));
               break;
             }
             case 34: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
                 moves_ = new java.util.ArrayList<com.rye.receiptcards.proto.Reqrep.Move>();
-                mutable_bitField0_ |= 0x00000001;
+                mutable_bitField0_ |= 0x00000002;
               }
               moves_.add(
                   input.readMessage(com.rye.receiptcards.proto.Reqrep.Move.parser(), extensionRegistry));
@@ -3389,9 +3404,9 @@ public final class Reqrep {
             }
             case 40: {
               int rawValue = input.readEnum();
-              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
                 specialActions_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000002;
+                mutable_bitField0_ |= 0x00000004;
               }
               specialActions_.add(rawValue);
               break;
@@ -3401,9 +3416,9 @@ public final class Reqrep {
               int oldLimit = input.pushLimit(length);
               while(input.getBytesUntilLimit() > 0) {
                 int rawValue = input.readEnum();
-                if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                if (!((mutable_bitField0_ & 0x00000004) != 0)) {
                   specialActions_ = new java.util.ArrayList<java.lang.Integer>();
-                  mutable_bitField0_ |= 0x00000002;
+                  mutable_bitField0_ |= 0x00000004;
                 }
                 specialActions_.add(rawValue);
               }
@@ -3426,9 +3441,12 @@ public final class Reqrep {
             e).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          moves_ = java.util.Collections.unmodifiableList(moves_);
+          newCards_ = java.util.Collections.unmodifiableList(newCards_);
         }
         if (((mutable_bitField0_ & 0x00000002) != 0)) {
+          moves_ = java.util.Collections.unmodifiableList(moves_);
+        }
+        if (((mutable_bitField0_ & 0x00000004) != 0)) {
           specialActions_ = java.util.Collections.unmodifiableList(specialActions_);
         }
         this.unknownFields = unknownFields.build();
@@ -3486,29 +3504,43 @@ public final class Reqrep {
     }
 
     public static final int NEW_CARDS_FIELD_NUMBER = 3;
-    private com.rye.receiptcards.proto.Reqrep.Cards newCards_;
+    private java.util.List<com.rye.receiptcards.proto.Reqrep.Card> newCards_;
     /**
-     * <code>.Cards new_cards = 3;</code>
-     * @return Whether the newCards field is set.
+     * <code>repeated .Card new_cards = 3;</code>
      */
     @java.lang.Override
-    public boolean hasNewCards() {
-      return newCards_ != null;
+    public java.util.List<com.rye.receiptcards.proto.Reqrep.Card> getNewCardsList() {
+      return newCards_;
     }
     /**
-     * <code>.Cards new_cards = 3;</code>
-     * @return The newCards.
+     * <code>repeated .Card new_cards = 3;</code>
      */
     @java.lang.Override
-    public com.rye.receiptcards.proto.Reqrep.Cards getNewCards() {
-      return newCards_ == null ? com.rye.receiptcards.proto.Reqrep.Cards.getDefaultInstance() : newCards_;
+    public java.util.List<? extends com.rye.receiptcards.proto.Reqrep.CardOrBuilder> 
+        getNewCardsOrBuilderList() {
+      return newCards_;
     }
     /**
-     * <code>.Cards new_cards = 3;</code>
+     * <code>repeated .Card new_cards = 3;</code>
      */
     @java.lang.Override
-    public com.rye.receiptcards.proto.Reqrep.CardsOrBuilder getNewCardsOrBuilder() {
-      return getNewCards();
+    public int getNewCardsCount() {
+      return newCards_.size();
+    }
+    /**
+     * <code>repeated .Card new_cards = 3;</code>
+     */
+    @java.lang.Override
+    public com.rye.receiptcards.proto.Reqrep.Card getNewCards(int index) {
+      return newCards_.get(index);
+    }
+    /**
+     * <code>repeated .Card new_cards = 3;</code>
+     */
+    @java.lang.Override
+    public com.rye.receiptcards.proto.Reqrep.CardOrBuilder getNewCardsOrBuilder(
+        int index) {
+      return newCards_.get(index);
     }
 
     public static final int MOVES_FIELD_NUMBER = 4;
@@ -3630,8 +3662,8 @@ public final class Reqrep {
       if (decksInfo_ != null) {
         output.writeMessage(2, getDecksInfo());
       }
-      if (newCards_ != null) {
-        output.writeMessage(3, getNewCards());
+      for (int i = 0; i < newCards_.size(); i++) {
+        output.writeMessage(3, newCards_.get(i));
       }
       for (int i = 0; i < moves_.size(); i++) {
         output.writeMessage(4, moves_.get(i));
@@ -3660,9 +3692,9 @@ public final class Reqrep {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, getDecksInfo());
       }
-      if (newCards_ != null) {
+      for (int i = 0; i < newCards_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getNewCards());
+          .computeMessageSize(3, newCards_.get(i));
       }
       for (int i = 0; i < moves_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
@@ -3702,11 +3734,8 @@ public final class Reqrep {
         if (!getDecksInfo()
             .equals(other.getDecksInfo())) return false;
       }
-      if (hasNewCards() != other.hasNewCards()) return false;
-      if (hasNewCards()) {
-        if (!getNewCards()
-            .equals(other.getNewCards())) return false;
-      }
+      if (!getNewCardsList()
+          .equals(other.getNewCardsList())) return false;
       if (!getMovesList()
           .equals(other.getMovesList())) return false;
       if (!specialActions_.equals(other.specialActions_)) return false;
@@ -3728,9 +3757,9 @@ public final class Reqrep {
         hash = (37 * hash) + DECKS_INFO_FIELD_NUMBER;
         hash = (53 * hash) + getDecksInfo().hashCode();
       }
-      if (hasNewCards()) {
+      if (getNewCardsCount() > 0) {
         hash = (37 * hash) + NEW_CARDS_FIELD_NUMBER;
-        hash = (53 * hash) + getNewCards().hashCode();
+        hash = (53 * hash) + getNewCardsList().hashCode();
       }
       if (getMovesCount() > 0) {
         hash = (37 * hash) + MOVES_FIELD_NUMBER;
@@ -3868,6 +3897,7 @@ public final class Reqrep {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getNewCardsFieldBuilder();
           getMovesFieldBuilder();
         }
       }
@@ -3883,19 +3913,19 @@ public final class Reqrep {
           decksInfoBuilder_ = null;
         }
         if (newCardsBuilder_ == null) {
-          newCards_ = null;
+          newCards_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
         } else {
-          newCards_ = null;
-          newCardsBuilder_ = null;
+          newCardsBuilder_.clear();
         }
         if (movesBuilder_ == null) {
           moves_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000002);
         } else {
           movesBuilder_.clear();
         }
         specialActions_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -3930,22 +3960,26 @@ public final class Reqrep {
           result.decksInfo_ = decksInfoBuilder_.build();
         }
         if (newCardsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            newCards_ = java.util.Collections.unmodifiableList(newCards_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
           result.newCards_ = newCards_;
         } else {
           result.newCards_ = newCardsBuilder_.build();
         }
         if (movesBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) != 0)) {
+          if (((bitField0_ & 0x00000002) != 0)) {
             moves_ = java.util.Collections.unmodifiableList(moves_);
-            bitField0_ = (bitField0_ & ~0x00000001);
+            bitField0_ = (bitField0_ & ~0x00000002);
           }
           result.moves_ = moves_;
         } else {
           result.moves_ = movesBuilder_.build();
         }
-        if (((bitField0_ & 0x00000002) != 0)) {
+        if (((bitField0_ & 0x00000004) != 0)) {
           specialActions_ = java.util.Collections.unmodifiableList(specialActions_);
-          bitField0_ = (bitField0_ & ~0x00000002);
+          bitField0_ = (bitField0_ & ~0x00000004);
         }
         result.specialActions_ = specialActions_;
         onBuilt();
@@ -4002,14 +4036,37 @@ public final class Reqrep {
         if (other.hasDecksInfo()) {
           mergeDecksInfo(other.getDecksInfo());
         }
-        if (other.hasNewCards()) {
-          mergeNewCards(other.getNewCards());
+        if (newCardsBuilder_ == null) {
+          if (!other.newCards_.isEmpty()) {
+            if (newCards_.isEmpty()) {
+              newCards_ = other.newCards_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureNewCardsIsMutable();
+              newCards_.addAll(other.newCards_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.newCards_.isEmpty()) {
+            if (newCardsBuilder_.isEmpty()) {
+              newCardsBuilder_.dispose();
+              newCardsBuilder_ = null;
+              newCards_ = other.newCards_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              newCardsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getNewCardsFieldBuilder() : null;
+            } else {
+              newCardsBuilder_.addAllMessages(other.newCards_);
+            }
+          }
         }
         if (movesBuilder_ == null) {
           if (!other.moves_.isEmpty()) {
             if (moves_.isEmpty()) {
               moves_ = other.moves_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000002);
             } else {
               ensureMovesIsMutable();
               moves_.addAll(other.moves_);
@@ -4022,7 +4079,7 @@ public final class Reqrep {
               movesBuilder_.dispose();
               movesBuilder_ = null;
               moves_ = other.moves_;
-              bitField0_ = (bitField0_ & ~0x00000001);
+              bitField0_ = (bitField0_ & ~0x00000002);
               movesBuilder_ = 
                 com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getMovesFieldBuilder() : null;
@@ -4034,7 +4091,7 @@ public final class Reqrep {
         if (!other.specialActions_.isEmpty()) {
           if (specialActions_.isEmpty()) {
             specialActions_ = other.specialActions_;
-            bitField0_ = (bitField0_ & ~0x00000002);
+            bitField0_ = (bitField0_ & ~0x00000004);
           } else {
             ensureSpecialActionsIsMutable();
             specialActions_.addAll(other.specialActions_);
@@ -4221,118 +4278,239 @@ public final class Reqrep {
         return decksInfoBuilder_;
       }
 
-      private com.rye.receiptcards.proto.Reqrep.Cards newCards_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.rye.receiptcards.proto.Reqrep.Cards, com.rye.receiptcards.proto.Reqrep.Cards.Builder, com.rye.receiptcards.proto.Reqrep.CardsOrBuilder> newCardsBuilder_;
-      /**
-       * <code>.Cards new_cards = 3;</code>
-       * @return Whether the newCards field is set.
-       */
-      public boolean hasNewCards() {
-        return newCardsBuilder_ != null || newCards_ != null;
+      private java.util.List<com.rye.receiptcards.proto.Reqrep.Card> newCards_ =
+        java.util.Collections.emptyList();
+      private void ensureNewCardsIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          newCards_ = new java.util.ArrayList<com.rye.receiptcards.proto.Reqrep.Card>(newCards_);
+          bitField0_ |= 0x00000001;
+         }
       }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.rye.receiptcards.proto.Reqrep.Card, com.rye.receiptcards.proto.Reqrep.Card.Builder, com.rye.receiptcards.proto.Reqrep.CardOrBuilder> newCardsBuilder_;
+
       /**
-       * <code>.Cards new_cards = 3;</code>
-       * @return The newCards.
+       * <code>repeated .Card new_cards = 3;</code>
        */
-      public com.rye.receiptcards.proto.Reqrep.Cards getNewCards() {
+      public java.util.List<com.rye.receiptcards.proto.Reqrep.Card> getNewCardsList() {
         if (newCardsBuilder_ == null) {
-          return newCards_ == null ? com.rye.receiptcards.proto.Reqrep.Cards.getDefaultInstance() : newCards_;
+          return java.util.Collections.unmodifiableList(newCards_);
         } else {
-          return newCardsBuilder_.getMessage();
+          return newCardsBuilder_.getMessageList();
         }
       }
       /**
-       * <code>.Cards new_cards = 3;</code>
+       * <code>repeated .Card new_cards = 3;</code>
        */
-      public Builder setNewCards(com.rye.receiptcards.proto.Reqrep.Cards value) {
+      public int getNewCardsCount() {
+        if (newCardsBuilder_ == null) {
+          return newCards_.size();
+        } else {
+          return newCardsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .Card new_cards = 3;</code>
+       */
+      public com.rye.receiptcards.proto.Reqrep.Card getNewCards(int index) {
+        if (newCardsBuilder_ == null) {
+          return newCards_.get(index);
+        } else {
+          return newCardsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .Card new_cards = 3;</code>
+       */
+      public Builder setNewCards(
+          int index, com.rye.receiptcards.proto.Reqrep.Card value) {
         if (newCardsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          newCards_ = value;
+          ensureNewCardsIsMutable();
+          newCards_.set(index, value);
           onChanged();
         } else {
-          newCardsBuilder_.setMessage(value);
+          newCardsBuilder_.setMessage(index, value);
         }
-
         return this;
       }
       /**
-       * <code>.Cards new_cards = 3;</code>
+       * <code>repeated .Card new_cards = 3;</code>
        */
       public Builder setNewCards(
-          com.rye.receiptcards.proto.Reqrep.Cards.Builder builderForValue) {
+          int index, com.rye.receiptcards.proto.Reqrep.Card.Builder builderForValue) {
         if (newCardsBuilder_ == null) {
-          newCards_ = builderForValue.build();
+          ensureNewCardsIsMutable();
+          newCards_.set(index, builderForValue.build());
           onChanged();
         } else {
-          newCardsBuilder_.setMessage(builderForValue.build());
+          newCardsBuilder_.setMessage(index, builderForValue.build());
         }
-
         return this;
       }
       /**
-       * <code>.Cards new_cards = 3;</code>
+       * <code>repeated .Card new_cards = 3;</code>
        */
-      public Builder mergeNewCards(com.rye.receiptcards.proto.Reqrep.Cards value) {
+      public Builder addNewCards(com.rye.receiptcards.proto.Reqrep.Card value) {
         if (newCardsBuilder_ == null) {
-          if (newCards_ != null) {
-            newCards_ =
-              com.rye.receiptcards.proto.Reqrep.Cards.newBuilder(newCards_).mergeFrom(value).buildPartial();
-          } else {
-            newCards_ = value;
+          if (value == null) {
+            throw new NullPointerException();
           }
+          ensureNewCardsIsMutable();
+          newCards_.add(value);
           onChanged();
         } else {
-          newCardsBuilder_.mergeFrom(value);
+          newCardsBuilder_.addMessage(value);
         }
-
         return this;
       }
       /**
-       * <code>.Cards new_cards = 3;</code>
+       * <code>repeated .Card new_cards = 3;</code>
+       */
+      public Builder addNewCards(
+          int index, com.rye.receiptcards.proto.Reqrep.Card value) {
+        if (newCardsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNewCardsIsMutable();
+          newCards_.add(index, value);
+          onChanged();
+        } else {
+          newCardsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Card new_cards = 3;</code>
+       */
+      public Builder addNewCards(
+          com.rye.receiptcards.proto.Reqrep.Card.Builder builderForValue) {
+        if (newCardsBuilder_ == null) {
+          ensureNewCardsIsMutable();
+          newCards_.add(builderForValue.build());
+          onChanged();
+        } else {
+          newCardsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Card new_cards = 3;</code>
+       */
+      public Builder addNewCards(
+          int index, com.rye.receiptcards.proto.Reqrep.Card.Builder builderForValue) {
+        if (newCardsBuilder_ == null) {
+          ensureNewCardsIsMutable();
+          newCards_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          newCardsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Card new_cards = 3;</code>
+       */
+      public Builder addAllNewCards(
+          java.lang.Iterable<? extends com.rye.receiptcards.proto.Reqrep.Card> values) {
+        if (newCardsBuilder_ == null) {
+          ensureNewCardsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, newCards_);
+          onChanged();
+        } else {
+          newCardsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .Card new_cards = 3;</code>
        */
       public Builder clearNewCards() {
         if (newCardsBuilder_ == null) {
-          newCards_ = null;
+          newCards_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
           onChanged();
         } else {
-          newCards_ = null;
-          newCardsBuilder_ = null;
+          newCardsBuilder_.clear();
         }
-
         return this;
       }
       /**
-       * <code>.Cards new_cards = 3;</code>
+       * <code>repeated .Card new_cards = 3;</code>
        */
-      public com.rye.receiptcards.proto.Reqrep.Cards.Builder getNewCardsBuilder() {
-        
-        onChanged();
-        return getNewCardsFieldBuilder().getBuilder();
+      public Builder removeNewCards(int index) {
+        if (newCardsBuilder_ == null) {
+          ensureNewCardsIsMutable();
+          newCards_.remove(index);
+          onChanged();
+        } else {
+          newCardsBuilder_.remove(index);
+        }
+        return this;
       }
       /**
-       * <code>.Cards new_cards = 3;</code>
+       * <code>repeated .Card new_cards = 3;</code>
        */
-      public com.rye.receiptcards.proto.Reqrep.CardsOrBuilder getNewCardsOrBuilder() {
-        if (newCardsBuilder_ != null) {
-          return newCardsBuilder_.getMessageOrBuilder();
-        } else {
-          return newCards_ == null ?
-              com.rye.receiptcards.proto.Reqrep.Cards.getDefaultInstance() : newCards_;
+      public com.rye.receiptcards.proto.Reqrep.Card.Builder getNewCardsBuilder(
+          int index) {
+        return getNewCardsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .Card new_cards = 3;</code>
+       */
+      public com.rye.receiptcards.proto.Reqrep.CardOrBuilder getNewCardsOrBuilder(
+          int index) {
+        if (newCardsBuilder_ == null) {
+          return newCards_.get(index);  } else {
+          return newCardsBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>.Cards new_cards = 3;</code>
+       * <code>repeated .Card new_cards = 3;</code>
        */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.rye.receiptcards.proto.Reqrep.Cards, com.rye.receiptcards.proto.Reqrep.Cards.Builder, com.rye.receiptcards.proto.Reqrep.CardsOrBuilder> 
+      public java.util.List<? extends com.rye.receiptcards.proto.Reqrep.CardOrBuilder> 
+           getNewCardsOrBuilderList() {
+        if (newCardsBuilder_ != null) {
+          return newCardsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(newCards_);
+        }
+      }
+      /**
+       * <code>repeated .Card new_cards = 3;</code>
+       */
+      public com.rye.receiptcards.proto.Reqrep.Card.Builder addNewCardsBuilder() {
+        return getNewCardsFieldBuilder().addBuilder(
+            com.rye.receiptcards.proto.Reqrep.Card.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .Card new_cards = 3;</code>
+       */
+      public com.rye.receiptcards.proto.Reqrep.Card.Builder addNewCardsBuilder(
+          int index) {
+        return getNewCardsFieldBuilder().addBuilder(
+            index, com.rye.receiptcards.proto.Reqrep.Card.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .Card new_cards = 3;</code>
+       */
+      public java.util.List<com.rye.receiptcards.proto.Reqrep.Card.Builder> 
+           getNewCardsBuilderList() {
+        return getNewCardsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          com.rye.receiptcards.proto.Reqrep.Card, com.rye.receiptcards.proto.Reqrep.Card.Builder, com.rye.receiptcards.proto.Reqrep.CardOrBuilder> 
           getNewCardsFieldBuilder() {
         if (newCardsBuilder_ == null) {
-          newCardsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.rye.receiptcards.proto.Reqrep.Cards, com.rye.receiptcards.proto.Reqrep.Cards.Builder, com.rye.receiptcards.proto.Reqrep.CardsOrBuilder>(
-                  getNewCards(),
+          newCardsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              com.rye.receiptcards.proto.Reqrep.Card, com.rye.receiptcards.proto.Reqrep.Card.Builder, com.rye.receiptcards.proto.Reqrep.CardOrBuilder>(
+                  newCards_,
+                  ((bitField0_ & 0x00000001) != 0),
                   getParentForChildren(),
                   isClean());
           newCards_ = null;
@@ -4343,9 +4521,9 @@ public final class Reqrep {
       private java.util.List<com.rye.receiptcards.proto.Reqrep.Move> moves_ =
         java.util.Collections.emptyList();
       private void ensureMovesIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
+        if (!((bitField0_ & 0x00000002) != 0)) {
           moves_ = new java.util.ArrayList<com.rye.receiptcards.proto.Reqrep.Move>(moves_);
-          bitField0_ |= 0x00000001;
+          bitField0_ |= 0x00000002;
          }
       }
 
@@ -4495,7 +4673,7 @@ public final class Reqrep {
       public Builder clearMoves() {
         if (movesBuilder_ == null) {
           moves_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000002);
           onChanged();
         } else {
           movesBuilder_.clear();
@@ -4572,7 +4750,7 @@ public final class Reqrep {
           movesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               com.rye.receiptcards.proto.Reqrep.Move, com.rye.receiptcards.proto.Reqrep.Move.Builder, com.rye.receiptcards.proto.Reqrep.MoveOrBuilder>(
                   moves_,
-                  ((bitField0_ & 0x00000001) != 0),
+                  ((bitField0_ & 0x00000002) != 0),
                   getParentForChildren(),
                   isClean());
           moves_ = null;
@@ -4583,9 +4761,9 @@ public final class Reqrep {
       private java.util.List<java.lang.Integer> specialActions_ =
         java.util.Collections.emptyList();
       private void ensureSpecialActionsIsMutable() {
-        if (!((bitField0_ & 0x00000002) != 0)) {
+        if (!((bitField0_ & 0x00000004) != 0)) {
           specialActions_ = new java.util.ArrayList<java.lang.Integer>(specialActions_);
-          bitField0_ |= 0x00000002;
+          bitField0_ |= 0x00000004;
         }
       }
       /**
@@ -4661,7 +4839,7 @@ public final class Reqrep {
        */
       public Builder clearSpecialActions() {
         specialActions_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         onChanged();
         return this;
       }
@@ -6283,99 +6461,58 @@ public final class Reqrep {
 
   }
 
-  public interface CardsOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:Cards)
+  public interface CardOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:Card)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>repeated .UUID card_uuids = 1;</code>
+     * <code>.UUID card_uuid = 1;</code>
+     * @return Whether the cardUuid field is set.
      */
-    java.util.List<com.rye.receiptcards.proto.Reqrep.UUID> 
-        getCardUuidsList();
+    boolean hasCardUuid();
     /**
-     * <code>repeated .UUID card_uuids = 1;</code>
+     * <code>.UUID card_uuid = 1;</code>
+     * @return The cardUuid.
      */
-    com.rye.receiptcards.proto.Reqrep.UUID getCardUuids(int index);
+    com.rye.receiptcards.proto.Reqrep.UUID getCardUuid();
     /**
-     * <code>repeated .UUID card_uuids = 1;</code>
+     * <code>.UUID card_uuid = 1;</code>
      */
-    int getCardUuidsCount();
-    /**
-     * <code>repeated .UUID card_uuids = 1;</code>
-     */
-    java.util.List<? extends com.rye.receiptcards.proto.Reqrep.UUIDOrBuilder> 
-        getCardUuidsOrBuilderList();
-    /**
-     * <code>repeated .UUID card_uuids = 1;</code>
-     */
-    com.rye.receiptcards.proto.Reqrep.UUIDOrBuilder getCardUuidsOrBuilder(
-        int index);
+    com.rye.receiptcards.proto.Reqrep.UUIDOrBuilder getCardUuidOrBuilder();
 
     /**
-     * <code>repeated string image_uris = 2;</code>
-     * @return A list containing the imageUris.
+     * <code>string image_uri = 2;</code>
+     * @return The imageUri.
      */
-    java.util.List<java.lang.String>
-        getImageUrisList();
+    java.lang.String getImageUri();
     /**
-     * <code>repeated string image_uris = 2;</code>
-     * @return The count of imageUris.
-     */
-    int getImageUrisCount();
-    /**
-     * <code>repeated string image_uris = 2;</code>
-     * @param index The index of the element to return.
-     * @return The imageUris at the given index.
-     */
-    java.lang.String getImageUris(int index);
-    /**
-     * <code>repeated string image_uris = 2;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the imageUris at the given index.
+     * <code>string image_uri = 2;</code>
+     * @return The bytes for imageUri.
      */
     com.google.protobuf.ByteString
-        getImageUrisBytes(int index);
-
-    /**
-     * <code>repeated uint32 image_indices = 3;</code>
-     * @return A list containing the imageIndices.
-     */
-    java.util.List<java.lang.Integer> getImageIndicesList();
-    /**
-     * <code>repeated uint32 image_indices = 3;</code>
-     * @return The count of imageIndices.
-     */
-    int getImageIndicesCount();
-    /**
-     * <code>repeated uint32 image_indices = 3;</code>
-     * @param index The index of the element to return.
-     * @return The imageIndices at the given index.
-     */
-    int getImageIndices(int index);
+        getImageUriBytes();
   }
   /**
-   * Protobuf type {@code Cards}
+   * Protobuf type {@code Card}
    */
-  public static final class Cards extends
+  public static final class Card extends
       com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:Cards)
-      CardsOrBuilder {
+      // @@protoc_insertion_point(message_implements:Card)
+      CardOrBuilder {
   private static final long serialVersionUID = 0L;
-    // Use Cards.newBuilder() to construct.
-    private Cards(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // Use Card.newBuilder() to construct.
+    private Card(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-    private Cards() {
-      cardUuids_ = java.util.Collections.emptyList();
-      imageUris_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      imageIndices_ = emptyIntList();
+    private Card() {
+      imageUri_ = "";
     }
 
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
         UnusedPrivateParameter unused) {
-      return new Cards();
+      return new Card();
     }
 
     @java.lang.Override
@@ -6383,7 +6520,7 @@ public final class Reqrep {
     getUnknownFields() {
       return this.unknownFields;
     }
-    private Cards(
+    private Card(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -6391,7 +6528,6 @@ public final class Reqrep {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
-      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -6403,42 +6539,22 @@ public final class Reqrep {
               done = true;
               break;
             case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                cardUuids_ = new java.util.ArrayList<com.rye.receiptcards.proto.Reqrep.UUID>();
-                mutable_bitField0_ |= 0x00000001;
+              com.rye.receiptcards.proto.Reqrep.UUID.Builder subBuilder = null;
+              if (cardUuid_ != null) {
+                subBuilder = cardUuid_.toBuilder();
               }
-              cardUuids_.add(
-                  input.readMessage(com.rye.receiptcards.proto.Reqrep.UUID.parser(), extensionRegistry));
+              cardUuid_ = input.readMessage(com.rye.receiptcards.proto.Reqrep.UUID.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(cardUuid_);
+                cardUuid_ = subBuilder.buildPartial();
+              }
+
               break;
             }
             case 18: {
               java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
-                imageUris_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              imageUris_.add(s);
-              break;
-            }
-            case 24: {
-              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
-                imageIndices_ = newIntList();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              imageIndices_.addInt(input.readUInt32());
-              break;
-            }
-            case 26: {
-              int length = input.readRawVarint32();
-              int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000004) != 0) && input.getBytesUntilLimit() > 0) {
-                imageIndices_ = newIntList();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              while (input.getBytesUntilLimit() > 0) {
-                imageIndices_.addInt(input.readUInt32());
-              }
-              input.popLimit(limit);
+
+              imageUri_ = s;
               break;
             }
             default: {
@@ -6456,134 +6572,86 @@ public final class Reqrep {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000001) != 0)) {
-          cardUuids_ = java.util.Collections.unmodifiableList(cardUuids_);
-        }
-        if (((mutable_bitField0_ & 0x00000002) != 0)) {
-          imageUris_ = imageUris_.getUnmodifiableView();
-        }
-        if (((mutable_bitField0_ & 0x00000004) != 0)) {
-          imageIndices_.makeImmutable(); // C
-        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.rye.receiptcards.proto.Reqrep.internal_static_Cards_descriptor;
+      return com.rye.receiptcards.proto.Reqrep.internal_static_Card_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.rye.receiptcards.proto.Reqrep.internal_static_Cards_fieldAccessorTable
+      return com.rye.receiptcards.proto.Reqrep.internal_static_Card_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.rye.receiptcards.proto.Reqrep.Cards.class, com.rye.receiptcards.proto.Reqrep.Cards.Builder.class);
+              com.rye.receiptcards.proto.Reqrep.Card.class, com.rye.receiptcards.proto.Reqrep.Card.Builder.class);
     }
 
-    public static final int CARD_UUIDS_FIELD_NUMBER = 1;
-    private java.util.List<com.rye.receiptcards.proto.Reqrep.UUID> cardUuids_;
+    public static final int CARD_UUID_FIELD_NUMBER = 1;
+    private com.rye.receiptcards.proto.Reqrep.UUID cardUuid_;
     /**
-     * <code>repeated .UUID card_uuids = 1;</code>
+     * <code>.UUID card_uuid = 1;</code>
+     * @return Whether the cardUuid field is set.
      */
     @java.lang.Override
-    public java.util.List<com.rye.receiptcards.proto.Reqrep.UUID> getCardUuidsList() {
-      return cardUuids_;
+    public boolean hasCardUuid() {
+      return cardUuid_ != null;
     }
     /**
-     * <code>repeated .UUID card_uuids = 1;</code>
+     * <code>.UUID card_uuid = 1;</code>
+     * @return The cardUuid.
      */
     @java.lang.Override
-    public java.util.List<? extends com.rye.receiptcards.proto.Reqrep.UUIDOrBuilder> 
-        getCardUuidsOrBuilderList() {
-      return cardUuids_;
+    public com.rye.receiptcards.proto.Reqrep.UUID getCardUuid() {
+      return cardUuid_ == null ? com.rye.receiptcards.proto.Reqrep.UUID.getDefaultInstance() : cardUuid_;
     }
     /**
-     * <code>repeated .UUID card_uuids = 1;</code>
+     * <code>.UUID card_uuid = 1;</code>
      */
     @java.lang.Override
-    public int getCardUuidsCount() {
-      return cardUuids_.size();
-    }
-    /**
-     * <code>repeated .UUID card_uuids = 1;</code>
-     */
-    @java.lang.Override
-    public com.rye.receiptcards.proto.Reqrep.UUID getCardUuids(int index) {
-      return cardUuids_.get(index);
-    }
-    /**
-     * <code>repeated .UUID card_uuids = 1;</code>
-     */
-    @java.lang.Override
-    public com.rye.receiptcards.proto.Reqrep.UUIDOrBuilder getCardUuidsOrBuilder(
-        int index) {
-      return cardUuids_.get(index);
+    public com.rye.receiptcards.proto.Reqrep.UUIDOrBuilder getCardUuidOrBuilder() {
+      return getCardUuid();
     }
 
-    public static final int IMAGE_URIS_FIELD_NUMBER = 2;
-    private com.google.protobuf.LazyStringList imageUris_;
+    public static final int IMAGE_URI_FIELD_NUMBER = 2;
+    private volatile java.lang.Object imageUri_;
     /**
-     * <code>repeated string image_uris = 2;</code>
-     * @return A list containing the imageUris.
+     * <code>string image_uri = 2;</code>
+     * @return The imageUri.
      */
-    public com.google.protobuf.ProtocolStringList
-        getImageUrisList() {
-      return imageUris_;
+    @java.lang.Override
+    public java.lang.String getImageUri() {
+      java.lang.Object ref = imageUri_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        imageUri_ = s;
+        return s;
+      }
     }
     /**
-     * <code>repeated string image_uris = 2;</code>
-     * @return The count of imageUris.
+     * <code>string image_uri = 2;</code>
+     * @return The bytes for imageUri.
      */
-    public int getImageUrisCount() {
-      return imageUris_.size();
-    }
-    /**
-     * <code>repeated string image_uris = 2;</code>
-     * @param index The index of the element to return.
-     * @return The imageUris at the given index.
-     */
-    public java.lang.String getImageUris(int index) {
-      return imageUris_.get(index);
-    }
-    /**
-     * <code>repeated string image_uris = 2;</code>
-     * @param index The index of the value to return.
-     * @return The bytes of the imageUris at the given index.
-     */
+    @java.lang.Override
     public com.google.protobuf.ByteString
-        getImageUrisBytes(int index) {
-      return imageUris_.getByteString(index);
+        getImageUriBytes() {
+      java.lang.Object ref = imageUri_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        imageUri_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
-
-    public static final int IMAGE_INDICES_FIELD_NUMBER = 3;
-    private com.google.protobuf.Internal.IntList imageIndices_;
-    /**
-     * <code>repeated uint32 image_indices = 3;</code>
-     * @return A list containing the imageIndices.
-     */
-    @java.lang.Override
-    public java.util.List<java.lang.Integer>
-        getImageIndicesList() {
-      return imageIndices_;
-    }
-    /**
-     * <code>repeated uint32 image_indices = 3;</code>
-     * @return The count of imageIndices.
-     */
-    public int getImageIndicesCount() {
-      return imageIndices_.size();
-    }
-    /**
-     * <code>repeated uint32 image_indices = 3;</code>
-     * @param index The index of the element to return.
-     * @return The imageIndices at the given index.
-     */
-    public int getImageIndices(int index) {
-      return imageIndices_.getInt(index);
-    }
-    private int imageIndicesMemoizedSerializedSize = -1;
 
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
@@ -6599,19 +6667,11 @@ public final class Reqrep {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      getSerializedSize();
-      for (int i = 0; i < cardUuids_.size(); i++) {
-        output.writeMessage(1, cardUuids_.get(i));
+      if (cardUuid_ != null) {
+        output.writeMessage(1, getCardUuid());
       }
-      for (int i = 0; i < imageUris_.size(); i++) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, imageUris_.getRaw(i));
-      }
-      if (getImageIndicesList().size() > 0) {
-        output.writeUInt32NoTag(26);
-        output.writeUInt32NoTag(imageIndicesMemoizedSerializedSize);
-      }
-      for (int i = 0; i < imageIndices_.size(); i++) {
-        output.writeUInt32NoTag(imageIndices_.getInt(i));
+      if (!getImageUriBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, imageUri_);
       }
       unknownFields.writeTo(output);
     }
@@ -6622,31 +6682,12 @@ public final class Reqrep {
       if (size != -1) return size;
 
       size = 0;
-      for (int i = 0; i < cardUuids_.size(); i++) {
+      if (cardUuid_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, cardUuids_.get(i));
+          .computeMessageSize(1, getCardUuid());
       }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < imageUris_.size(); i++) {
-          dataSize += computeStringSizeNoTag(imageUris_.getRaw(i));
-        }
-        size += dataSize;
-        size += 1 * getImageUrisList().size();
-      }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < imageIndices_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeUInt32SizeNoTag(imageIndices_.getInt(i));
-        }
-        size += dataSize;
-        if (!getImageIndicesList().isEmpty()) {
-          size += 1;
-          size += com.google.protobuf.CodedOutputStream
-              .computeInt32SizeNoTag(dataSize);
-        }
-        imageIndicesMemoizedSerializedSize = dataSize;
+      if (!getImageUriBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, imageUri_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -6658,17 +6699,18 @@ public final class Reqrep {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof com.rye.receiptcards.proto.Reqrep.Cards)) {
+      if (!(obj instanceof com.rye.receiptcards.proto.Reqrep.Card)) {
         return super.equals(obj);
       }
-      com.rye.receiptcards.proto.Reqrep.Cards other = (com.rye.receiptcards.proto.Reqrep.Cards) obj;
+      com.rye.receiptcards.proto.Reqrep.Card other = (com.rye.receiptcards.proto.Reqrep.Card) obj;
 
-      if (!getCardUuidsList()
-          .equals(other.getCardUuidsList())) return false;
-      if (!getImageUrisList()
-          .equals(other.getImageUrisList())) return false;
-      if (!getImageIndicesList()
-          .equals(other.getImageIndicesList())) return false;
+      if (hasCardUuid() != other.hasCardUuid()) return false;
+      if (hasCardUuid()) {
+        if (!getCardUuid()
+            .equals(other.getCardUuid())) return false;
+      }
+      if (!getImageUri()
+          .equals(other.getImageUri())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -6680,86 +6722,80 @@ public final class Reqrep {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      if (getCardUuidsCount() > 0) {
-        hash = (37 * hash) + CARD_UUIDS_FIELD_NUMBER;
-        hash = (53 * hash) + getCardUuidsList().hashCode();
+      if (hasCardUuid()) {
+        hash = (37 * hash) + CARD_UUID_FIELD_NUMBER;
+        hash = (53 * hash) + getCardUuid().hashCode();
       }
-      if (getImageUrisCount() > 0) {
-        hash = (37 * hash) + IMAGE_URIS_FIELD_NUMBER;
-        hash = (53 * hash) + getImageUrisList().hashCode();
-      }
-      if (getImageIndicesCount() > 0) {
-        hash = (37 * hash) + IMAGE_INDICES_FIELD_NUMBER;
-        hash = (53 * hash) + getImageIndicesList().hashCode();
-      }
+      hash = (37 * hash) + IMAGE_URI_FIELD_NUMBER;
+      hash = (53 * hash) + getImageUri().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
     }
 
-    public static com.rye.receiptcards.proto.Reqrep.Cards parseFrom(
+    public static com.rye.receiptcards.proto.Reqrep.Card parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.rye.receiptcards.proto.Reqrep.Cards parseFrom(
+    public static com.rye.receiptcards.proto.Reqrep.Card parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.rye.receiptcards.proto.Reqrep.Cards parseFrom(
+    public static com.rye.receiptcards.proto.Reqrep.Card parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.rye.receiptcards.proto.Reqrep.Cards parseFrom(
+    public static com.rye.receiptcards.proto.Reqrep.Card parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.rye.receiptcards.proto.Reqrep.Cards parseFrom(byte[] data)
+    public static com.rye.receiptcards.proto.Reqrep.Card parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static com.rye.receiptcards.proto.Reqrep.Cards parseFrom(
+    public static com.rye.receiptcards.proto.Reqrep.Card parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static com.rye.receiptcards.proto.Reqrep.Cards parseFrom(java.io.InputStream input)
+    public static com.rye.receiptcards.proto.Reqrep.Card parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.rye.receiptcards.proto.Reqrep.Cards parseFrom(
+    public static com.rye.receiptcards.proto.Reqrep.Card parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.rye.receiptcards.proto.Reqrep.Cards parseDelimitedFrom(java.io.InputStream input)
+    public static com.rye.receiptcards.proto.Reqrep.Card parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static com.rye.receiptcards.proto.Reqrep.Cards parseDelimitedFrom(
+    public static com.rye.receiptcards.proto.Reqrep.Card parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static com.rye.receiptcards.proto.Reqrep.Cards parseFrom(
+    public static com.rye.receiptcards.proto.Reqrep.Card parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static com.rye.receiptcards.proto.Reqrep.Cards parseFrom(
+    public static com.rye.receiptcards.proto.Reqrep.Card parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -6772,7 +6808,7 @@ public final class Reqrep {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(com.rye.receiptcards.proto.Reqrep.Cards prototype) {
+    public static Builder newBuilder(com.rye.receiptcards.proto.Reqrep.Card prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -6788,26 +6824,26 @@ public final class Reqrep {
       return builder;
     }
     /**
-     * Protobuf type {@code Cards}
+     * Protobuf type {@code Card}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:Cards)
-        com.rye.receiptcards.proto.Reqrep.CardsOrBuilder {
+        // @@protoc_insertion_point(builder_implements:Card)
+        com.rye.receiptcards.proto.Reqrep.CardOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return com.rye.receiptcards.proto.Reqrep.internal_static_Cards_descriptor;
+        return com.rye.receiptcards.proto.Reqrep.internal_static_Card_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return com.rye.receiptcards.proto.Reqrep.internal_static_Cards_fieldAccessorTable
+        return com.rye.receiptcards.proto.Reqrep.internal_static_Card_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                com.rye.receiptcards.proto.Reqrep.Cards.class, com.rye.receiptcards.proto.Reqrep.Cards.Builder.class);
+                com.rye.receiptcards.proto.Reqrep.Card.class, com.rye.receiptcards.proto.Reqrep.Card.Builder.class);
       }
 
-      // Construct using com.rye.receiptcards.proto.Reqrep.Cards.newBuilder()
+      // Construct using com.rye.receiptcards.proto.Reqrep.Card.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -6820,39 +6856,36 @@ public final class Reqrep {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
-          getCardUuidsFieldBuilder();
         }
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        if (cardUuidsBuilder_ == null) {
-          cardUuids_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
+        if (cardUuidBuilder_ == null) {
+          cardUuid_ = null;
         } else {
-          cardUuidsBuilder_.clear();
+          cardUuid_ = null;
+          cardUuidBuilder_ = null;
         }
-        imageUris_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        imageIndices_ = emptyIntList();
-        bitField0_ = (bitField0_ & ~0x00000004);
+        imageUri_ = "";
+
         return this;
       }
 
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return com.rye.receiptcards.proto.Reqrep.internal_static_Cards_descriptor;
+        return com.rye.receiptcards.proto.Reqrep.internal_static_Card_descriptor;
       }
 
       @java.lang.Override
-      public com.rye.receiptcards.proto.Reqrep.Cards getDefaultInstanceForType() {
-        return com.rye.receiptcards.proto.Reqrep.Cards.getDefaultInstance();
+      public com.rye.receiptcards.proto.Reqrep.Card getDefaultInstanceForType() {
+        return com.rye.receiptcards.proto.Reqrep.Card.getDefaultInstance();
       }
 
       @java.lang.Override
-      public com.rye.receiptcards.proto.Reqrep.Cards build() {
-        com.rye.receiptcards.proto.Reqrep.Cards result = buildPartial();
+      public com.rye.receiptcards.proto.Reqrep.Card build() {
+        com.rye.receiptcards.proto.Reqrep.Card result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -6860,28 +6893,14 @@ public final class Reqrep {
       }
 
       @java.lang.Override
-      public com.rye.receiptcards.proto.Reqrep.Cards buildPartial() {
-        com.rye.receiptcards.proto.Reqrep.Cards result = new com.rye.receiptcards.proto.Reqrep.Cards(this);
-        int from_bitField0_ = bitField0_;
-        if (cardUuidsBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) != 0)) {
-            cardUuids_ = java.util.Collections.unmodifiableList(cardUuids_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.cardUuids_ = cardUuids_;
+      public com.rye.receiptcards.proto.Reqrep.Card buildPartial() {
+        com.rye.receiptcards.proto.Reqrep.Card result = new com.rye.receiptcards.proto.Reqrep.Card(this);
+        if (cardUuidBuilder_ == null) {
+          result.cardUuid_ = cardUuid_;
         } else {
-          result.cardUuids_ = cardUuidsBuilder_.build();
+          result.cardUuid_ = cardUuidBuilder_.build();
         }
-        if (((bitField0_ & 0x00000002) != 0)) {
-          imageUris_ = imageUris_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000002);
-        }
-        result.imageUris_ = imageUris_;
-        if (((bitField0_ & 0x00000004) != 0)) {
-          imageIndices_.makeImmutable();
-          bitField0_ = (bitField0_ & ~0x00000004);
-        }
-        result.imageIndices_ = imageIndices_;
+        result.imageUri_ = imageUri_;
         onBuilt();
         return result;
       }
@@ -6920,60 +6939,21 @@ public final class Reqrep {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.rye.receiptcards.proto.Reqrep.Cards) {
-          return mergeFrom((com.rye.receiptcards.proto.Reqrep.Cards)other);
+        if (other instanceof com.rye.receiptcards.proto.Reqrep.Card) {
+          return mergeFrom((com.rye.receiptcards.proto.Reqrep.Card)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(com.rye.receiptcards.proto.Reqrep.Cards other) {
-        if (other == com.rye.receiptcards.proto.Reqrep.Cards.getDefaultInstance()) return this;
-        if (cardUuidsBuilder_ == null) {
-          if (!other.cardUuids_.isEmpty()) {
-            if (cardUuids_.isEmpty()) {
-              cardUuids_ = other.cardUuids_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureCardUuidsIsMutable();
-              cardUuids_.addAll(other.cardUuids_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.cardUuids_.isEmpty()) {
-            if (cardUuidsBuilder_.isEmpty()) {
-              cardUuidsBuilder_.dispose();
-              cardUuidsBuilder_ = null;
-              cardUuids_ = other.cardUuids_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              cardUuidsBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getCardUuidsFieldBuilder() : null;
-            } else {
-              cardUuidsBuilder_.addAllMessages(other.cardUuids_);
-            }
-          }
+      public Builder mergeFrom(com.rye.receiptcards.proto.Reqrep.Card other) {
+        if (other == com.rye.receiptcards.proto.Reqrep.Card.getDefaultInstance()) return this;
+        if (other.hasCardUuid()) {
+          mergeCardUuid(other.getCardUuid());
         }
-        if (!other.imageUris_.isEmpty()) {
-          if (imageUris_.isEmpty()) {
-            imageUris_ = other.imageUris_;
-            bitField0_ = (bitField0_ & ~0x00000002);
-          } else {
-            ensureImageUrisIsMutable();
-            imageUris_.addAll(other.imageUris_);
-          }
-          onChanged();
-        }
-        if (!other.imageIndices_.isEmpty()) {
-          if (imageIndices_.isEmpty()) {
-            imageIndices_ = other.imageIndices_;
-            bitField0_ = (bitField0_ & ~0x00000004);
-          } else {
-            ensureImageIndicesIsMutable();
-            imageIndices_.addAll(other.imageIndices_);
-          }
+        if (!other.getImageUri().isEmpty()) {
+          imageUri_ = other.imageUri_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -6991,11 +6971,11 @@ public final class Reqrep {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.rye.receiptcards.proto.Reqrep.Cards parsedMessage = null;
+        com.rye.receiptcards.proto.Reqrep.Card parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.rye.receiptcards.proto.Reqrep.Cards) e.getUnfinishedMessage();
+          parsedMessage = (com.rye.receiptcards.proto.Reqrep.Card) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -7004,433 +6984,198 @@ public final class Reqrep {
         }
         return this;
       }
-      private int bitField0_;
 
-      private java.util.List<com.rye.receiptcards.proto.Reqrep.UUID> cardUuids_ =
-        java.util.Collections.emptyList();
-      private void ensureCardUuidsIsMutable() {
-        if (!((bitField0_ & 0x00000001) != 0)) {
-          cardUuids_ = new java.util.ArrayList<com.rye.receiptcards.proto.Reqrep.UUID>(cardUuids_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          com.rye.receiptcards.proto.Reqrep.UUID, com.rye.receiptcards.proto.Reqrep.UUID.Builder, com.rye.receiptcards.proto.Reqrep.UUIDOrBuilder> cardUuidsBuilder_;
-
+      private com.rye.receiptcards.proto.Reqrep.UUID cardUuid_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.rye.receiptcards.proto.Reqrep.UUID, com.rye.receiptcards.proto.Reqrep.UUID.Builder, com.rye.receiptcards.proto.Reqrep.UUIDOrBuilder> cardUuidBuilder_;
       /**
-       * <code>repeated .UUID card_uuids = 1;</code>
+       * <code>.UUID card_uuid = 1;</code>
+       * @return Whether the cardUuid field is set.
        */
-      public java.util.List<com.rye.receiptcards.proto.Reqrep.UUID> getCardUuidsList() {
-        if (cardUuidsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(cardUuids_);
+      public boolean hasCardUuid() {
+        return cardUuidBuilder_ != null || cardUuid_ != null;
+      }
+      /**
+       * <code>.UUID card_uuid = 1;</code>
+       * @return The cardUuid.
+       */
+      public com.rye.receiptcards.proto.Reqrep.UUID getCardUuid() {
+        if (cardUuidBuilder_ == null) {
+          return cardUuid_ == null ? com.rye.receiptcards.proto.Reqrep.UUID.getDefaultInstance() : cardUuid_;
         } else {
-          return cardUuidsBuilder_.getMessageList();
+          return cardUuidBuilder_.getMessage();
         }
       }
       /**
-       * <code>repeated .UUID card_uuids = 1;</code>
+       * <code>.UUID card_uuid = 1;</code>
        */
-      public int getCardUuidsCount() {
-        if (cardUuidsBuilder_ == null) {
-          return cardUuids_.size();
-        } else {
-          return cardUuidsBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .UUID card_uuids = 1;</code>
-       */
-      public com.rye.receiptcards.proto.Reqrep.UUID getCardUuids(int index) {
-        if (cardUuidsBuilder_ == null) {
-          return cardUuids_.get(index);
-        } else {
-          return cardUuidsBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .UUID card_uuids = 1;</code>
-       */
-      public Builder setCardUuids(
-          int index, com.rye.receiptcards.proto.Reqrep.UUID value) {
-        if (cardUuidsBuilder_ == null) {
+      public Builder setCardUuid(com.rye.receiptcards.proto.Reqrep.UUID value) {
+        if (cardUuidBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureCardUuidsIsMutable();
-          cardUuids_.set(index, value);
+          cardUuid_ = value;
           onChanged();
         } else {
-          cardUuidsBuilder_.setMessage(index, value);
+          cardUuidBuilder_.setMessage(value);
         }
+
         return this;
       }
       /**
-       * <code>repeated .UUID card_uuids = 1;</code>
+       * <code>.UUID card_uuid = 1;</code>
        */
-      public Builder setCardUuids(
-          int index, com.rye.receiptcards.proto.Reqrep.UUID.Builder builderForValue) {
-        if (cardUuidsBuilder_ == null) {
-          ensureCardUuidsIsMutable();
-          cardUuids_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          cardUuidsBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .UUID card_uuids = 1;</code>
-       */
-      public Builder addCardUuids(com.rye.receiptcards.proto.Reqrep.UUID value) {
-        if (cardUuidsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureCardUuidsIsMutable();
-          cardUuids_.add(value);
-          onChanged();
-        } else {
-          cardUuidsBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .UUID card_uuids = 1;</code>
-       */
-      public Builder addCardUuids(
-          int index, com.rye.receiptcards.proto.Reqrep.UUID value) {
-        if (cardUuidsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureCardUuidsIsMutable();
-          cardUuids_.add(index, value);
-          onChanged();
-        } else {
-          cardUuidsBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .UUID card_uuids = 1;</code>
-       */
-      public Builder addCardUuids(
+      public Builder setCardUuid(
           com.rye.receiptcards.proto.Reqrep.UUID.Builder builderForValue) {
-        if (cardUuidsBuilder_ == null) {
-          ensureCardUuidsIsMutable();
-          cardUuids_.add(builderForValue.build());
+        if (cardUuidBuilder_ == null) {
+          cardUuid_ = builderForValue.build();
           onChanged();
         } else {
-          cardUuidsBuilder_.addMessage(builderForValue.build());
+          cardUuidBuilder_.setMessage(builderForValue.build());
         }
+
         return this;
       }
       /**
-       * <code>repeated .UUID card_uuids = 1;</code>
+       * <code>.UUID card_uuid = 1;</code>
        */
-      public Builder addCardUuids(
-          int index, com.rye.receiptcards.proto.Reqrep.UUID.Builder builderForValue) {
-        if (cardUuidsBuilder_ == null) {
-          ensureCardUuidsIsMutable();
-          cardUuids_.add(index, builderForValue.build());
+      public Builder mergeCardUuid(com.rye.receiptcards.proto.Reqrep.UUID value) {
+        if (cardUuidBuilder_ == null) {
+          if (cardUuid_ != null) {
+            cardUuid_ =
+              com.rye.receiptcards.proto.Reqrep.UUID.newBuilder(cardUuid_).mergeFrom(value).buildPartial();
+          } else {
+            cardUuid_ = value;
+          }
           onChanged();
         } else {
-          cardUuidsBuilder_.addMessage(index, builderForValue.build());
+          cardUuidBuilder_.mergeFrom(value);
         }
+
         return this;
       }
       /**
-       * <code>repeated .UUID card_uuids = 1;</code>
+       * <code>.UUID card_uuid = 1;</code>
        */
-      public Builder addAllCardUuids(
-          java.lang.Iterable<? extends com.rye.receiptcards.proto.Reqrep.UUID> values) {
-        if (cardUuidsBuilder_ == null) {
-          ensureCardUuidsIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, cardUuids_);
+      public Builder clearCardUuid() {
+        if (cardUuidBuilder_ == null) {
+          cardUuid_ = null;
           onChanged();
         } else {
-          cardUuidsBuilder_.addAllMessages(values);
+          cardUuid_ = null;
+          cardUuidBuilder_ = null;
         }
+
         return this;
       }
       /**
-       * <code>repeated .UUID card_uuids = 1;</code>
+       * <code>.UUID card_uuid = 1;</code>
        */
-      public Builder clearCardUuids() {
-        if (cardUuidsBuilder_ == null) {
-          cardUuids_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
+      public com.rye.receiptcards.proto.Reqrep.UUID.Builder getCardUuidBuilder() {
+        
+        onChanged();
+        return getCardUuidFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.UUID card_uuid = 1;</code>
+       */
+      public com.rye.receiptcards.proto.Reqrep.UUIDOrBuilder getCardUuidOrBuilder() {
+        if (cardUuidBuilder_ != null) {
+          return cardUuidBuilder_.getMessageOrBuilder();
         } else {
-          cardUuidsBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .UUID card_uuids = 1;</code>
-       */
-      public Builder removeCardUuids(int index) {
-        if (cardUuidsBuilder_ == null) {
-          ensureCardUuidsIsMutable();
-          cardUuids_.remove(index);
-          onChanged();
-        } else {
-          cardUuidsBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .UUID card_uuids = 1;</code>
-       */
-      public com.rye.receiptcards.proto.Reqrep.UUID.Builder getCardUuidsBuilder(
-          int index) {
-        return getCardUuidsFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .UUID card_uuids = 1;</code>
-       */
-      public com.rye.receiptcards.proto.Reqrep.UUIDOrBuilder getCardUuidsOrBuilder(
-          int index) {
-        if (cardUuidsBuilder_ == null) {
-          return cardUuids_.get(index);  } else {
-          return cardUuidsBuilder_.getMessageOrBuilder(index);
+          return cardUuid_ == null ?
+              com.rye.receiptcards.proto.Reqrep.UUID.getDefaultInstance() : cardUuid_;
         }
       }
       /**
-       * <code>repeated .UUID card_uuids = 1;</code>
+       * <code>.UUID card_uuid = 1;</code>
        */
-      public java.util.List<? extends com.rye.receiptcards.proto.Reqrep.UUIDOrBuilder> 
-           getCardUuidsOrBuilderList() {
-        if (cardUuidsBuilder_ != null) {
-          return cardUuidsBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(cardUuids_);
-        }
-      }
-      /**
-       * <code>repeated .UUID card_uuids = 1;</code>
-       */
-      public com.rye.receiptcards.proto.Reqrep.UUID.Builder addCardUuidsBuilder() {
-        return getCardUuidsFieldBuilder().addBuilder(
-            com.rye.receiptcards.proto.Reqrep.UUID.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .UUID card_uuids = 1;</code>
-       */
-      public com.rye.receiptcards.proto.Reqrep.UUID.Builder addCardUuidsBuilder(
-          int index) {
-        return getCardUuidsFieldBuilder().addBuilder(
-            index, com.rye.receiptcards.proto.Reqrep.UUID.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .UUID card_uuids = 1;</code>
-       */
-      public java.util.List<com.rye.receiptcards.proto.Reqrep.UUID.Builder> 
-           getCardUuidsBuilderList() {
-        return getCardUuidsFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
+      private com.google.protobuf.SingleFieldBuilderV3<
           com.rye.receiptcards.proto.Reqrep.UUID, com.rye.receiptcards.proto.Reqrep.UUID.Builder, com.rye.receiptcards.proto.Reqrep.UUIDOrBuilder> 
-          getCardUuidsFieldBuilder() {
-        if (cardUuidsBuilder_ == null) {
-          cardUuidsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+          getCardUuidFieldBuilder() {
+        if (cardUuidBuilder_ == null) {
+          cardUuidBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               com.rye.receiptcards.proto.Reqrep.UUID, com.rye.receiptcards.proto.Reqrep.UUID.Builder, com.rye.receiptcards.proto.Reqrep.UUIDOrBuilder>(
-                  cardUuids_,
-                  ((bitField0_ & 0x00000001) != 0),
+                  getCardUuid(),
                   getParentForChildren(),
                   isClean());
-          cardUuids_ = null;
+          cardUuid_ = null;
         }
-        return cardUuidsBuilder_;
+        return cardUuidBuilder_;
       }
 
-      private com.google.protobuf.LazyStringList imageUris_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureImageUrisIsMutable() {
-        if (!((bitField0_ & 0x00000002) != 0)) {
-          imageUris_ = new com.google.protobuf.LazyStringArrayList(imageUris_);
-          bitField0_ |= 0x00000002;
-         }
-      }
+      private java.lang.Object imageUri_ = "";
       /**
-       * <code>repeated string image_uris = 2;</code>
-       * @return A list containing the imageUris.
+       * <code>string image_uri = 2;</code>
+       * @return The imageUri.
        */
-      public com.google.protobuf.ProtocolStringList
-          getImageUrisList() {
-        return imageUris_.getUnmodifiableView();
+      public java.lang.String getImageUri() {
+        java.lang.Object ref = imageUri_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          imageUri_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>repeated string image_uris = 2;</code>
-       * @return The count of imageUris.
-       */
-      public int getImageUrisCount() {
-        return imageUris_.size();
-      }
-      /**
-       * <code>repeated string image_uris = 2;</code>
-       * @param index The index of the element to return.
-       * @return The imageUris at the given index.
-       */
-      public java.lang.String getImageUris(int index) {
-        return imageUris_.get(index);
-      }
-      /**
-       * <code>repeated string image_uris = 2;</code>
-       * @param index The index of the value to return.
-       * @return The bytes of the imageUris at the given index.
+       * <code>string image_uri = 2;</code>
+       * @return The bytes for imageUri.
        */
       public com.google.protobuf.ByteString
-          getImageUrisBytes(int index) {
-        return imageUris_.getByteString(index);
+          getImageUriBytes() {
+        java.lang.Object ref = imageUri_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          imageUri_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
-       * <code>repeated string image_uris = 2;</code>
-       * @param index The index to set the value at.
-       * @param value The imageUris to set.
+       * <code>string image_uri = 2;</code>
+       * @param value The imageUri to set.
        * @return This builder for chaining.
        */
-      public Builder setImageUris(
-          int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureImageUrisIsMutable();
-        imageUris_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string image_uris = 2;</code>
-       * @param value The imageUris to add.
-       * @return This builder for chaining.
-       */
-      public Builder addImageUris(
+      public Builder setImageUri(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureImageUrisIsMutable();
-        imageUris_.add(value);
+  
+        imageUri_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string image_uris = 2;</code>
-       * @param values The imageUris to add.
+       * <code>string image_uri = 2;</code>
        * @return This builder for chaining.
        */
-      public Builder addAllImageUris(
-          java.lang.Iterable<java.lang.String> values) {
-        ensureImageUrisIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, imageUris_);
+      public Builder clearImageUri() {
+        
+        imageUri_ = getDefaultInstance().getImageUri();
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string image_uris = 2;</code>
+       * <code>string image_uri = 2;</code>
+       * @param value The bytes for imageUri to set.
        * @return This builder for chaining.
        */
-      public Builder clearImageUris() {
-        imageUris_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string image_uris = 2;</code>
-       * @param value The bytes of the imageUris to add.
-       * @return This builder for chaining.
-       */
-      public Builder addImageUrisBytes(
+      public Builder setImageUriBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        ensureImageUrisIsMutable();
-        imageUris_.add(value);
-        onChanged();
-        return this;
-      }
-
-      private com.google.protobuf.Internal.IntList imageIndices_ = emptyIntList();
-      private void ensureImageIndicesIsMutable() {
-        if (!((bitField0_ & 0x00000004) != 0)) {
-          imageIndices_ = mutableCopy(imageIndices_);
-          bitField0_ |= 0x00000004;
-         }
-      }
-      /**
-       * <code>repeated uint32 image_indices = 3;</code>
-       * @return A list containing the imageIndices.
-       */
-      public java.util.List<java.lang.Integer>
-          getImageIndicesList() {
-        return ((bitField0_ & 0x00000004) != 0) ?
-                 java.util.Collections.unmodifiableList(imageIndices_) : imageIndices_;
-      }
-      /**
-       * <code>repeated uint32 image_indices = 3;</code>
-       * @return The count of imageIndices.
-       */
-      public int getImageIndicesCount() {
-        return imageIndices_.size();
-      }
-      /**
-       * <code>repeated uint32 image_indices = 3;</code>
-       * @param index The index of the element to return.
-       * @return The imageIndices at the given index.
-       */
-      public int getImageIndices(int index) {
-        return imageIndices_.getInt(index);
-      }
-      /**
-       * <code>repeated uint32 image_indices = 3;</code>
-       * @param index The index to set the value at.
-       * @param value The imageIndices to set.
-       * @return This builder for chaining.
-       */
-      public Builder setImageIndices(
-          int index, int value) {
-        ensureImageIndicesIsMutable();
-        imageIndices_.setInt(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated uint32 image_indices = 3;</code>
-       * @param value The imageIndices to add.
-       * @return This builder for chaining.
-       */
-      public Builder addImageIndices(int value) {
-        ensureImageIndicesIsMutable();
-        imageIndices_.addInt(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated uint32 image_indices = 3;</code>
-       * @param values The imageIndices to add.
-       * @return This builder for chaining.
-       */
-      public Builder addAllImageIndices(
-          java.lang.Iterable<? extends java.lang.Integer> values) {
-        ensureImageIndicesIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, imageIndices_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated uint32 image_indices = 3;</code>
-       * @return This builder for chaining.
-       */
-      public Builder clearImageIndices() {
-        imageIndices_ = emptyIntList();
-        bitField0_ = (bitField0_ & ~0x00000004);
+        
+        imageUri_ = value;
         onChanged();
         return this;
       }
@@ -7447,41 +7192,41 @@ public final class Reqrep {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:Cards)
+      // @@protoc_insertion_point(builder_scope:Card)
     }
 
-    // @@protoc_insertion_point(class_scope:Cards)
-    private static final com.rye.receiptcards.proto.Reqrep.Cards DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:Card)
+    private static final com.rye.receiptcards.proto.Reqrep.Card DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new com.rye.receiptcards.proto.Reqrep.Cards();
+      DEFAULT_INSTANCE = new com.rye.receiptcards.proto.Reqrep.Card();
     }
 
-    public static com.rye.receiptcards.proto.Reqrep.Cards getDefaultInstance() {
+    public static com.rye.receiptcards.proto.Reqrep.Card getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static final com.google.protobuf.Parser<Cards>
-        PARSER = new com.google.protobuf.AbstractParser<Cards>() {
+    private static final com.google.protobuf.Parser<Card>
+        PARSER = new com.google.protobuf.AbstractParser<Card>() {
       @java.lang.Override
-      public Cards parsePartialFrom(
+      public Card parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Cards(input, extensionRegistry);
+        return new Card(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<Cards> parser() {
+    public static com.google.protobuf.Parser<Card> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Cards> getParserForType() {
+    public com.google.protobuf.Parser<Card> getParserForType() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.rye.receiptcards.proto.Reqrep.Cards getDefaultInstanceForType() {
+    public com.rye.receiptcards.proto.Reqrep.Card getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -7518,10 +7263,10 @@ public final class Reqrep {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_DecksInfo_DeckInfo_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_Cards_descriptor;
+    internal_static_Card_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_Cards_fieldAccessorTable;
+      internal_static_Card_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -7535,28 +7280,27 @@ public final class Reqrep {
       "64\030\001 \001(\006\022\020\n\010second64\030\002 \001(\006\"|\n\004Move\022\030\n\tca" +
       "rd_uuid\030\001 \001(\0132\005.UUID\022\032\n\013source_zone\030\002 \001(" +
       "\0162\005.Zone\022\032\n\013target_zone\030\003 \001(\0162\005.Zone\022\020\n\010" +
-      "num_down\030\004 \001(\r\022\020\n\010from_top\030\005 \001(\010\"\373\001\n\003Req" +
+      "num_down\030\004 \001(\r\022\020\n\010from_top\030\005 \001(\010\"\207\002\n\003Req" +
       "\022\030\n\tuser_uuid\030\001 \001(\0132\005.UUID\022\036\n\010req_type\030\002" +
       " \001(\0162\014.Req.ReqType\022\026\n\007draw_to\030\003 \001(\0162\005.Zo" +
       "ne\022\023\n\004move\030\004 \001(\0132\005.Move\022\022\n\ndeck_index\030\005 " +
-      "\001(\r\022\037\n\007special\030\006 \001(\0162\016.SpecialAction\"X\n\007" +
+      "\001(\r\022\037\n\007special\030\006 \001(\0162\016.SpecialAction\"d\n\007" +
       "ReqType\022\013\n\007SHUFFLE\020\000\022\010\n\004MOVE\020\001\022\010\n\004DRAW\020\002" +
       "\022\016\n\nDECKS_LIST\020\003\022\017\n\013SELECT_DECK\020\004\022\013\n\007SPE" +
-      "CIAL\020\005\"\220\001\n\003Rep\022\017\n\007success\030\001 \001(\010\022\036\n\ndecks" +
-      "_info\030\002 \001(\0132\n.DecksInfo\022\031\n\tnew_cards\030\003 \001" +
-      "(\0132\006.Cards\022\024\n\005moves\030\004 \003(\0132\005.Move\022\'\n\017spec" +
-      "ial_actions\030\005 \003(\0162\016.SpecialAction\"W\n\tDec" +
-      "ksInfo\022\"\n\005decks\030\001 \003(\0132\023.DecksInfo.DeckIn" +
-      "fo\032&\n\010DeckInfo\022\014\n\004name\030\001 \001(\t\022\014\n\004game\030\002 \001" +
-      "(\t\"M\n\005Cards\022\031\n\ncard_uuids\030\001 \003(\0132\005.UUID\022\022" +
-      "\n\nimage_uris\030\002 \003(\t\022\025\n\rimage_indices\030\003 \003(" +
-      "\r*=\n\004Zone\022\010\n\004NONE\020\000\022\010\n\004HAND\020\001\022\n\n\006PLAYED\020" +
-      "\002\022\010\n\004DECK\020\003\022\013\n\007SPECIAL\020\004*\216\001\n\rSpecialActi" +
-      "on\022\r\n\tSIDEBOARD\020\000\022\t\n\005CREEP\020\001\022\016\n\nRAND_ARR" +
-      "OW\020\002\022\016\n\nLEFT_ARROW\020\003\022\021\n\rFORWARD_ARROW\020\004\022" +
-      "\017\n\013RIGHT_ARROW\020\005\022\020\n\014SHOP_NO_HOLD\020\006\022\r\n\tSH" +
-      "OP_HOLD\020\007B\034\n\032com.rye.receiptcards.protob" +
-      "\006proto3"
+      "CIAL\020\005\022\n\n\006RESUME\020\006\"\217\001\n\003Rep\022\017\n\007success\030\001 " +
+      "\001(\010\022\036\n\ndecks_info\030\002 \001(\0132\n.DecksInfo\022\030\n\tn" +
+      "ew_cards\030\003 \003(\0132\005.Card\022\024\n\005moves\030\004 \003(\0132\005.M" +
+      "ove\022\'\n\017special_actions\030\005 \003(\0162\016.SpecialAc" +
+      "tion\"W\n\tDecksInfo\022\"\n\005decks\030\001 \003(\0132\023.Decks" +
+      "Info.DeckInfo\032&\n\010DeckInfo\022\014\n\004name\030\001 \001(\t\022" +
+      "\014\n\004game\030\002 \001(\t\"3\n\004Card\022\030\n\tcard_uuid\030\001 \001(\013" +
+      "2\005.UUID\022\021\n\timage_uri\030\002 \001(\t*=\n\004Zone\022\010\n\004NO" +
+      "NE\020\000\022\010\n\004HAND\020\001\022\n\n\006PLAYED\020\002\022\010\n\004DECK\020\003\022\013\n\007" +
+      "SPECIAL\020\004*\216\001\n\rSpecialAction\022\r\n\tSIDEBOARD" +
+      "\020\000\022\t\n\005CREEP\020\001\022\016\n\nRAND_ARROW\020\002\022\016\n\nLEFT_AR" +
+      "ROW\020\003\022\021\n\rFORWARD_ARROW\020\004\022\017\n\013RIGHT_ARROW\020" +
+      "\005\022\020\n\014SHOP_NO_HOLD\020\006\022\r\n\tSHOP_HOLD\020\007B\034\n\032co" +
+      "m.rye.receiptcards.protob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -7598,12 +7342,12 @@ public final class Reqrep {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_DecksInfo_DeckInfo_descriptor,
         new java.lang.String[] { "Name", "Game", });
-    internal_static_Cards_descriptor =
+    internal_static_Card_descriptor =
       getDescriptor().getMessageTypes().get(5);
-    internal_static_Cards_fieldAccessorTable = new
+    internal_static_Card_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_Cards_descriptor,
-        new java.lang.String[] { "CardUuids", "ImageUris", "ImageIndices", });
+        internal_static_Card_descriptor,
+        new java.lang.String[] { "CardUuid", "ImageUri", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

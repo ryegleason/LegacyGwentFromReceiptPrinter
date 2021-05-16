@@ -13,6 +13,7 @@ import com.rye.receiptcards.R
 import com.rye.receiptcards.data.CardManager
 import com.rye.receiptcards.proto.Reqrep
 import com.rye.receiptcards.ui.login.EXTRA_DECKS_INFO
+import kotlinx.android.synthetic.main.activity_deck_select.*
 
 class DeckSelectActivity : AppCompatActivity() {
 
@@ -40,6 +41,7 @@ class DeckSelectActivity : AppCompatActivity() {
         val deckChooser = findViewById<Spinner>(R.id.deckChooser)
         val beginButton = findViewById<Button>(R.id.begin)
         val loadBar = findViewById<ProgressBar>(R.id.loadBar)
+        val resumeButton = findViewById<Button>(R.id.resume)
 
         deckSelectViewModel = ViewModelProvider(this, DeckSelectViewModelFactory())
             .get(DeckSelectViewModel::class.java)
@@ -84,13 +86,23 @@ class DeckSelectActivity : AppCompatActivity() {
         beginButton.setOnClickListener {
             loadBar.visibility = View.VISIBLE
             beginButton.isEnabled = false
+            resumeButton.isEnabled = false
             deckSelectViewModel.getDeckCards(allDecks.indexOf(deckChooser.selectedItem))
+        }
+
+        resumeButton.setOnClickListener {
+            loadBar.visibility = View.VISIBLE
+            beginButton.isEnabled = false
+            resumeButton.isEnabled = false
+            deckSelectViewModel.resume()
         }
 
         deckSelectViewModel.cardsResult.observe(this@DeckSelectActivity, Observer {
             val loginResult = it ?: return@Observer
 
             loadBar.visibility = View.GONE
+            beginButton.isEnabled = true
+            resumeButton.isEnabled = true
             if (!loginResult.success) {
                 showFetchFailed()
             } else {

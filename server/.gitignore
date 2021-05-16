@@ -136,3 +136,6 @@ proto/
 
 # Decklists
 decks/
+
+# Logs
+receipt_server_log*
