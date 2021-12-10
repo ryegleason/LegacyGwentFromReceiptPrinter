@@ -24,7 +24,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/sideboard"
-                tools:visibility="gone" />
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <Button
                 android:id="@+id/creep_button"
@@ -32,49 +33,63 @@
                 android:layout_height="wrap_content"
                 android:text="@string/creep"
                 android:visibility="gone"
-                tools:visibility="gone" />
+                tools:visibility="visible" />
 
             <Button
                 android:id="@+id/rand_arrow_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/rand_arrow"
-                tools:visibility="gone" />
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <Button
                 android:id="@+id/left_arrow_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/left_arrow"
-                tools:visibility="gone" />
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <Button
                 android:id="@+id/forward_arrow_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/forward_arrow"
-                tools:visibility="gone" />
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <Button
                 android:id="@+id/right_arrow_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/right_arrow"
-                tools:visibility="gone" />
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <Button
                 android:id="@+id/shop_no_hold_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/shop_no_hold"
-                tools:visibility="gone" />
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <Button
                 android:id="@+id/shop_hold_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/shop_hold"
-                tools:visibility="gone" />
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/draw_prize_card_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/draw_prize_card"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
         </android.widget.LinearLayout>
     </ScrollView>

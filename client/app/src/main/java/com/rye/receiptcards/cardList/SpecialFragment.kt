@@ -54,6 +54,7 @@ class SpecialFragment : Fragment() {
         val rightArrowButton: Button = root.findViewById(R.id.right_arrow_button)
         val shopNoHoldButton: Button = root.findViewById(R.id.shop_no_hold_button)
         val shopHoldButton: Button = root.findViewById(R.id.shop_hold_button)
+        val drawPrizeButton: Button = root.findViewById(R.id.draw_prize_card_button)
 
         specialViewModel.specialActions.observe(viewLifecycleOwner, {
             it?.let {
@@ -65,6 +66,7 @@ class SpecialFragment : Fragment() {
                 setVisibleIffContains(rightArrowButton, Reqrep.SpecialAction.RIGHT_ARROW, it)
                 setVisibleIffContains(shopNoHoldButton, Reqrep.SpecialAction.SHOP_NO_HOLD, it)
                 setVisibleIffContains(shopHoldButton, Reqrep.SpecialAction.SHOP_HOLD, it)
+                setVisibleIffContains(drawPrizeButton, Reqrep.SpecialAction.DRAW_PRIZE_CARD, it)
             }
         })
 
@@ -98,6 +100,10 @@ class SpecialFragment : Fragment() {
             specialViewModel.doSpecialAction(Reqrep.SpecialAction.SHOP_HOLD)
             val intent = Intent(context, ShopActivity()::class.java)
             startActivity(intent)
+        }
+
+        drawPrizeButton.setOnClickListener {
+            specialViewModel.doSpecialAction(Reqrep.SpecialAction.DRAW_PRIZE_CARD)
         }
 
 

@@ -61,6 +61,7 @@
     <string name="right_arrow">Right Arrow</string>
     <string name="shop_no_hold">Shop (no hold)</string>
     <string name="shop_hold">Shop (hold Secret Shop item)</string>
+    <string name="draw_prize_card">Draw Prize Card</string>
 
     <string name="secret_shop">Secret Shop Item:</string>
     <string name="item_deck">Item Deck Item:</string>
