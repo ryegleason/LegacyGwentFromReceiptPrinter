@@ -5,6 +5,7 @@ from data.DeckLoaderGlob import DeckLoaderGlob
 from data.DeckManager import DeckManager
 from data.FiniteDeckManager import FiniteDeckManager
 from data.PokemonCardData import PokemonCardData, BASIC_ENERGY
+from data.PokemonDeckManager import PokemonDeckManager
 from proto.protobuf import reqrep_pb2
 
 
@@ -32,7 +33,7 @@ class PokemonDeckLoader(DeckLoaderGlob):
                     new_card = Card(card_data)
                     cards.append(new_card)
 
-        manager = FiniteDeckManager(self.print_queue, cards)
+        manager = PokemonDeckManager(self.print_queue, cards)
         response = manager.setup()
         return manager, response
 

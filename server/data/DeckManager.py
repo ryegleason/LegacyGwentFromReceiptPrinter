@@ -1,9 +1,10 @@
 import util
+from data import Card
 from proto.protobuf import reqrep_pb2
 from proto.protobuf.reqrep_pb2 import Zone, Rep, Move, SpecialAction
 
 
-def add_new_card_to_message(card, zone, response):
+def add_new_card_to_message(card: Card, zone: Zone, response: Rep):
     move = response.moves.add()
     proto_card = response.new_cards.add()
     util.UUID_to_proto_UUID(card.uuid, move.card_uuid)

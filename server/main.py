@@ -6,10 +6,11 @@ import os.path
 
 import util
 from daemons.CLIDaemon import CLIDaemon
-from data import MTGCardData, ArtifactCardData
+from data import MTGCardData, ArtifactCardData, PokemonCardData
 from data.ArtifactDeckLoader import ArtifactDeckLoader
 from data.MTGDeckLoader import MTGDeckLoader
 from daemons.PrinterDaemon import PrinterDaemon
+from data.PokemonDeckLoader import PokemonDeckLoader
 from proto.protobuf import reqrep_pb2
 
 
@@ -26,9 +27,11 @@ printer_daemon.start()
 print_queue = printer_daemon.print_queue
 
 deck_manager_loaders = {"mtg": MTGDeckLoader(print_queue, os.path.abspath(os.path.join("decks", "mtg"))),
-                        "artifact": ArtifactDeckLoader(print_queue, os.path.abspath(os.path.join("decks", "artifact_decks.txt")))}
+                        "artifact": ArtifactDeckLoader(print_queue, os.path.abspath(os.path.join("decks", "artifact_decks.txt"))),
+                        "pokemon": PokemonDeckLoader(print_queue, os.path.abspath(os.path.join("decks", "pokemon")))}
 
-card_print_functions = {"mtg": MTGCardData.print_card_from_name, "artifact": ArtifactCardData.print_card_from_name}
+card_print_functions = {"mtg": MTGCardData.print_card_from_name, "artifact": ArtifactCardData.print_card_from_name,
+                        "pokemon": PokemonCardData.print_card_from_name}
 
 cli_daemon = CLIDaemon(print_queue)
 cli_daemon.start()
