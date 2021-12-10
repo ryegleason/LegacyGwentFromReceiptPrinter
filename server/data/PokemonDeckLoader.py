@@ -1,30 +1,32 @@
 import os
-from pathlib import Path
-from typing import List
 
 from data.Card import Card
-from data.DeckLoader import DeckLoader
 from data.DeckLoaderGlob import DeckLoaderGlob
 from data.DeckManager import DeckManager
 from data.FiniteDeckManager import FiniteDeckManager
-from data.MTGCardData import MTGCardData
+from data.PokemonCardData import PokemonCardData, BASIC_ENERGY
 from proto.protobuf import reqrep_pb2
 
 
-class MTGDeckLoader(DeckLoaderGlob):
+class PokemonDeckLoader(DeckLoaderGlob):
 
     def load_deck(self, name: str) -> (DeckManager, reqrep_pb2.Rep):
         cards = []
 
         with open(os.path.join(self.deck_dir, name + "." + self.suffix), "r") as f:
             for line in f:
-                if line.strip() == "":
+                line = line.strip()
+                if line == "" or line[0] == "#":
                     break
-                copies = int(line.split(" ")[0])
-                # Split and double sided card handling
-                name = line[line.index(" "):].replace("/", " // ").strip()
+                split_line = line.split(" ")
+                copies = int(split_line[0])
 
-                card_data = MTGCardData(name)
+                if " ".join(split_line[1:3]) in BASIC_ENERGY:
+                    card_data = BASIC_ENERGY[" ".join(split_line[1:3])]
+                else:
+                    set_code = split_line[-2]
+                    card_number = split_line[-1]
+                    card_data = PokemonCardData(set_code, card_number)
 
                 for i in range(copies):
                     new_card = Card(card_data)
@@ -36,6 +38,6 @@ class MTGDeckLoader(DeckLoaderGlob):
 
 
 if __name__ == "__main__":
-    loader = MTGDeckLoader(r"G:\Documents\MixedProjects\LegacyGwentFromReceiptPrinter\server\decks\mtg")
+    loader = PokemonDeckLoader(r"G:\Documents\MixedProjects\LegacyGwentFromReceiptPrinter\server\decks\pokemon")
     print(loader.get_deck_names())
     loader.load_deck(loader.get_deck_names()[0])
