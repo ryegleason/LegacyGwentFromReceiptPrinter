@@ -1,15 +1,21 @@
-import time
+import os
 from queue import Queue
 from threading import Thread
 
+from dotenv import load_dotenv
 from escpos.printer import Dummy, Usb
+import escpos.constants
 
-DRY_RUN = True
+load_dotenv()
+DRY_RUN = False
 
 if DRY_RUN:
     printer = Dummy()
 else:
-    printer = Usb(0x0416, 0x5011, in_ep=0x81, out_ep=0x3)
+    printer = Usb(int(os.getenv("VENDOR_ID"), base=16),
+                  int(os.getenv("PRODUCT_ID"), base=16),
+                  in_ep=int(os.getenv("IN_ENDPOINT"), base=16),
+                  out_ep=int(os.getenv("OUT_ENDPOINT"), base=16))
 
 
 class PrinterDaemon(Thread):

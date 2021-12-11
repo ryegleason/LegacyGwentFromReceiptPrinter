@@ -45,6 +45,10 @@ def modifier_to_str(modifier) -> str:
     return "{} {}".format(TYPE_SYMBOL_DICT[modifier.type], modifier.value)
 
 
+def normalize_special_chars(text: str) -> str:
+    return text.replace("×", "x").replace("é", "e")
+
+
 class PokemonCardData(SimpleCardData):
 
     data_folder = os.path.join("download", "pokemon", "data")
@@ -68,7 +72,6 @@ class PokemonCardData(SimpleCardData):
         self.card_data = card_data
 
         self.name = card_data.name
-        print(self.name)
         typeline = "{} - {}".format(card_data.supertype, " ".join(card_data.subtypes))
         body = "\n".join([] if card_data.rules is None else card_data.rules)
         top_right = ""
@@ -85,8 +88,8 @@ class PokemonCardData(SimpleCardData):
                 else:
                     body = "Evolves from " + card_data.evolvesFrom
             # start keeping a trailing newline
-            if body == "":
-                body = "\n"
+            if body == "" or body[-1] != "\n":
+                body += "\n"
 
             if card_data.ancientTrait:
                 body += "{}: {}\n".format(card_data.ancientTrait.name, card_data.ancientTrait.text)
@@ -96,10 +99,13 @@ class PokemonCardData(SimpleCardData):
             if card_data.attacks:
                 for attack in card_data.attacks:
                     if attack.text == "":
-                        body += "{} {}     {}\n".format(cost_to_str(attack.cost), attack.name, attack.damage)
+                        body += "{} {}   {}\n".format(cost_to_str(attack.cost), attack.name, attack.damage)
                     else:
-                        body += "{} {}     {}\n{}\n".format(cost_to_str(attack.cost), attack.name, attack.damage,
+                        body += "{} {}   {}\n{}\n".format(cost_to_str(attack.cost), attack.name, attack.damage,
                                                             attack.text)
+
+            # trim trailing newline
+            body = body[:-1]
             if card_data.weaknesses:
                 bottom_left = "; ".join(map(modifier_to_str, card_data.weaknesses))
             if card_data.resistances:
@@ -109,8 +115,9 @@ class PokemonCardData(SimpleCardData):
         self.artwork = None
         if art:
             self.get_artwork(card_data.images.small)
-        super().__init__(self.name, top_right, typeline, body, bottom_left, str(bottom_right), self.artwork,
-                         bottom_center=bottom_center)
+        super().__init__(normalize_special_chars(self.name), top_right, normalize_special_chars(typeline),
+                         normalize_special_chars(body), normalize_special_chars(bottom_left),
+                         normalize_special_chars(bottom_right), self.artwork, bottom_center=bottom_center)
 
     def get_artwork(self, image_uri) -> Image:
         if self.artwork is None:
