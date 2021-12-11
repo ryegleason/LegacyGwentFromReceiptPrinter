@@ -100,7 +100,7 @@ class ArtifactCardData(SimpleCardData):
                 enhancer = ImageEnhance.Contrast(art)
                 art = enhancer.enhance(2)
                 art = ImageOps.grayscale(art)
-                art = art.point(lambda x: 255 - (255 - x)/2)
+                art = art.point(lambda x: 255 - int((255 - x)/2))
 
                 if not os.path.isdir(self.art_folder):
                     os.makedirs(self.art_folder)

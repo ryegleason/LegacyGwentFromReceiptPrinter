@@ -12,6 +12,8 @@ from data.SimpleCardData import SimpleCardData
 from dotenv import load_dotenv
 
 load_dotenv()
+if os.getenv("POKEMON_API_KEY") == "":
+    print("WARNING: You're using the pokemon API without an API key!")
 pokemontcgsdk.RestClient.configure(os.getenv("POKEMON_API_KEY"))
 
 
@@ -34,6 +36,8 @@ TYPE_SYMBOL_DICT = {"Colorless": "{CL}",
 
 
 def cost_to_str(cost: List[str]) -> str:
+    if cost is None:
+        return ""
     return "".join(map(lambda x: TYPE_SYMBOL_DICT[x], cost))
 
 
@@ -64,6 +68,7 @@ class PokemonCardData(SimpleCardData):
         self.card_data = card_data
 
         self.name = card_data.name
+        print(self.name)
         typeline = "{} - {}".format(card_data.supertype, " ".join(card_data.subtypes))
         body = "\n".join([] if card_data.rules is None else card_data.rules)
         top_right = ""
@@ -109,7 +114,7 @@ class PokemonCardData(SimpleCardData):
 
     def get_artwork(self, image_uri) -> Image:
         if self.artwork is None:
-            art_path = self.to_filename(self.art_folder, "png", name=self.name)
+            art_path = self.to_filename(self.art_folder, "png")
             if os.path.isfile(art_path):
                 self.artwork = Image.open(art_path)
             else:
@@ -120,7 +125,7 @@ class PokemonCardData(SimpleCardData):
                 enhancer = ImageEnhance.Contrast(art)
                 art = enhancer.enhance(2)
                 art = ImageOps.grayscale(art)
-                art = art.point(lambda x: 255 - (255 - x)/2)
+                art = art.point(lambda x: 255 - int((255 - x)/2))
 
                 if not os.path.isdir(self.art_folder):
                     os.makedirs(self.art_folder)

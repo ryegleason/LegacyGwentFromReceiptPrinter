@@ -18,7 +18,7 @@ class PokemonDeckLoader(DeckLoaderGlob):
             for line in f:
                 line = line.strip()
                 if line == "" or line[0] == "#":
-                    break
+                    continue
                 split_line = line.split(" ")
                 copies = int(split_line[0])
 

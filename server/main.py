@@ -22,7 +22,7 @@ server = context.socket(zmq.REP)
 server.bind("tcp://*:27068")
 
 printer_daemon = PrinterDaemon()
-printer_daemon.setDaemon(True)
+printer_daemon.daemon = True
 printer_daemon.start()
 print_queue = printer_daemon.print_queue
 
