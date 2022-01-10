@@ -19,6 +19,7 @@ enum SpecialAction {
   RIGHT_ARROW = 5;
   SHOP_NO_HOLD = 6;
   SHOP_HOLD = 7;
+  DRAW_PRIZE_CARD = 8;
 }
 
 message UUID {

@@ -4,29 +4,19 @@ from typing import List
 
 from data.Card import Card
 from data.DeckLoader import DeckLoader
+from data.DeckLoaderGlob import DeckLoaderGlob
 from data.DeckManager import DeckManager
 from data.FiniteDeckManager import FiniteDeckManager
 from data.MTGCardData import MTGCardData
 from proto.protobuf import reqrep_pb2
 
 
-class MTGDeckLoader(DeckLoader):
-
-    def __init__(self, print_queue, deck_dir):
-        super().__init__(print_queue)
-        self.deck_dir = deck_dir
-        self.deck_names = []
-        if os.path.isdir(deck_dir):
-            for deck_filename in Path(deck_dir).rglob("*.txt"):
-                self.deck_names.append(deck_filename.with_suffix('').name)
-
-    def get_deck_names(self) -> List[str]:
-        return self.deck_names
+class MTGDeckLoader(DeckLoaderGlob):
 
     def load_deck(self, name: str) -> (DeckManager, reqrep_pb2.Rep):
         cards = []
 
-        with open(os.path.join(self.deck_dir, name + ".txt"), "r") as f:
+        with open(os.path.join(self.deck_dir, name + "." + self.suffix), "r") as f:
             for line in f:
                 if line.strip() == "":
                     break

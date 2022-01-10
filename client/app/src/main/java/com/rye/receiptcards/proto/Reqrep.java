@@ -186,6 +186,10 @@ public final class Reqrep {
      * <code>SHOP_HOLD = 7;</code>
      */
     SHOP_HOLD(7),
+    /**
+     * <code>DRAW_PRIZE_CARD = 8;</code>
+     */
+    DRAW_PRIZE_CARD(8),
     UNRECOGNIZED(-1),
     ;
 
@@ -221,6 +225,10 @@ public final class Reqrep {
      * <code>SHOP_HOLD = 7;</code>
      */
     public static final int SHOP_HOLD_VALUE = 7;
+    /**
+     * <code>DRAW_PRIZE_CARD = 8;</code>
+     */
+    public static final int DRAW_PRIZE_CARD_VALUE = 8;
 
 
     public final int getNumber() {
@@ -255,6 +263,7 @@ public final class Reqrep {
         case 5: return RIGHT_ARROW;
         case 6: return SHOP_NO_HOLD;
         case 7: return SHOP_HOLD;
+        case 8: return DRAW_PRIZE_CARD;
         default: return null;
       }
     }
@@ -7296,11 +7305,12 @@ public final class Reqrep {
       "\014\n\004game\030\002 \001(\t\"3\n\004Card\022\030\n\tcard_uuid\030\001 \001(\013" +
       "2\005.UUID\022\021\n\timage_uri\030\002 \001(\t*=\n\004Zone\022\010\n\004NO" +
       "NE\020\000\022\010\n\004HAND\020\001\022\n\n\006PLAYED\020\002\022\010\n\004DECK\020\003\022\013\n\007" +
-      "SPECIAL\020\004*\216\001\n\rSpecialAction\022\r\n\tSIDEBOARD" +
+      "SPECIAL\020\004*\243\001\n\rSpecialAction\022\r\n\tSIDEBOARD" +
       "\020\000\022\t\n\005CREEP\020\001\022\016\n\nRAND_ARROW\020\002\022\016\n\nLEFT_AR" +
       "ROW\020\003\022\021\n\rFORWARD_ARROW\020\004\022\017\n\013RIGHT_ARROW\020" +
-      "\005\022\020\n\014SHOP_NO_HOLD\020\006\022\r\n\tSHOP_HOLD\020\007B\034\n\032co" +
-      "m.rye.receiptcards.protob\006proto3"
+      "\005\022\020\n\014SHOP_NO_HOLD\020\006\022\r\n\tSHOP_HOLD\020\007\022\023\n\017DR" +
+      "AW_PRIZE_CARD\020\010B\034\n\032com.rye.receiptcards." +
+      "protob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

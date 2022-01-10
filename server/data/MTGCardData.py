@@ -108,7 +108,7 @@ class MTGCardData(CardData):
 
                 art = art.resize((self.IMAGE_WIDTH, new_height))
                 art = ImageOps.grayscale(art)
-                art = art.point(lambda x: 255 - (255 - x)/2)
+                art = art.point(lambda x: 255 - int((255 - x)/2))
 
                 if not os.path.isdir(self.art_folder):
                     os.makedirs(self.art_folder)
@@ -142,7 +142,7 @@ if __name__ == "__main__":
     pd = PrinterDaemon()
     # p = Usb(0x0416, 0x5011, in_ep=0x81, out_ep=0x3)
     hewwo = MTGCardData("Fireball")
-    # print(hewwo.raw_print)
+    print(hewwo.raw_print)
     # printer._raw(hewwo.raw_print)
     pd.print_queue.put(hewwo.raw_print)
     pd.print_queue.put(MTGCardData("Goblin").raw_print)
