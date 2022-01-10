@@ -28,7 +28,14 @@ class PrinterDaemon(Thread):
         while True:
             to_print = self.print_queue.get()
             if not DRY_RUN:
-                printer.open()
+                success = False
+                while not success:
+                    try:
+                        printer.open()
+                        success = True
+                    except Exception as e:
+                        print("Connecting to printer failed: " + str(e))
+                        input("Press enter to retry.")
             printer._raw(to_print)
             if not DRY_RUN:
                 printer.close()
