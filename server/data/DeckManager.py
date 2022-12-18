@@ -1,10 +1,12 @@
+from typing import List
+
 import util
 from data import Card
 from proto.protobuf import reqrep_pb2
 from proto.protobuf.reqrep_pb2 import Zone, Rep, Move, SpecialAction
 
 
-def add_new_card_to_message(card: Card, zone: Zone, response: Rep):
+def add_new_card_to_message(card: Card.Card, zone: Zone, response: Rep):
     move = response.moves.add()
     proto_card = response.new_cards.add()
     util.UUID_to_proto_UUID(card.uuid, move.card_uuid)
@@ -33,5 +35,29 @@ class DeckManager:
         proto_response.success = False
         return proto_response
 
-    def get_full_state(self) -> Rep:
+    def get_deck(self) -> List[Card.Card]:
+        """
+        Get the deck *for display purposes.* This means the deck should probably be g.g. sorted alphabetically before
+        being returned, so deck order isn't exposed.
+        :return: The deck, in an order suitable for displaying to players.
+        """
         pass
+
+    def get_hand(self) -> List[Card.Card]:
+        pass
+
+    def get_played(self) -> List[Card.Card]:
+        pass
+
+    def get_full_state(self) -> Rep:
+        response = reqrep_pb2.Rep()
+
+        for card in self.get_deck():
+            add_new_card_to_message(card, reqrep_pb2.Zone.DECK, response)
+        for card in self.get_hand():
+            add_new_card_to_message(card, reqrep_pb2.Zone.HAND, response)
+        for card in self.get_played():
+            add_new_card_to_message(card, reqrep_pb2.Zone.PLAYED, response)
+
+        response.success = True
+        return response

@@ -1,0 +1,23 @@
+$def with (deck_manager_loaders, has_active_game)
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Legacy Gwent From Receipt Printer</title>
+</head>
+<body>
+<h1>Welcome To Legacy Gwent From Receipt Printer!</h1>
+<form method="post" action="new">
+<label for="deckSelect">Choose a deck: </label>
+<select id="deckSelect" name="deck">
+$for game_name, loader in deck_manager_loaders.items():
+    $for deck_name in loader.get_deck_names():
+        $ deck_string = game_name + " - " + deck_name
+        <option value="$deck_string">$deck_string</option>
+</select>
+<input type="submit" value="Start New Game"/>
+</form>
+$if has_active_game:
+    <h3>OR</h3>
+    <a href="play">Resume Game</a>
+</body>
+</html>

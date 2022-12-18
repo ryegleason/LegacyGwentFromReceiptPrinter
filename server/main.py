@@ -52,39 +52,39 @@ log_file = None
 if LOG:
     log_file = open(LOG_FILE_NAME, 'w')
 
-while True:
-    request = server.recv()
-    proto_request = reqrep_pb2.Req()
-    proto_request.ParseFromString(request)
-
-    if LOG:
-        log_file.write(str(proto_request) + "\n")
-
-    proto_response = reqrep_pb2.Rep()
-
-    user_uuid = util.proto_UUID_to_UUID(proto_request.user_uuid)
-    if proto_request.req_type == reqrep_pb2.Req.ReqType.DECKS_LIST:
-        proto_response.success = True
-        proto_response.decks_info.decks.extend(decks_info_list)
-    elif proto_request.req_type == reqrep_pb2.Req.ReqType.SELECT_DECK:
-        deck_info = decks_info_list[proto_request.deck_index]
-        user_deck_managers[user_uuid], proto_response = deck_manager_loaders[deck_info.game].load_deck(deck_info.name)
-        cli_daemon.print_func = card_print_functions[deck_info.game]
-    elif proto_request.req_type == reqrep_pb2.Req.ReqType.SHUFFLE:
-        proto_response = user_deck_managers[user_uuid].shuffle()
-    elif proto_request.req_type == reqrep_pb2.Req.ReqType.DRAW:
-        proto_response = user_deck_managers[user_uuid].draw(proto_request.draw_to)
-    elif proto_request.req_type == reqrep_pb2.Req.ReqType.MOVE:
-        proto_response = user_deck_managers[user_uuid].move(proto_request.move)
-    elif proto_request.req_type == reqrep_pb2.Req.ReqType.SPECIAL:
-        proto_response = user_deck_managers[user_uuid].special(proto_request.special)
-    elif proto_request.req_type == reqrep_pb2.Req.ReqType.RESUME:
-        proto_response = user_deck_managers[user_uuid].get_full_state()
-    else:
-        proto_response.success = False
-
-    if LOG:
-        log_file.write(str(proto_response) + "\n")
-        log_file.flush()
-
-    server.send(proto_response.SerializeToString())
+# while True:
+#     request = server.recv()
+#     proto_request = reqrep_pb2.Req()
+#     proto_request.ParseFromString(request)
+#
+#     if LOG:
+#         log_file.write(str(proto_request) + "\n")
+#
+#     proto_response = reqrep_pb2.Rep()
+#
+#     user_uuid = util.proto_UUID_to_UUID(proto_request.user_uuid)
+#     if proto_request.req_type == reqrep_pb2.Req.ReqType.DECKS_LIST:
+#         proto_response.success = True
+#         proto_response.decks_info.decks.extend(decks_info_list)
+#     elif proto_request.req_type == reqrep_pb2.Req.ReqType.SELECT_DECK:
+#         deck_info = decks_info_list[proto_request.deck_index]
+#         user_deck_managers[user_uuid], proto_response = deck_manager_loaders[deck_info.game].load_deck(deck_info.name)
+#         cli_daemon.print_func = card_print_functions[deck_info.game]
+#     elif proto_request.req_type == reqrep_pb2.Req.ReqType.SHUFFLE:
+#         proto_response = user_deck_managers[user_uuid].shuffle()
+#     elif proto_request.req_type == reqrep_pb2.Req.ReqType.DRAW:
+#         proto_response = user_deck_managers[user_uuid].draw(proto_request.draw_to)
+#     elif proto_request.req_type == reqrep_pb2.Req.ReqType.MOVE:
+#         proto_response = user_deck_managers[user_uuid].move(proto_request.move)
+#     elif proto_request.req_type == reqrep_pb2.Req.ReqType.SPECIAL:
+#         proto_response = user_deck_managers[user_uuid].special(proto_request.special)
+#     elif proto_request.req_type == reqrep_pb2.Req.ReqType.RESUME:
+#         proto_response = user_deck_managers[user_uuid].get_full_state()
+#     else:
+#         proto_response.success = False
+#
+#     if LOG:
+#         log_file.write(str(proto_response) + "\n")
+#         log_file.flush()
+#
+#     server.send(proto_response.SerializeToString())

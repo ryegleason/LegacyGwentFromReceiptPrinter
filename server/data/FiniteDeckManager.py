@@ -88,19 +88,15 @@ class FiniteDeckManager(DeckManager):
         response.moves.append(move)
         return response
 
-    def get_full_state(self) -> Rep:
-        response = reqrep_pb2.Rep()
-
+    def get_deck(self) -> List[Card.Card]:
         # Sort alphabetically, for convenience and to avoid exposing deck order
-        for card in sorted(self.deck, key=lambda c: c.card_data.name):
-            add_new_card_to_message(card, reqrep_pb2.Zone.DECK, response)
-        for card in self.hand:
-            add_new_card_to_message(card, reqrep_pb2.Zone.HAND, response)
-        for card in self.played:
-            add_new_card_to_message(card, reqrep_pb2.Zone.PLAYED, response)
+        return sorted(self.deck, key=lambda c: c.card_data.name)
 
-        response.success = True
-        return response
+    def get_hand(self) -> List[Card.Card]:
+        return self.hand
+
+    def get_played(self) -> List[Card.Card]:
+        return self.played
 
     def put_in_deck(self, card: Card, from_top: bool, n_cards_down: int = 0):
         if from_top and n_cards_down == 0:

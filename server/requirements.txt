@@ -5,7 +5,7 @@ chardet==4.0.0
 colorama==0.4.4
 dacite==1.6.0
 idna==2.10
-Pillow==8.0.1
+Pillow~=8.4.0
 pokemontcgsdk==3.2.0
 protobuf==3.15.6
 pyserial==3.4
@@ -13,8 +13,10 @@ python-dotenv==0.19.2
 python-escpos==2.2.0
 pyusb==1.1.0
 PyYAML==5.3.1
-pyzmq==22.0.3
+pyzmq~=22.3.0
 qrcode==6.1
 requests==2.25.1
 six==1.15.0
 urllib3==1.26.4
+
+web.py~=0.62
