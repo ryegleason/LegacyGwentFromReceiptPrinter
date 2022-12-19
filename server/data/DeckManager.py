@@ -1,3 +1,4 @@
+import uuid
 from typing import List
 
 import util
@@ -24,10 +25,10 @@ class DeckManager:
     def shuffle(self) -> Rep:
         pass
 
-    def draw(self, draw_to: Zone) -> Rep:
+    def draw(self, draw_to: str) -> Rep:
         pass
 
-    def move(self, move: Move) -> Rep:
+    def move(self, source_zone: str, target_zone: str, card_uuid: uuid.UUID, from_top: bool, num_down: int) -> bool:
         pass
 
     def special(self, special_action: SpecialAction):

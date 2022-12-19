@@ -7,7 +7,9 @@ ID_COOKIE_NAME = "uuid"
 
 urls = ("/", "index",
         "/new", "new",
-        "/play", "play")
+        "/play", "play",
+        "/move", "move",
+        "/tuck", "tuck",)
 render = web.template.render('web/templates/')
 
 class index:
@@ -31,6 +33,23 @@ class play:
         user_id = web.cookies().get(ID_COOKIE_NAME)
         return render.play(main.user_deck_managers[user_id])
 
+class move:
+    def POST(self):
+        user_id = web.cookies().get(ID_COOKIE_NAME)
+        source = web.input().source_zone
+        destination = web.input().target_zone
+        card_id = uuid.UUID(web.input().uuid)
+        from_top = bool(web.input().get("from_top", False))
+        num_down = int(web.input().get("num_down", 0))
+        if not main.user_deck_managers[user_id].move(source, destination, card_id, from_top, num_down):
+            raise web.BadRequest("Move failed, probably because that card isn't in the source zone.")
+        raise web.seeother("/play")
+
+class tuck:
+    def GET(self):
+        user_id = web.cookies().get(ID_COOKIE_NAME)
+        card_id = uuid.UUID(web.input().uuid)
+        return render.tuck(main.user_deck_managers[user_id].card_for_uuid(card_id))
 
 
 if __name__ == "__main__":

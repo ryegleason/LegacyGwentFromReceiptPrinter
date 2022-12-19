@@ -1,4 +1,5 @@
 import random
+import uuid
 from uuid import UUID
 
 from escpos.printer import Dummy
@@ -67,22 +68,18 @@ class ArtifactDeckManager(FiniteDeckManager):
 
         return rep
 
-    def move(self, move: reqrep_pb2.Move) -> reqrep_pb2.Rep:
-        if move.source_zone != Zone.SPECIAL:
-            return super().move(move)
+    def move(self, source_zone: str, target_zone: str, card_uuid: uuid.UUID, from_top: bool = False, num_down: int = 0) -> bool:
+        if source_zone != "special":
+            return super().move(source_zone, target_zone, card_uuid, from_top, num_down)
 
-        rep = reqrep_pb2.Rep()
-        card_uuid = util.proto_UUID_to_UUID(move.card_uuid)
         try:
             card_idx = [idx for idx, value in enumerate(self.shop_cards) if value is not None and value.uuid == card_uuid][0]
         except IndexError:
-            rep.success = False
-            return rep
+            return False
 
         card = self.shop_cards[card_idx]
-        if not self.move_card(card, move):
-            rep.success = False
-            return rep
+        if not self.move_card(card, target_zone, from_top, num_down):
+            return False
 
         # Item deck, so we replace it
         if card_idx == 1:
@@ -90,22 +87,10 @@ class ArtifactDeckManager(FiniteDeckManager):
             if len(self.item_deck) > 0:
                 new_card = self.item_deck[-1]
                 self.shop_cards[1] = new_card
-                proto_uuid = reqrep_pb2.UUID()
-                util.UUID_to_proto_UUID(new_card.uuid, proto_uuid)
-                rep.new_cards.card_uuids.append(proto_uuid)
-                rep.new_cards.image_uris.append(new_card.card_data.get_card_image_uri())
-                rep.new_cards.image_indices.append(0)
-
-                new_move = rep.moves.add()
-                util.UUID_to_proto_UUID(new_card.uuid, new_move.card_uuid)
-                new_move.source_zone = Zone.NONE
-                new_move.target_zone = Zone.SPECIAL
         else:
             self.shop_cards[card_idx] = None
 
-        rep.moves.append(move)
-        rep.success = True
-        return rep
+        return True
 
     def special(self, special_action: SpecialAction):
         rep = reqrep_pb2.Rep()
