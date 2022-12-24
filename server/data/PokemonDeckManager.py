@@ -11,7 +11,7 @@ PRIZE_CARDS = 6
 class PokemonDeckManager(FiniteDeckManager):
 
     def __init__(self, print_queue, decklist):
-        super().__init__(print_queue, decklist, starting_hand_size=7)
+        super().__init__(print_queue, decklist, [], starting_hand_size=7)
         self.prize_cards = []
 
     def setup(self) -> reqrep_pb2.Rep:

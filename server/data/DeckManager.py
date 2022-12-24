@@ -21,6 +21,7 @@ class DeckManager:
 
     def __init__(self, print_queue):
         self.print_queue = print_queue
+        self.special_actions: Dict[str, bool] = {} # map special action names to whether they should redirect (true means redirect)
 
     def shuffle(self) -> Rep:
         pass

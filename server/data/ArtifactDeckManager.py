@@ -44,7 +44,7 @@ forward_arrow_raw = dummy_printer.output
 class ArtifactDeckManager(FiniteDeckManager):
 
     def __init__(self, print_queue, main_deck, heroes, item_deck):
-        super().__init__(print_queue, main_deck, starting_hand_size=5)
+        super().__init__(print_queue, main_deck, [], starting_hand_size=5)
         self.heroes = heroes
         self.starting_item_deck = item_deck
         self.item_deck = []

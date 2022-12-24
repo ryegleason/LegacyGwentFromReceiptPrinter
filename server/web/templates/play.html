@@ -64,7 +64,17 @@ $for card in deck_manager.get_played():
     <img src="$card.card_data.get_card_image_uri()" id="$card.uuid" data-name="$card.card_data.name" class="card"/>
 </div>
   </div>
-  <div class="tab-pane fade" id="actions" role="tabpanel" aria-labelledby="actions-tab" style="max-height: 100%"></div>
+  <div class="tab-pane fade" id="actions" role="tabpanel" aria-labelledby="actions-tab" style="max-height: 100%">
+      <div class="container text-center" style="overflow: auto; max-height: 100%; width: 100%; height: 100%;">
+$for name, is_a in deck_manager.special_actions.items():
+    <div class="row mb-1">
+    $if is_a:
+        <a class="btn btn-primary" id="${name}Button" href="/$name">$name.capitalize()</a>
+    $else:
+        <button type="button" class="btn btn-primary" id="${name}Button" onclick="$$.post('/$name', {})">$name.capitalize()</button>
+    </div>
+</div>
+  </div>
 </div>
 </div>
 

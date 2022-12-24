@@ -14,17 +14,25 @@ from proto.protobuf.reqrep_pb2 import Rep
 
 class FiniteDeckManager(DeckManager):
 
-    def __init__(self, print_queue, decklist, starting_hand_size=7):
+    def __init__(self, print_queue, decklist: List[Card.Card], sideboard: List[Card.Card], starting_hand_size=7):
         super().__init__(print_queue)
         self.decklist = decklist
+        self.sideboard_list = sideboard
         self.starting_hand_size = starting_hand_size
         self.decklist.sort()
+        self.sideboard_list.sort()
         self.deck: List[Card] = []
         self.hand: List[Card] = []
         self.played: List[Card] = []
+        self.sideboard: List[Card] = []
+        self.special_actions["mulligan"] = True
+        if len(self.sideboard_list) > 0:
+            self.special_actions["sideboard"] = True
+            self.special_actions["wish"] = True
 
     def setup(self) -> bool:
         self.deck = random.sample(self.decklist, len(self.decklist))
+        self.sideboard = sorted(self.sideboard_list, key=lambda c: c.card_data.name)
         self.hand = []
         self.played = []
 
@@ -62,6 +70,8 @@ class FiniteDeckManager(DeckManager):
                 self.hand.remove(card)
             elif source_zone == "played":
                 self.played.remove(card)
+            elif source_zone == "sideboard":
+                self.sideboard.remove(card)
             else:
                 self.deck.remove(card)
         except ValueError:
@@ -79,6 +89,9 @@ class FiniteDeckManager(DeckManager):
     def get_played(self) -> List[Card.Card]:
         return self.played
 
+    def get_sideboard(self) -> List[Card.Card]:
+        return self.sideboard
+
     def put_in_deck(self, card: Card, from_top: bool, n_cards_down: int = 0):
         if from_top and n_cards_down == 0:
             self.deck.append(card)
@@ -93,6 +106,9 @@ class FiniteDeckManager(DeckManager):
         i = bisect_left(self.decklist, DummyCard(uuid))
         if i != len(self.decklist) and self.decklist[i].uuid == uuid:
             return self.decklist[i]
+        i = bisect_left(self.sideboard_list, DummyCard(uuid))
+        if i != len(self.sideboard_list) and self.sideboard_list[i].uuid == uuid:
+            return self.sideboard_list[i]
         raise ValueError
 
     def move_card(self, card: Card, target_zone: str, from_top: bool = False, num_down: int = 0) -> bool:
@@ -106,3 +122,8 @@ class FiniteDeckManager(DeckManager):
         else:
             return False
         return True
+
+    def mulligan(self) -> bool:
+        if len(self.hand) != self.starting_hand_size or len(self.played) != 0:
+            return False
+        return self.setup()

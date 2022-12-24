@@ -14,12 +14,19 @@ from proto.protobuf import reqrep_pb2
 class MTGDeckLoader(DeckLoaderGlob):
 
     def load_deck(self, name: str) -> (DeckManager, reqrep_pb2.Rep):
-        cards = []
+        maindeck = []
+        sideboard = []
+        is_sideboard = False
 
         with open(os.path.join(self.deck_dir, name + "." + self.suffix), "r") as f:
             for line in f:
                 if line.strip() == "":
-                    break
+                    if is_sideboard:
+                        break
+                    else:
+                        is_sideboard = True
+                        continue
+
                 copies = int(line.split(" ")[0])
                 # Split and double sided card handling
                 name = line[line.index(" "):].replace("/", " // ").strip()
@@ -28,9 +35,12 @@ class MTGDeckLoader(DeckLoaderGlob):
 
                 for i in range(copies):
                     new_card = Card(card_data)
-                    cards.append(new_card)
+                    if is_sideboard:
+                        sideboard.append(new_card)
+                    else:
+                        maindeck.append(new_card)
 
-        manager = FiniteDeckManager(self.print_queue, cards)
+        manager = FiniteDeckManager(self.print_queue, maindeck, sideboard, starting_hand_size=7)
         response = manager.setup()
         return manager, response
 

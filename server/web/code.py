@@ -12,7 +12,10 @@ urls = ("/", "index",
         "/move", "move",
         "/tuck", "tuck",
         "/shuffle", "shuffle",
-        "/draw", "draw",)
+        "/draw", "draw",
+        "/mulligan", "mulligan",
+        "/sideboard", "sideboard",
+        "/wish", "wish")
 render = web.template.render('web/templates/')
 
 class index:
@@ -48,6 +51,9 @@ class move:
             raise web.BadRequest("Move failed, probably because that card isn't in the source zone.")
         raise web.seeother("/play")
 
+    def GET(self):
+        return self.POST()
+
 class tuck:
     def GET(self):
         user_id = web.cookies().get(ID_COOKIE_NAME)
@@ -69,6 +75,17 @@ class draw:
                                "new_cards": [{"uuid": card.uuid, "image_url": card.card_data.get_card_image_uri(), "name": card.card_data.name, "zone": zone} for card, zone in draw_output[1]]})
         else:
             raise web.BadRequest("Draw failed, probably because the deck is empty.")
+
+class mulligan:
+    def GET(self):
+        user_id = web.cookies().get(ID_COOKIE_NAME)
+        main.user_deck_managers[user_id].mulligan()
+        raise web.seeother("/play")
+
+class wish:
+    def GET(self):
+        user_id = web.cookies().get(ID_COOKIE_NAME)
+        return render.extra_zone("Sideboard", "sideboard", main.user_deck_managers[user_id].get_sideboard())
 
 if __name__ == "__main__":
     app = web.application(urls, globals())
