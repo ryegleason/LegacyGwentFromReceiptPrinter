@@ -45,12 +45,18 @@ $def with (deck_manager)
 $for card in deck_manager.get_deck():
     <img src="$card.card_data.get_card_image_uri()" id="$card.uuid" data-name="$card.card_data.name" class="card"/>
 </div>
+      <div class="fixed-bottom p-3">
+        <button type="button" class="btn btn-primary" id="shuffleButton">Shuffle</button>
+      </div>
   </div>
   <div class="tab-pane fade show active" id="hand" role="tabpanel" aria-labelledby="hand-tab" style="max-height: 100%; height: 100%">
 <div class="cardholder">
 $for card in deck_manager.get_hand():
     <img src="$card.card_data.get_card_image_uri()" id="$card.uuid" data-name="$card.card_data.name" class="card"/>
 </div>
+      <div class="fixed-bottom p-3">
+        <button type="button" class="btn btn-primary" id="drawButton">Draw</button>
+      </div>
   </div>
   <div class="tab-pane fade cardholder" id="played" role="tabpanel" aria-labelledby="played-tab" style="max-height: 100%; height: 100%">
 <div class="cardholder">

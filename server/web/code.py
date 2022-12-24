@@ -1,3 +1,4 @@
+import json
 import uuid
 
 import web
@@ -9,7 +10,9 @@ urls = ("/", "index",
         "/new", "new",
         "/play", "play",
         "/move", "move",
-        "/tuck", "tuck",)
+        "/tuck", "tuck",
+        "/shuffle", "shuffle",
+        "/draw", "draw",)
 render = web.template.render('web/templates/')
 
 class index:
@@ -51,6 +54,21 @@ class tuck:
         card_id = uuid.UUID(web.input().uuid)
         return render.tuck(main.user_deck_managers[user_id].card_for_uuid(card_id))
 
+class shuffle:
+    def POST(self):
+        user_id = web.cookies().get(ID_COOKIE_NAME)
+        main.user_deck_managers[user_id].shuffle()
+        raise web.seeother("/play")
+
+class draw:
+    def POST(self):
+        user_id = web.cookies().get(ID_COOKIE_NAME)
+        draw_output = main.user_deck_managers[user_id].draw(web.input().draw_to)
+        if draw_output:
+            return json.dumps({"uuid": None if draw_output[0] is None else str(draw_output[0]),
+                               "new_cards": [{"uuid": card.uuid, "image_url": card.card_data.get_card_image_uri(), "name": card.card_data.name, "zone": zone} for card, zone in draw_output[1]]})
+        else:
+            raise web.BadRequest("Draw failed, probably because the deck is empty.")
 
 if __name__ == "__main__":
     app = web.application(urls, globals())

@@ -98,4 +98,38 @@ $(document).ready(function (){
     $("#hand .card").click(handOnClick);
 
     $("#played .card").click(playedOnClick);
+
+    $("#shuffleButton").click(function () {
+        $.post("/shuffle", {}, null, "text");
+    });
+
+    $("#drawButton").click(function () {
+        $.post("/draw", {draw_to: "hand"}, function (response) {
+            if (response["uuid"] != null) {
+                const card = document.getElementById(response["uuid"]);
+                $("#hand .cardholder").append(card);
+                $(card).off("click");
+                $(card).click(handOnClick);
+            }
+            for (const cardData of response["new_cards"]) {
+                const card = document.createElement("img");
+                card.src = cardData["image_url"];
+                card.id = cardData["uuid"];
+                card.className = "card";
+                card.dataset.name = cardData["name"];
+                if (cardData["zone"] === "deck") {
+                    $("#deck .cardholder").append(card);
+                    $(card).click(deckOnClick);
+                } else if (cardData["zone"] === "hand") {
+                    $("#hand .cardholder").append(card);
+                    $(card).click(handOnClick);
+                } else if (cardData["zone"] === "played") {
+                    $("#played .cardholder").append(card);
+                    $(card).click(playedOnClick);
+                } else {
+                    console.log("Unknown zone: " + cardData["zone"] + " for new card: " + cardData["name"]);
+                }
+            }
+        }, "json");
+    });
 });

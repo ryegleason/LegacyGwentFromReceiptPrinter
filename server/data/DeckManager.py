@@ -1,5 +1,5 @@
 import uuid
-from typing import List
+from typing import List, Tuple, Dict
 
 import util
 from data import Card
@@ -25,7 +25,13 @@ class DeckManager:
     def shuffle(self) -> Rep:
         pass
 
-    def draw(self, draw_to: str) -> Rep:
+    def draw(self, draw_to: str) -> bool | Tuple[uuid.UUID, List[Tuple[Card.Card, str]]]:
+        """
+        Draw a card from the deck to the specified zone.
+        :param draw_to: The zone to draw to. Must be one of "deck", "hand", or "played".
+        :return: False if the draw fails. Otherwise, the uuid of the card drawn (may be None) and a list of tuple pairs
+        of (card, zone) representing any new cards created and what zone they were created in.
+        """
         pass
 
     def move(self, source_zone: str, target_zone: str, card_uuid: uuid.UUID, from_top: bool, num_down: int) -> bool:

@@ -1,7 +1,7 @@
 import random
 import uuid
 from bisect import bisect_left
-from typing import List
+from typing import List, Tuple
 from uuid import UUID
 
 import util
@@ -23,19 +23,16 @@ class FiniteDeckManager(DeckManager):
         self.hand: List[Card] = []
         self.played: List[Card] = []
 
-    def setup(self) -> reqrep_pb2.Rep:
+    def setup(self) -> bool:
         self.deck = random.sample(self.decklist, len(self.decklist))
         self.hand = []
         self.played = []
 
         success = True
         for i in range(self.starting_hand_size):
-            success = success and self.draw(reqrep_pb2.Zone.HAND).success
+            success = success and self.draw("hand") is not False
 
-        response = self.get_full_state()
-        response.success = response.success and success
-
-        return response
+        return success
 
     def shuffle(self) -> reqrep_pb2.Rep:
         random.shuffle(self.deck)
@@ -43,28 +40,20 @@ class FiniteDeckManager(DeckManager):
         response.success = True
         return response
 
-    def draw(self, draw_to: reqrep_pb2.Zone) -> reqrep_pb2.Rep:
-        response = reqrep_pb2.Rep()
-        if draw_to == reqrep_pb2.Zone.DECK or len(self.deck) < 1:
-            response.success = False
-            return response
+    def draw(self, draw_to: str) -> bool | Tuple[uuid.UUID, List[Tuple[Card.Card, str]]]:
+        if draw_to == "deck" or len(self.deck) < 1:
+            return False
 
         to_draw = self.deck.pop()
-        if draw_to == reqrep_pb2.Zone.HAND:
+        if draw_to == "hand":
             self.hand.append(to_draw)
-        elif draw_to == reqrep_pb2.Zone.PLAYED:
+        elif draw_to == "played":
             self.played.append(to_draw)
             to_draw.queue_print(self.print_queue)
         else:
-            response.success = False
-            return response
+            return False
 
-        move = response.moves.add()
-        util.UUID_to_proto_UUID(to_draw.uuid, move.card_uuid)
-        move.source_zone = reqrep_pb2.Zone.DECK
-        move.target_zone = draw_to
-        response.success = True
-        return response
+        return to_draw.uuid, []
 
     def move(self, source_zone: str, target_zone: str, card_uuid: uuid.UUID, from_top: bool = False, num_down: int = 0) -> bool:
         try:
