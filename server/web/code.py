@@ -87,6 +87,24 @@ class wish:
         user_id = web.cookies().get(ID_COOKIE_NAME)
         return render.extra_zone("Sideboard", "sideboard", main.user_deck_managers[user_id].get_sideboard())
 
+
+class sideboard:
+    def GET(self):
+        user_id = web.cookies().get(ID_COOKIE_NAME)
+        return render.sideboard(main.user_deck_managers[user_id], sorted)
+
+    def POST(self):
+        user_id = web.cookies().get(ID_COOKIE_NAME)
+        kwargs = {"to_deck[]": [], "to_sideboard[]": []}
+        data = web.input(**kwargs)
+        to_deck_uuids = list(uuid.UUID(uuid_str) for uuid_str in data.get("to_deck[]"))
+        to_sideboard_uuids = list(uuid.UUID(uuid_str) for uuid_str in data.get("to_sideboard[]"))
+        print("to_deck: {}, to_sideboard: {}".format(to_deck_uuids, to_sideboard_uuids))
+        if main.user_deck_managers[user_id].sideboard_deck(to_deck_uuids, to_sideboard_uuids):
+            raise web.seeother("/play")
+        else:
+            raise web.BadRequest("Sideboarding failed, probably because you tried to move a card in the sideboard to the sideboard or a card in the deck to the deck.")
+
 if __name__ == "__main__":
     app = web.application(urls, globals())
     app.run()

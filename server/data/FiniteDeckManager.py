@@ -127,3 +127,16 @@ class FiniteDeckManager(DeckManager):
         if len(self.hand) != self.starting_hand_size or len(self.played) != 0:
             return False
         return self.setup()
+
+    def sideboard_deck(self, to_deck_uuids: List[uuid.UUID], to_sideboard_uuids: List[uuid.UUID]) -> bool:
+        for card_uuid in to_sideboard_uuids:
+            card = self.card_for_uuid(card_uuid)
+            self.decklist.remove(card)
+            self.sideboard_list.append(card)
+        self.sideboard_list.sort()
+        for card_uuid in to_deck_uuids:
+            card = self.card_for_uuid(card_uuid)
+            self.sideboard_list.remove(card)
+            self.decklist.append(card)
+        self.decklist.sort()
+        return self.setup()
