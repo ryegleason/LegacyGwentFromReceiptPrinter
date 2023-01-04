@@ -3,15 +3,13 @@ import os
 from data.Card import Card
 from data.DeckLoaderGlob import DeckLoaderGlob
 from data.DeckManager import DeckManager
-from data.FiniteDeckManager import FiniteDeckManager
 from data.PokemonCardData import PokemonCardData, BASIC_ENERGY
 from data.PokemonDeckManager import PokemonDeckManager
-from proto.protobuf import reqrep_pb2
 
 
 class PokemonDeckLoader(DeckLoaderGlob):
 
-    def load_deck(self, name: str) -> (DeckManager, reqrep_pb2.Rep):
+    def load_deck(self, name: str) -> DeckManager:
         cards = []
 
         with open(os.path.join(self.deck_dir, name + "." + self.suffix), "r") as f:
@@ -34,8 +32,8 @@ class PokemonDeckLoader(DeckLoaderGlob):
                     cards.append(new_card)
 
         manager = PokemonDeckManager(self.print_queue, cards)
-        response = manager.setup()
-        return manager, response
+        manager.setup()
+        return manager
 
 
 if __name__ == "__main__":

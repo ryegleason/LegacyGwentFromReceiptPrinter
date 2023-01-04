@@ -4,12 +4,9 @@ from bisect import bisect_left
 from typing import List, Tuple
 from uuid import UUID
 
-import util
 from data import Card
 from data.Card import DummyCard
-from data.DeckManager import DeckManager, add_new_card_to_message
-from proto.protobuf import reqrep_pb2
-from proto.protobuf.reqrep_pb2 import Rep
+from data.DeckManager import DeckManager, SimpleAction
 
 
 class FiniteDeckManager(DeckManager):
@@ -25,10 +22,10 @@ class FiniteDeckManager(DeckManager):
         self.hand: List[Card] = []
         self.played: List[Card] = []
         self.sideboard: List[Card] = []
-        self.special_actions["mulligan"] = True
+        self.simple_actions.append(SimpleAction("Mulligan", "mulligan", True, self.mulligan))
         if len(self.sideboard_list) > 0:
-            self.special_actions["sideboard"] = True
-            self.special_actions["wish"] = True
+            self.complex_actions["Sideboard"] = "sideboard"
+            self.complex_actions["Wish"] = "wish"
 
     def setup(self) -> bool:
         self.deck = random.sample(self.decklist, len(self.decklist))
@@ -42,11 +39,8 @@ class FiniteDeckManager(DeckManager):
 
         return success
 
-    def shuffle(self) -> reqrep_pb2.Rep:
+    def shuffle(self):
         random.shuffle(self.deck)
-        response = reqrep_pb2.Rep()
-        response.success = True
-        return response
 
     def draw(self, draw_to: str) -> bool | Tuple[uuid.UUID, List[Tuple[Card.Card, str]]]:
         if draw_to == "deck" or len(self.deck) < 1:

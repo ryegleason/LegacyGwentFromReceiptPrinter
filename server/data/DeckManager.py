@@ -1,29 +1,19 @@
 import uuid
-from typing import List, Tuple, Dict
+from collections import namedtuple
+from typing import List, Tuple, Dict, Callable
 
-import util
 from data import Card
-from proto.protobuf import reqrep_pb2
-from proto.protobuf.reqrep_pb2 import Zone, Rep, Move, SpecialAction
 
-
-def add_new_card_to_message(card: Card.Card, zone: Zone, response: Rep):
-    move = response.moves.add()
-    proto_card = response.new_cards.add()
-    util.UUID_to_proto_UUID(card.uuid, move.card_uuid)
-    util.UUID_to_proto_UUID(card.uuid, proto_card.card_uuid)
-    move.source_zone = reqrep_pb2.Zone.NONE
-    move.target_zone = zone
-    proto_card.image_uri = card.card_data.get_card_image_uri()
-
+SimpleAction = namedtuple("SimpleAction", ["description", "url", "redirect", "action"])
 
 class DeckManager:
 
     def __init__(self, print_queue):
         self.print_queue = print_queue
-        self.special_actions: Dict[str, bool] = {} # map special action names to whether they should redirect (true means redirect)
+        self.simple_actions: List = []
+        self.complex_actions: Dict[str, str] = {} # map of complex action button texts to URLs
 
-    def shuffle(self) -> Rep:
+    def shuffle(self):
         pass
 
     def draw(self, draw_to: str) -> bool | Tuple[uuid.UUID, List[Tuple[Card.Card, str]]]:
@@ -38,11 +28,6 @@ class DeckManager:
     def move(self, source_zone: str, target_zone: str, card_uuid: uuid.UUID, from_top: bool, num_down: int) -> bool:
         pass
 
-    def special(self, special_action: SpecialAction):
-        proto_response = reqrep_pb2.Rep()
-        proto_response.success = False
-        return proto_response
-
     def get_deck(self) -> List[Card.Card]:
         """
         Get the deck *for display purposes.* This means the deck should probably be g.g. sorted alphabetically before
@@ -56,16 +41,3 @@ class DeckManager:
 
     def get_played(self) -> List[Card.Card]:
         pass
-
-    def get_full_state(self) -> Rep:
-        response = reqrep_pb2.Rep()
-
-        for card in self.get_deck():
-            add_new_card_to_message(card, reqrep_pb2.Zone.DECK, response)
-        for card in self.get_hand():
-            add_new_card_to_message(card, reqrep_pb2.Zone.HAND, response)
-        for card in self.get_played():
-            add_new_card_to_message(card, reqrep_pb2.Zone.PLAYED, response)
-
-        response.success = True
-        return response

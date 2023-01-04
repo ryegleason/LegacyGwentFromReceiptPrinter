@@ -1,19 +1,15 @@
 import os
-from pathlib import Path
-from typing import List
 
 from data.Card import Card
-from data.DeckLoader import DeckLoader
 from data.DeckLoaderGlob import DeckLoaderGlob
 from data.DeckManager import DeckManager
 from data.FiniteDeckManager import FiniteDeckManager
 from data.MTGCardData import MTGCardData
-from proto.protobuf import reqrep_pb2
 
 
 class MTGDeckLoader(DeckLoaderGlob):
 
-    def load_deck(self, name: str) -> (DeckManager, reqrep_pb2.Rep):
+    def load_deck(self, name: str) -> DeckManager:
         maindeck = []
         sideboard = []
         is_sideboard = False
@@ -41,8 +37,8 @@ class MTGDeckLoader(DeckLoaderGlob):
                         maindeck.append(new_card)
 
         manager = FiniteDeckManager(self.print_queue, maindeck, sideboard, starting_hand_size=7)
-        response = manager.setup()
-        return manager, response
+        manager.setup()
+        return manager
 
 
 if __name__ == "__main__":

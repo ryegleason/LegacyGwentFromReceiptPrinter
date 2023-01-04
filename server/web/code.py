@@ -13,9 +13,11 @@ urls = ("/", "index",
         "/tuck", "tuck",
         "/shuffle", "shuffle",
         "/draw", "draw",
-        "/mulligan", "mulligan",
+        "/simple_action", "simple_action",
         "/sideboard", "sideboard",
-        "/wish", "wish")
+        "/wish", "wish",
+        "/shop_reload", "shop_reload",
+        "/shop", "shop")
 render = web.template.render('web/templates/')
 
 class index:
@@ -31,7 +33,7 @@ class new:
     def POST(self):
         user_id = web.cookies().get(ID_COOKIE_NAME)
         deck = web.input().deck.split(" - ")
-        main.user_deck_managers[user_id], _ = main.deck_manager_loaders[deck[0]].load_deck(deck[1])
+        main.user_deck_managers[user_id] = main.deck_manager_loaders[deck[0]].load_deck(deck[1])
         raise web.seeother("/play")
 
 class play:
@@ -76,11 +78,17 @@ class draw:
         else:
             raise web.BadRequest("Draw failed, probably because the deck is empty.")
 
-class mulligan:
+class simple_action:
     def GET(self):
         user_id = web.cookies().get(ID_COOKIE_NAME)
-        main.user_deck_managers[user_id].mulligan()
-        raise web.seeother("/play")
+        for action in main.user_deck_managers[user_id].simple_actions:
+            if action.url == web.input().action:
+                action.action()
+                raise web.seeother("/play")
+        raise web.BadRequest("Unknown simple action.")
+
+    def POST(self):
+        return self.GET()
 
 class wish:
     def GET(self):
@@ -104,6 +112,17 @@ class sideboard:
             raise web.seeother("/play")
         else:
             raise web.BadRequest("Sideboarding failed, probably because you tried to move a card in the sideboard to the sideboard or a card in the deck to the deck.")
+
+class shop_reload:
+    def GET(self):
+        user_id = web.cookies().get(ID_COOKIE_NAME)
+        main.user_deck_managers[user_id].refresh_shop(web.input().get("hold") == "true")
+        raise web.seeother("/shop")
+
+class shop:
+    def GET(self):
+        user_id = web.cookies().get(ID_COOKIE_NAME)
+        return render.shop(main.user_deck_managers[user_id])
 
 if __name__ == "__main__":
     app = web.application(urls, globals())

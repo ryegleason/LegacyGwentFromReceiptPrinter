@@ -8,7 +8,6 @@ from data.Card import Card
 from data.CardData import CardData
 from data.DeckLoader import DeckLoader
 from data.DeckManager import DeckManager
-from proto.protobuf import reqrep_pb2
 
 
 class ArtifactDeckLoader(DeckLoader):
@@ -27,7 +26,7 @@ class ArtifactDeckLoader(DeckLoader):
     def get_deck_names(self) -> List[str]:
         return list(self.decks.keys())
 
-    def load_deck(self, name: str) -> (DeckManager, reqrep_pb2.Rep):
+    def load_deck(self, name: str) -> DeckManager:
         deck = self.decks[name]
         heroes = deck["heroes"]
         other = deck["cards"]
@@ -66,6 +65,6 @@ class ArtifactDeckLoader(DeckLoader):
                 item_cards.append(Card(card_data))
 
         manager = ArtifactDeckManager(self.print_queue, deck_cards, hero_card_data, item_cards)
-        response = manager.setup()
-        return manager, response
+        manager.setup()
+        return manager
 

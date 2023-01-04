@@ -1,6 +1,9 @@
 $(document).ready(function (){
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function(e) {
-        localStorage.setItem('activeTab', $(e.target).data('bs-target'));
+        const targetTab = $(e.target).data('bs-target')
+        if (targetTab !== "#actions") {
+            localStorage.setItem('activeTab', targetTab);
+        }
     });
     var activeTab = localStorage.getItem('activeTab');
     if(activeTab){
