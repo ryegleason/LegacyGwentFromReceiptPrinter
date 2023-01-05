@@ -1,5 +1,4 @@
 import random
-import uuid
 from bisect import bisect_left
 from typing import List, Tuple
 from uuid import UUID
@@ -42,7 +41,7 @@ class FiniteDeckManager(DeckManager):
     def shuffle(self):
         random.shuffle(self.deck)
 
-    def draw(self, draw_to: str) -> bool | Tuple[uuid.UUID, List[Tuple[Card.Card, str]]]:
+    def draw(self, draw_to: str) -> bool | Tuple[UUID, List[Tuple[Card.Card, str]]]:
         if draw_to == "deck" or len(self.deck) < 1:
             return False
 
@@ -57,7 +56,7 @@ class FiniteDeckManager(DeckManager):
 
         return to_draw.uuid, []
 
-    def move(self, source_zone: str, target_zone: str, card_uuid: uuid.UUID, from_top: bool = False, num_down: int = 0) -> bool:
+    def move(self, source_zone: str, target_zone: str, card_uuid: UUID, from_top: bool = False, num_down: int = 0) -> bool:
         try:
             card = self.card_for_uuid(card_uuid)
             if source_zone == "hand":
@@ -122,7 +121,7 @@ class FiniteDeckManager(DeckManager):
             return False
         return self.setup()
 
-    def sideboard_deck(self, to_deck_uuids: List[uuid.UUID], to_sideboard_uuids: List[uuid.UUID]) -> bool:
+    def sideboard_deck(self, to_deck_uuids: List[UUID], to_sideboard_uuids: List[UUID]) -> bool:
         for card_uuid in to_sideboard_uuids:
             card = self.card_for_uuid(card_uuid)
             self.decklist.remove(card)

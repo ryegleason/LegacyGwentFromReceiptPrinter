@@ -27,7 +27,7 @@ class MTGDeckLoader(DeckLoaderGlob):
                 # Split and double sided card handling
                 name = line[line.index(" "):].replace("/", " // ").strip()
 
-                card_data = MTGCardData(name)
+                card_data = MTGCardData.from_name(name)
 
                 for i in range(copies):
                     new_card = Card(card_data)

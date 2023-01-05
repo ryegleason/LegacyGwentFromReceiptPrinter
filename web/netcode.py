@@ -83,7 +83,7 @@ class draw:
         draw_output = user_deck_managers[user_id].draw(web.input().draw_to)
         if draw_output:
             return json.dumps({"uuid": None if draw_output[0] is None else str(draw_output[0]),
-                               "new_cards": [{"uuid": card.uuid, "image_url": card.card_data.get_card_image_uri(),
+                               "new_cards": [{"uuid": str(card.uuid), "image_url": card.card_data.get_card_image_uri(),
                                               "name": card.card_data.name, "zone": zone} for card, zone in
                                              draw_output[1]]})
         else:

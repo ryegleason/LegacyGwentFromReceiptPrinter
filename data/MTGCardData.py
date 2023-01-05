@@ -23,9 +23,12 @@ def request_from_scryfall(req) -> requests.Response:
 
 
 def print_card_from_name(print_queue, name):
-    card = MTGCardData(name)
+    card = MTGCardData.from_name(name)
     card.queue_print(print_queue)
 
+
+def to_filename(folder, extension, name):
+    return os.path.join(folder, name.replace("//", "&&") + "." + extension)
 
 class MTGCardData(CardData):
     IMAGE_WIDTH = 300
@@ -33,16 +36,13 @@ class MTGCardData(CardData):
     json_folder = os.path.join("download", "mtg", "json")
     art_folder = os.path.join("download", "mtg", "art")
 
-    def __init__(self, name):
+    def __init__(self, response_json):
         # Get saved json, or get new json from scryfall
-        self.name = name
-        json_path = self.to_filename(self.json_folder, "json")
-        if os.path.isfile(json_path):
-            with open(json_path, "r") as f:
-                self.response_json = json.load(f)
-        else:
-            self.response_json = json.loads(request_from_scryfall("https://api.scryfall.com/cards/named?exact=" +
-                                                                  name.replace(" ", "+")).content)
+        self.response_json = response_json
+        self.name = self.response_json["name"]
+
+        json_path = to_filename(self.json_folder, "json", self.name)
+        if not os.path.isfile(json_path):
             if not os.path.isdir(self.json_folder):
                 os.makedirs(self.json_folder)
             with open(json_path, "w") as f:
@@ -51,7 +51,6 @@ class MTGCardData(CardData):
         self.card_data_components = []
         self.artworks = {}
 
-        self.name = self.response_json["name"]
         self.card_image = None
 
         try:
@@ -69,6 +68,17 @@ class MTGCardData(CardData):
             self.card_data_components.append(self.build_simple_card_data(self.response_json, None))
 
         super().__init__()
+
+    @classmethod
+    def from_name(cls, name):
+        json_path = to_filename(MTGCardData.json_folder, "json", name)
+        if os.path.isfile(json_path):
+            with open(json_path, "r") as f:
+                response_json = json.load(f)
+        else:
+            response_json = json.loads(request_from_scryfall("https://api.scryfall.com/cards/named?exact=" +
+                                                             name.replace(" ", "+")).content)
+        return cls(response_json)
 
     def build_simple_card_data(self, face_json, image=None):
         # Non creatures don't have a P/T
@@ -94,7 +104,7 @@ class MTGCardData(CardData):
 
     def get_artwork(self, name, image_uri) -> Image:
         if name not in self.artworks or self.artworks[name] is None:
-            art_path = self.to_filename(self.art_folder, "png", name=name)
+            art_path = to_filename(self.art_folder, "png", name)
             if os.path.isfile(art_path):
                 self.artworks[name] = Image.open(art_path)
             else:
@@ -123,10 +133,6 @@ class MTGCardData(CardData):
             uri = self.response_json["card_faces"][0]["image_uris"]["png"]
         return uri
 
-    def to_filename(self, folder, extension, name=None):
-        if name is None:
-            name = self.name
-        return os.path.join(folder, name.replace("//", "&&") + "." + extension)
 
     def print_self(self, printer, postfix="\n\n\n\n"):
         # Double-sided and split card printing
@@ -140,9 +146,9 @@ class MTGCardData(CardData):
 if __name__ == "__main__":
     pd = PrinterDaemon()
     # p = Usb(0x0416, 0x5011, in_ep=0x81, out_ep=0x3)
-    hewwo = MTGCardData("Fireball")
+    hewwo = MTGCardData.from_name("Fireball")
     print(hewwo.raw_print)
     # printer._raw(hewwo.raw_print)
     pd.print_queue.put(hewwo.raw_print)
-    pd.print_queue.put(MTGCardData("Goblin").raw_print)
+    pd.print_queue.put(MTGCardData.from_name("Goblin").raw_print)
     pd.run()

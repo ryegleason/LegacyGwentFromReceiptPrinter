@@ -5,7 +5,6 @@ class CardData:
 
     def __init__(self):
         printer = Dummy()
-        # self.name = "default"
         self.print_self(printer)
         self.raw_print = printer.output
 
