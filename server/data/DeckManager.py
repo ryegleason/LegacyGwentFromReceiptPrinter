@@ -1,6 +1,6 @@
 import uuid
 from collections import namedtuple
-from typing import List, Tuple, Dict, Callable
+from typing import List, Tuple, Dict
 
 from data import Card
 

@@ -4,11 +4,10 @@ from uuid import UUID
 
 from escpos.printer import Dummy
 
-import util
 from data.ArtifactCardData import ArtifactCardData, id_to_card_dict
 from data.Card import Card
-from data.FiniteDeckManager import FiniteDeckManager
 from data.DeckManager import SimpleAction
+from data.FiniteDeckManager import FiniteDeckManager
 
 CREEP_CARD = ArtifactCardData(1006)
 CONSUMABLE_SHOP_CARDS = [ArtifactCardData(3003), ArtifactCardData(3004), ArtifactCardData(3005), ArtifactCardData(3006)]

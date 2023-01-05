@@ -5,9 +5,8 @@ import time
 
 import requests
 from PIL import Image, ImageOps, ImageEnhance
-from escpos.printer import Usb
 
-from daemons.PrinterDaemon import PrinterDaemon, printer
+from daemons.PrinterDaemon import PrinterDaemon
 from data.CardData import CardData
 from data.SimpleCardData import SimpleCardData
 

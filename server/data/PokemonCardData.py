@@ -127,7 +127,16 @@ class PokemonCardData(SimpleCardData):
             else:
                 img_data = requests.get(image_uri).content
                 art = Image.open(io.BytesIO(img_data))
-                art = art.crop((19, 34, 206, 128))
+
+                # crop boxes were measured on 245x342 images
+                width_ratio = art.width / 245.0
+                height_ratio = art.height / 342.0
+                if self.card_data.supertype == "Pokémon":
+                    art = art.crop((int(20 * width_ratio), int(34 * height_ratio), int(224 * width_ratio), int(161 * height_ratio)))
+                elif self.card_data.supertype == "Energy":
+                    art = art.crop((int(10 * width_ratio), int(47 * height_ratio), int(234 * width_ratio), int(220 * height_ratio)))
+                else: # trainer cards
+                    art = art.crop((int(20 * width_ratio), int(49 * height_ratio), int(224 * width_ratio), int(175 * height_ratio)))
 
                 enhancer = ImageEnhance.Contrast(art)
                 art = enhancer.enhance(2)

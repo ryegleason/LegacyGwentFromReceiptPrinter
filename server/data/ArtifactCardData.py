@@ -5,7 +5,6 @@ import re
 
 import requests
 from PIL import Image, ImageOps, ImageEnhance
-from escpos.printer import Usb
 
 from data.SimpleCardData import SimpleCardData
 
