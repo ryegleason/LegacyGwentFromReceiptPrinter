@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from escpos.printer import Dummy, Usb
 
 load_dotenv()
-DRY_RUN = True
+DRY_RUN = False
 
 if DRY_RUN:
     printer = Dummy()
