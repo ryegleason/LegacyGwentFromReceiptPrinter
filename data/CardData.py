@@ -1,10 +1,10 @@
 from escpos.printer import Dummy
 
-
 class CardData:
 
     def __init__(self):
         printer = Dummy()
+        printer.profile.profile_data["media"]["width"]["pixels"] = 50000 # dummy value to suppress warnings
         self.print_self(printer)
         self.raw_print = printer.output
 
