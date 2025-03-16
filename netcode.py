@@ -53,7 +53,7 @@ class move:
         source = web.input().source_zone
         destination = web.input().target_zone
         card_id = uuid.UUID(web.input().uuid)
-        from_top = bool(web.input().get("from_top", False))
+        from_top = web.input().get("from_top", False).lower() == "true"
         num_down = int(web.input().get("num_down", 0))
         if not user_deck_managers[user_id].move(source, destination, card_id, from_top, num_down):
             raise web.BadRequest("Move failed, probably because that card isn't in the source zone.")
